@@ -26,9 +26,11 @@ Routes.create = function (app) {
             client.query('SELECT table_schema,table_name FROM information_schema.tables;')
                 .on('row', function(row) {
                     console.log(JSON.stringify(row));
-                    res.send( JSON.stringify(row));
+                    //res.send( JSON.stringify(row));
                 });
         });
+
+        res.send("Hello world 2");
     });
 }
 
