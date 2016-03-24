@@ -26,7 +26,8 @@
     "express-session":"latest",
     "body-parser":"latest",
     "ejs": "^1.0.0",
-    "cookie-parser":"latest"
+    "cookie-parser":"latest",
+    "pg" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
