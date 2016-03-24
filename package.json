@@ -1,0 +1,35 @@
+{
+  "name": "TechRadar",
+  "version": "1.0.0",
+  "description": "Prototype Tech Radar",
+  "keywords": [
+    "Node.js",
+    "application"
+  ],
+  "author": {
+    "name": "Gordon Pimblott",
+    "email": "g.pimblott@kainos.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/techradar-demo.git"
+  },
+
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+
+  "dependencies": {
+    "console-stamp" : "latest",
+    "express": "latest",
+    "express-session":"latest",
+    "body-parser":"latest",
+    "ejs": "^1.0.0",
+    "cookie-parser":"latest"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+  "private": true,
+  "main": "server.js"
+}

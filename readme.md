@@ -1,0 +1,1 @@
+This is a prototype application to experiment with establishing a tech radar for Kainos
