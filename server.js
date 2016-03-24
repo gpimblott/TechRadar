@@ -30,7 +30,7 @@ var TechRadar = function () {
     self.setupVariables = function () {
         //  Set the environment variables we need.
        // self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port = process.env.OPENSHIFT_NODEJS_PORT || 8090;
+        self.port = process.env.PORT || 8090;
 
         //if (typeof self.ipaddress === "undefined") {
         //    //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -120,7 +120,7 @@ var TechRadar = function () {
      */
     self.start = function () {
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port,  function () {
+        self.app.listen( self.port,  function () {
             console.log('%s: Node server started on %s:%d ...',
                 Date(Date.now()), self.ipaddress, self.port);
         });
