@@ -10,11 +10,21 @@
 
     <% include ../partials/head.ejs %>
 
+    <script type="text/javascript" src="lib/protovis-3.2/protovis-d3.2.js"></script>
+    <!--<script type="text/javascript" charset="utf-8" src="utils.js"></script>-->
+    <!--<script type="text/javascript" charset="utf-8" src="lib/lodash.underscore.min.js"></script>-->
+    <!--<script type="text/javascript" charset="utf-8" src="radars/radarData.js"></script>-->
+
+    <script type="text/javascript" src="radar.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    </script>
+
     <title>Starter Template for Bootstrap</title>
 
 </head>
 
-<body>
+<body onload="init(500,500);">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -44,6 +54,7 @@
     <div class="starter-template">
         <h1>Krystal Ball starter for 10</h1>
         <p class="lead">Blank Bootstrap project to start the Krystal ball from<br> Coming soon</p>
+        <div id="radar"></div>
     </div>
 
 </div><!-- /.container -->
