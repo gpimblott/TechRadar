@@ -27,7 +27,8 @@
     "body-parser":"latest",
     "ejs": "^1.0.0",
     "cookie-parser":"latest",
-    "pg" : "latest"
+    "pg" : "latest",
+    "pg-promise": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

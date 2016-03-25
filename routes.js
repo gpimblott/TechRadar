@@ -1,5 +1,5 @@
 var pg = require('pg');
-var db = require('./db.js');
+var db = require('./config/db.js');
 
 
 var Routes = function () {
