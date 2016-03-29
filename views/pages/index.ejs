@@ -10,50 +10,27 @@
 
     <% include ../partials/head.ejs %>
 
-    <script type="text/javascript" src="lib/protovis-3.2/protovis-d3.2.js"></script>
-    <script type="text/javascript" src="utils.js" charset="utf-8"></script>
-    <script type="text/javascript" src="radar.js" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">
-
-    </script>
-
     <title>Krystal Ball</title>
 
 </head>
 
-<body onload="init(400,400);">
+<body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Krystal Ball</a>
+    <% include ../partials/menu.ejs %>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 standard-section">
+            <br>
+            <H2>Hello - Select a category from the menu :)</H2>
+
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#tools">Tools</a></li>
-                <li><a href="#platforms">Platforms</a></li>
-                <li><a href="#frameworks">Languages & Frameworks</a></li>
-                <li><a href="#frameworks">Infrastructure</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
+        <div class="col-sm-6 standard-section">
 
-<div class="container">
-
-    <div class="starter-template">
-        <h1>Krystal Ball</h1>
-        <p class="lead">Coming soon</p>
-        <div id="radar"></div>
+        </div>
     </div>
+
+
 
 </div><!-- /.container -->
 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+    <script type="text/javascript" src="/lib/protovis-3.2/protovis-d3.2.js"></script>
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/radar.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    </script>
+
+    <title>Krystal Ball</title>
+
+</head>
+
+<body onload="init(400,400);">
+
+
+<% include ../partials/menu.ejs %>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <br>
+            <h2><%=category %></h2>
+            <% statuses.forEach(function(status) { %>
+
+            <ul class="list-group">
+                <li class="list-group-item active">
+                    <span class="label label-default label-pill pull-xs-right"></span>
+                    <%= status.name %>
+                </li>
+                <li class="list-group-item">
+                    <span class="label label-default label-pill pull-xs-right">14</span>
+                    Cras justo odio
+                </li>
+                <li class="list-group-item">
+                    <span class="label label-default label-pill pull-xs-right">15</span>
+                    Dapibus ac facilisis in
+                </li>
+
+            </ul>
+
+            <% }); %>
+
+        </div>
+        <div class="col-sm-6 standard-section">
+                <div id="radar"></div>
+        </div>
+    </div>
+
+
+
+</div><!-- /.container -->
+
+
+<% include ../partials/footer.ejs %>
+</body>
+</html>
