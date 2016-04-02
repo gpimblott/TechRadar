@@ -1,4 +1,4 @@
-function init(h, w) {
+function init(h, w, data) {
     $('#title').text(document.title);
 
     var labelTopOffset = 20;
@@ -8,31 +8,6 @@ function init(h, w) {
     var labels = ["Hold", "Trial", "Assess", "Adopt"];
     var colours = ["#ccf", "#aaf", "#77f", "#55f"]
 
-    var data = {
-        "category" : "Adopt",
-        "items": [
-            {"name": "Java", state: "nochange", num: 1},
-            {"name": "Scala", state: "nochange", num: 2},
-            {"name": "NodeJS", state: "new", num: 3},
-            {"name": "Java", state: "nochange", num: 4},
-            {"name": "Scala", state: "nochange", num: 5},
-            {"name": "NodeJS", state: "new", num: 6},
-            {"name": "Java", state: "nochange", num: 7},
-            {"name": "Scala", state: "nochange", num: 8},
-            {"name": "NodeJS", state: "new", num: 9},
-            {"name": "Java", state: "nochange", num: 10},
-            {"name": "Scala", state: "nochange", num: 11},
-            {"name": "NodeJS", state: "new", num: 12},
-            {"name": "Scala", state: "nochange", num: 13},
-            {"name": "NodeJS", state: "new", num: 14},
-            {"name": "Java", state: "nochange", num: 15},
-            {"name": "Scala", state: "nochange", num: 16},
-            {"name": "NodeJS", state: "new", num: 17},
-            {"name": "Java", state: "nochange", num: 18},
-            {"name": "Scala", state: "nochange", num: 19},
-            {"name": "NodeJS", state: "new", num: 20}
-        ]
-    };
 
     var radar = new pv.Panel()
         .width(w)
@@ -87,55 +62,66 @@ function init(h, w) {
         })
         .strokeStyle("#900");
 
-
-    /**
-     * Draw the items on the chart
-     */
-    var itemsPerRow = data.items.length;
-
-    var angle=80/itemsPerRow;
-    var numRows = 1;
-
-    while( angle < 10 ) {
-        numRows +=1;
-        itemsPerRow = Math.ceil( data.items.length / numRows);
-        angle=80/itemsPerRow;
-    }
+    for( var s = 3;s>=0;s--) {
+      
+        var items = [];
+        
+        for( var l=0;l<data.length;l++) {
+            if( data[l].status==labels[s] ) {
+                items.push(data[l]);
+            }
+        }
 
 
-    var index = labels.indexOf(data.category);
-    var outer = w * wedges[index];
-    var inner = w * ( index==3 ? 0.1 : wedges[index+1]);
-    var spacing = (outer-inner)/(numRows+1);
+        /**
+         * Draw the items on the chart
+         */
+        var itemsPerRow = items.length;
 
-    var itemNum = 0;
+        var angle = 80 / itemsPerRow;
+        var numRows = 1;
 
-    for(var row = 1;row<=numRows;row++) {
-        var t = 10.0;
-        var r = inner + (spacing*row);
+        while (angle < 10) {
+            numRows += 1;
+            itemsPerRow = Math.ceil(items.length / numRows);
+            angle = 80 / itemsPerRow;
+        }
 
-        for (var i = 0; itemNum<data.items.length && i < itemsPerRow; i++) {
-            var item = data.items[itemNum];
 
-            var point = polar_to_cartesian(r, t);
+        var index = s;
+        var outer = w * wedges[index];
+        var inner = w * ( index == 3 ? 0.1 : wedges[index + 1]);
+        var spacing = (outer - inner) / (numRows + 1);
 
-            radar.add(pv.Dot)
-                .strokeStyle("#900")
-                .fillStyle("#900")
-                .left(point[0])
-                .bottom(point[1])
-                .shape(item.state == "new" ? "triangle" : "circle")
-                .size(100);
+        var itemNum = 0;
 
-            radar.add(pv.Label)
-                .left(point[0])
-                .bottom(point[1] - 6)
-                .textAlign("center")
-                .textStyle("white")
-                .text(item.num);
+        for (var row = 1; row <= numRows; row++) {
+            var t = 10.0;
+            var r = inner + (spacing * row);
 
-            t += angle;
-            itemNum +=1;
+            for (var i = 0; itemNum < items.length && i < itemsPerRow; i++) {
+                var item = items[itemNum];
+
+                var point = polar_to_cartesian(r, t);
+
+                radar.add(pv.Dot)
+                    .strokeStyle("#900")
+                    .fillStyle("#900")
+                    .left(point[0])
+                    .bottom(point[1])
+                    .shape(item.state == "new" ? "triangle" : "circle")
+                    .size(100);
+
+                radar.add(pv.Label)
+                    .left(point[0])
+                    .bottom(point[1] - 6)
+                    .textAlign("center")
+                    .textStyle("white")
+                    .text(item.num);
+
+                t += angle;
+                itemNum += 1;
+            }
         }
     }
 

@@ -20,8 +20,11 @@
     <title>Krystal Ball</title>
 
 </head>
+<script>
+    var data=<%-JSON.stringify(entries, null, 4)%>;
 
-<body onload="init(400,400);">
+</script>
+<body onload="init(400,400,data);">
 
 
 <% include ../partials/menu.ejs %>
@@ -31,25 +34,28 @@
         <div class="col-sm-6">
             <br>
             <h2><%=category %></h2>
-            <% statuses.forEach(function(status) { %>
 
             <ul class="list-group">
-                <li class="list-group-item active">
-                    <span class="label label-default label-pill pull-xs-right"></span>
-                    <%= status.name %>
-                </li>
-                <li class="list-group-item">
-                    <span class="label label-default label-pill pull-xs-right">14</span>
-                    Cras justo odio
-                </li>
-                <li class="list-group-item">
-                    <span class="label label-default label-pill pull-xs-right">15</span>
-                    Dapibus ac facilisis in
-                </li>
+                <%
+                var heading="";
 
+                for (var i = 0, len = entries.length; i < len; i++) {
+                    var entry = entries[i];
+
+                    if( entry.status != heading) {
+                        heading = entry.status;
+                     %>
+                        <li class="list-group-item active"><%= heading %></li>
+                     <%
+                    }
+
+                %>
+                    <li class="list-group-item"><span class="badge"><%=entry.num%></span><%= entry.name %></li>
+                <%
+                }
+                %>
             </ul>
 
-            <% }); %>
 
         </div>
         <div class="col-sm-6 standard-section">
@@ -59,9 +65,11 @@
 
 
 
-</div><!-- /.container -->
+</div>
 
 
 <% include ../partials/footer.ejs %>
+
+
 </body>
 </html>

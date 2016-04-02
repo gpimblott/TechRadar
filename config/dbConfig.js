@@ -6,7 +6,7 @@ var port        = 5432;
 var dbname      = 'debmeboff0jsv2';
 var timezone    = 'utc';
 
-var cn = 'postgres://' + username +':' + password + '@' + host + ':' + port + '/' + dbname;
+var cn = 'postgres://' + username +':' + password + '@' + host + ':' + port + '/' + dbname + "?ssl=true";
 
 var dbConfig = function () {
 };
