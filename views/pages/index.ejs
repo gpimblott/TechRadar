@@ -10,30 +10,37 @@
 
     <% include ../partials/head.ejs %>
 
-    <title>Krystal Ball</title>
 
 </head>
 
 <body>
 
-    <% include ../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
-<div class="container-fluid">
+<div tabindex="-1" id="content" class="bs-docs-header">
+    <div class="container">
+        <h1>Tech Radar (alpha)</h1>
+        <p>Practical team technology management</p>
+        <p>All the data currently in this site is *JUNK* it has been cut and paste just to provide content</p>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
     <div class="row">
-        <div class="col-sm-6 standard-section">
-            <br>
-            <H2>Hello - Select a category from the menu :)</H2>
+        <div class="col-md-9"  style="padding-left: 15px; padding-top: 40px;">
+            <p>A platform to allow teams to gather thoughts and views on technologies.
+                Both the ones they are using and emerging technologies</p>
+            <p>Everyone can <a href="#addtechnology">add</a>, <a href="#comment">comment</a> and <a href="vots">vote</a> on technologies, with <a href="reports">reports</a> generated from the community's response</p>
 
         </div>
-        <div class="col-sm-6 standard-section">
+        <div class="col-md-3">
 
         </div>
+
     </div>
 
 
-
 </div><!-- /.container -->
-
 
 <% include ../partials/footer.ejs %>
 </body>

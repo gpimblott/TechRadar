@@ -13,28 +13,30 @@
     <script type="text/javascript" src="/lib/protovis-3.2/protovis-d3.2.js"></script>
     <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
     <script type="text/javascript" src="/radar.js" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">
+    <script type="text/javascript" charset="utf-8"></script>
 
-    </script>
-
-    <title>Krystal Ball</title>
 
 </head>
 <script>
     var data=<%-JSON.stringify(entries, null, 4)%>;
-
 </script>
+
 <body onload="init(400,400,data);">
 
 
 <% include ../partials/menu.ejs %>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
-            <br>
-            <h2><%=category %></h2>
 
+<div tabindex="-1" id="content" class="bs-docs-header">
+    <div class="container">
+        <h1><%=category %></h1>
+        <p>An brief definition of the category should go here !!</p>
+    </div>
+</div>
+<div class="container bs-docs-container">
+
+    <div class="row" style="padding-top: 20px;">
+        <div class="col-sm-6" >
             <ul class="list-group">
                 <%
                 var heading="";
@@ -44,21 +46,21 @@
 
                     if( entry.status != heading) {
                         heading = entry.status;
-                     %>
-                        <li class="list-group-item active"><%= heading %></li>
-                     <%
-                    }
 
-                %>
+                 %>
+                        <li class="list-group-item active"><%= heading %></li>
+
+                 <% } %>
+
                     <li class="list-group-item"><span class="badge"><%=entry.num%></span><%= entry.name %></li>
-                <%
-                }
-                %>
+
+            <% } %>
+
             </ul>
 
 
         </div>
-        <div class="col-sm-6 standard-section">
+        <div class="col-sm-6">
                 <div id="radar"></div>
         </div>
     </div>

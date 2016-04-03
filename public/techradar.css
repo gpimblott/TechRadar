@@ -1,7 +1,51 @@
-body {
-    padding-top: 50px;
-}
+
+
 .standard-section {
-    padding: 40px 15px;
+    padding: 30px 15px;
+    text-align: justify;
+}
+
+.bs-docs-nav {
+    background-color: #fff;
+    border-bottom: 0 none;
+    margin-bottom: 0;
+}
+
+ul.nav.navbar-nav li a {
+    color: #000;
+}
+
+div.navbar-header a {
+    color: #000;
+}
+
+.bs-docs-header, .bs-docs-masthead {
+    background-color: #6f5499;
+    background-image: linear-gradient(to bottom, #563d7c 0px, #6f5499 100%);
+    background-repeat: repeat-x;
+    color: #cdbfe3;
+    padding: 0px 0;
+    position: relative;
+    text-align: left;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bs-docs-header h1	{
+    color: #fff;
+}
+
+.list-group, .list-group-item {
+    color: #6f5499;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item.active {
+    background-color: #6f5499;
+    background-image: linear-gradient(to bottom, #563d7c 0px, #6f5499 100%);
+    background-repeat: repeat-x;
+    color: #fff;
+    padding: 10px 0;
+    position: relative;
     text-align: center;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }

@@ -1,23 +1,34 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<header role="banner" id="top" class="navbar navbar-static-top bs-docs-nav">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button aria-expanded="false" aria-controls="bs-navbar" data-target="#bs-navbar" data-toggle="collapse"
+                    type="button" class="navbar-toggle collapsed">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Krystal Ball</a>
+            <a class="navbar-brand" href="../">Radar</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <nav class="collapse navbar-collapse" id="bs-navbar">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/radar/tools">Tools</a></li>
-                <li><a href="/radar/platforms">Platforms</a></li>
-                <li><a href="/radar/languages-and-frameworks">Languages & Frameworks</a></li>
-                <li><a href="/radar/infrastructure">Infrastructure</a></li>
-                <li><a href="/#contact">Contact</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/radar/tools">Tools</a></li>
+                        <li><a href="/radar/platforms">Platforms</a></li>
+                        <li><a href="/radar/languages-and-frameworks">Languages & Frameworks</a></li>
+                        <li><a href="/radar/infrastructure">Infrastructure</a></li>
+                    </ul>
+                </li>
+
+
             </ul>
-        </div><!--/.nav-collapse -->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#help">Help</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
     </div>
-</nav>
+</header>
