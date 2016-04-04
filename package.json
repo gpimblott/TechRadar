@@ -28,7 +28,9 @@
     "ejs": "^1.0.0",
     "cookie-parser":"latest",
     "pg" : "latest",
-    "async": "latest"
+    "async": "latest",
+    "passport" : "latest",
+    "passport-http" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

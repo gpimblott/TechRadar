@@ -8,7 +8,25 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes.js');
+var cache = require('./dao/cache.js');
 
+var passport = require('passport');
+var Strategy = require('passport-http').BasicStrategy;
+var users = require('./dao/users');
+
+
+// =========================================================================
+// Basic HTP Authentication  ===============================================
+// =========================================================================
+passport.use(new Strategy(
+    function(username, password, cb) {
+        users.findByUsername(username, function(err, user) {
+            if (err) { return cb(err); }
+            if (!user) { return cb(null, false); }
+            if (user.password != password) { return cb(null, false); }
+            return cb(null, user);
+        });
+    }));
 
 
 /**
@@ -86,6 +104,7 @@ var TechRadar = function () {
         self.app.set('view engine', 'ejs');
 
         self.app.use(cookieParser());
+       // self.app.use(bodyParser );
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({
             extended: true
@@ -98,10 +117,11 @@ var TechRadar = function () {
         self.app.use('/', express.static('public', {maxAge: oneDay}));
 
 
+        // update the cache
+        cache.refresh();
+        
         // Create all the routes and refresh the cache
         routes.create(self.app);
-
-
     };
 
 
