@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <h1>Add Technology</h1>
+        <p>Add a new technology to the catalogue</p>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
+            <form action="/technology/add" method="POST">
+                <div class="form-group">
+                    <label for="technologyName">Name of Technology</label>
+                    <input type="text" class="form-control" id="technologyName" name="technologyName" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="technologyWebsite">Website</label>
+                    <input type="url" class="form-control" id="technologyWebsite" name="technologyWebsite" placeholder="Website">
+                </div>
+                <div class="form-group">
+                    <label for="technologyGroup">Category:</label>
+                    <select class="form-control" id="technologyCategory" name="technologyCategory">
+
+                     <%
+                     categories.forEach(function(category, index, arr) {
+                         %>
+
+                        <option value="<%=category.id%>"><%=category.name%></option>
+
+                        <%
+                     });
+                     %>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="technologyDescription">Description</label>
+                    <textarea class="form-control" rows="3" id="technologyDescription" name="technologyDescription" placeholder="Description"></textarea>
+
+                </div>
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div><!-- /.container -->
+
+<% include ../partials/footer.ejs %>
+</body>
+</html>
