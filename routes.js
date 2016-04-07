@@ -1,6 +1,6 @@
 var bodyParser = require('body-parser');
 var pg = require('pg');
-var entry = require('./dao/entry.js');
+var technology = require('./dao/technology.js');
 var cache = require('./dao/cache.js');
 
 var passport = require('passport');
@@ -19,49 +19,78 @@ Routes.create = function (app) {
      * Home page with no parameters
      */
     app.get('/',
-        passport.authenticate('basic', { session: false } ),
+        passport.authenticate('basic', {session: false}),
         function (req, res) {
             res.render('pages/index', {});
         });
 
     /**
-     * Main cateory 'radar' pages
+     * Main category 'radar' pages
      */
     app.get('/radar/:category', function (req, res) {
 
-        var cname = replaceAll(req.params.category , '-' , ' ');
-        entry.getValues( cname , function( values ) {
-
-            if( values.length==0) {
+        var cname = replaceAll(req.params.category, '-', ' ');
+        technology.getValuesForCategory(cname, function (values) {
+            
+            if (values.length == 0) {
                 res.render('pages/error');
             } else {
-                var category = values[0].category;
-                res.render('pages/radar', {category: category, entries: values});
+
+                var category = cache.getCategory(values[0].category);
+
+                res.render('pages/radar', {category: category, technologies: values});
             }
         });
     });
 
+    
+    app.get('/technology/view/:id', function (req, res) {
+        var num = req.params.id;
+        technology.getById(num, function (value) {
+            if (value.length == 0 || value.length >1 ) {
+                res.render('pages/error');
+            } else {
+                res.render('pages/technology', {technology: value[0]});
+            }
+        });
+    });
+
+    app.get('/technology/comment/add/:id', function (req, res) {
+        var num = req.params.id;
+        technology.getById(num, function (value) {
+            if (value.length == 0 || value.length >1 ) {
+                res.render('pages/error');
+            } else {
+                res.render('pages/addComment', {technology: value[0]});
+            }
+        });
+    });
 
     app.get('/technology/add', function (req, res) {
         res.render('pages/addTechnology', {categories: cache.getCategories()});
     });
 
-    app.post('/technology/add', jsonParser,  function (req, res) {
-        console.log("Add technology POST");
-        console.log( req.body.technologyName );
-        console.log( req.body.technologyWebsite );
-        console.log( req.body.technologyCategory );
-        console.log( req.body.technologyDescription );
+
+    app.post('/technology/add', jsonParser, function (req, res) {
+
+        var status = cache.getStatus('tbd');
+        technology.add(req.body.technologyName,
+            req.body.technologyWebsite,
+            req.body.technologyCategory,
+            req.body.technologyDescription,status.id,
+        function( result ) {
+            console.log(result);
+            if( undefined === result) {
+                res.render('pages/error');
+            } else {
+                res.redirect('/technology/view/' + result);
+            }
+        });
 
 
-        // var user_id = req.body.id;
-        // var token = req.body.token;
-        // var geo = req.body.geo;
-
-        res.send("POST received");
     });
 
-    
+
 }
 
 function replaceAll(str, find, replace) {

@@ -18,7 +18,7 @@
 
 </head>
 <script>
-    var data=<%-JSON.stringify(entries, null, 4)%>;
+    var data=<%-JSON.stringify(technologies, null, 4)%>;
 </script>
 
 <body onload="init(400,400,data);">
@@ -27,10 +27,10 @@
 <% include ../partials/menu.ejs %>
 
 
-<div tabindex="-1" id="content" class="bs-docs-header">
+<div tabindex="-1" id="content" class="site-header">
     <div class="container">
-        <h1><%=category %></h1>
-        <p>An brief definition of the category should go here !!</p>
+        <h1><%=category.name %></h1>
+        <p><%=category.description%></p>
     </div>
 </div>
 <div class="container bs-docs-container">
@@ -41,18 +41,20 @@
                 <%
                 var heading="";
 
-                for (var i = 0, len = entries.length; i < len; i++) {
-                    var entry = entries[i];
+                for (var i = 0, len = technologies.length; i < len; i++) {
+                    var technology = technologies[i];
 
-                    if( entry.status != heading) {
-                        heading = entry.status;
-
+                    if( technology.status != heading) {
+                        heading = technology.status;
                  %>
                         <li class="list-group-item active"><%= heading %></li>
 
                  <% } %>
 
-                    <li class="list-group-item"><span class="badge"><%=entry.num%></span><%= entry.name %></li>
+                    <li class="list-group-item">
+                        <span class="badge"><%=technology.num%></span>
+                        <a href="/technology/view/<%=technology.id%>"><%= technology.name %></a>
+                    </li>
 
             <% } %>
 

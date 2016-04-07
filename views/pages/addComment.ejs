@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <h1><%= technology.name %></h1>
+        <p><%= technology.description %></p>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <h1>COMMENT BOX</h1>
+    <!-------Wrap------------>
+    <div id="wrap">
+        <div id="main">
+            <div class="row">
+                <div class="col-md-5">
+                    <h3 class="heading">Comments and Responses</h3>
+                </div>
+                <div class="col-md-7">
+                    <div id="upper_blank"></div>
+                </div>
+            </div>
+        </div>
+
+        <p>Your email address will not be published. Required fields are marked *</p>
+
+
+        <div id='form'>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <form action="" method="POST" id="commentform">
+
+                        <div id="comment-name" class="form-row">
+                            <input type="text" placeholder="Name (required)" name="dname" id="name">
+                        </div>
+                        <div id="comment-email" class="form-row">
+                            <input type="text" placeholder="Mail (will not be published) (required)" name="demail"
+                                   id="email">
+                        </div>
+                        <div id="comment-url" class="form-row">
+                            <input type="text" placeholder="Website" name="url" id="url">
+                        </div>
+                        <div id="comment-message" class="form-row">
+                            <textarea name="comment" placeholder="Message" id="comment"></textarea>
+                        </div>
+                        <a href="#"><input type="submit" name="dsubmit" id="commentSubmit" value="Submit Comment"></a>
+                        <input style="width: 30px" type="checkbox" value="1" name="subscribe" id="subscribe"
+                               checked="checked">
+                        <p1><b>Notify me when new comments are added.</b></p1>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div><!-- /.container -->
+
+<% include ../partials/footer.ejs %>
+</body>
+</html>

@@ -1,39 +1,25 @@
 var db = require('../config/dbConfig.js');
 var pg = require('pg');
+var dbhelper = require('../dao/dbhelper.js');
+
+/**
+ * Database routines for 'Category's'
+ * @constructor
+ */
+var Category = function () {
+};
 
 
-var Category = function () {};
+Category.getValuesForCategory = function (done) {
+    var sql = "SELECT * FROM categories ";
 
-
-Category.getAllValues = function ( done ) {
-    /**
-     * Create the list of earthquakes for the front page
-     */
-    pg.defaults.ssl = true;
-    pg.connect(db.getConnectionString() , function (err, client ) {
-        var results = [];
-
-        // Handle connection errors
-        if(err) {
-            done();
-            console.log(err);
-            return res.status(500).json({ success: false, data: err});
-        }
-
-        var sql = "SELECT * FROM categories " ;
-        var query = client.query( sql );
-
-        query.on('row', function(row) {
-            results.push(row);
-        });
-
-        // After all data is returned, close connection and return results
-        query.on('end', function() {
+    dbhelper.query(sql, [],
+        function (results) {
             done(results);
-            client.end();
+        },
+        function (error) {
+            console.log(error);
         });
-
-    });
 }
 
 module.exports = Category;

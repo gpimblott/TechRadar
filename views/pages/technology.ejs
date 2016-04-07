@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <h1><%=technology.name%></h1>
+        <p><%=technology.description%></p>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-1" style="padding-left: 15px; padding-top: 40px;">
+            <span class="glyphicon glyphicon-comment" aria-hidden="true"/>
+        </div>
+        <div class="col-md-11" style="padding-left: 15px; padding-top: 40px;">
+<p>hello 1</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="padding-left: 15px; padding-top: 40px;">
+<p>hello</p>
+        </div>
+
+    </div>
+</div><!-- /.container -->
+
+<% include ../partials/footer.ejs %>
+</body>
+</html>

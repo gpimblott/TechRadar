@@ -5,7 +5,7 @@
     text-align: justify;
 }
 
-.bs-docs-nav {
+.site-nav {
     background-color: #fff;
     border-bottom: 0 none;
     margin-bottom: 0;
@@ -19,7 +19,7 @@ div.navbar-header a {
     color: #000;
 }
 
-.bs-docs-header, .bs-docs-masthead {
+.site-header, .site-masthead {
     background-color: #6f5499;
     background-image: linear-gradient(to bottom, #563d7c 0px, #6f5499 100%);
     background-repeat: repeat-x;
@@ -28,10 +28,12 @@ div.navbar-header a {
     position: relative;
     text-align: left;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    font-size: 18px;
 }
 
-.bs-docs-header h1	{
+.site-header h1	{
     color: #fff;
+    font-size: 50px;
 }
 
 .list-group, .list-group-item {
@@ -48,4 +50,16 @@ div.navbar-header a {
     position: relative;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+span.glyphicon-arrow-down {
+    font-size: 2.2em;
+}
+
+span.glyphicon-arrow-right {
+    font-size: 2.2em;
+}
+
+span.glyphicon-arrow-left {
+    font-size: 2.2em;
 }

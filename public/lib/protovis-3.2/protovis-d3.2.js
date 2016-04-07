@@ -1655,7 +1655,7 @@ pv.keys = function(map) {
 };
 
 /**
- * Returns all of the entries (key-value pairs) of the specified object (a
+ * Returns all of the technologies (key-value pairs) of the specified object (a
  * map). The order of the returned array is not defined. Each key-value pair is
  * represented as an object with <tt>key</tt> and <tt>value</tt> attributes,
  * e.g., <tt>{key: "foo", value: 42}</tt>.
@@ -1663,7 +1663,7 @@ pv.keys = function(map) {
  * @param map an object.
  * @returns {array} an array of key-value pairs corresponding to the keys.
  */
-pv.entries = function(map) {
+pv.technologies = function(map) {
   var array = [];
   for (var key in map) {
     array.push({ key: key, value: map[key] });
@@ -2258,7 +2258,7 @@ pv.nest = function(array) {
  * <pre>var nest = pv.nest(yields)
  *     .key(function(d) d.year)
  *     .key(function(d) d.variety)
- *     .entries();</pre>
+ *     .technologies();</pre>
  *
  * This returns a nested array. Each element of the outer array is a key-values
  * pair, listing the values for each distinct key:
@@ -2312,7 +2312,7 @@ pv.Nest.prototype.key = function(key) {
  *     .key(function(d) d.year)
  *     .key(function(d) d.variety)
  *     .sortKeys()
- *     .entries()</pre>
+ *     .technologies()</pre>
  *
  * groups yield data by year, then variety, and sorts the variety groups
  * lexicographically (since the variety attribute is a string).
@@ -2340,7 +2340,7 @@ pv.Nest.prototype.sortKeys = function(order) {
  *     .key(function(d) d.year)
  *     .key(function(d) d.variety)
  *     .sortValues(function(a, b) a.yield - b.yield)
- *     .entries()</pre>
+ *     .technologies()</pre>
  *
  * groups yield data by year, then variety, and sorts the values for each
  * variety group by yield.
@@ -2417,14 +2417,14 @@ pv.Nest.prototype.map = function() {
  *
  * @returns a hierarchical nested array.
  */
-pv.Nest.prototype.entries = function() {
+pv.Nest.prototype.technologies = function() {
 
-  /** Recursively extracts the entries for the given map. */
+  /** Recursively extracts the technologies for the given map. */
   function entries(map) {
     var array = [];
     for (var k in map) {
       var v = map[k];
-      array.push({ key: k, values: (v instanceof Array) ? v : entries(v) });
+      array.push({ key: k, values: (v instanceof Array) ? v : technologies(v) });
     };
     return array;
   }
@@ -2441,7 +2441,7 @@ pv.Nest.prototype.entries = function() {
     return array;
   }
 
-  return sort.call(this, entries(this.map()), 0);
+  return sort.call(this, technologies(this.map()), 0);
 };
 
 /**
@@ -2562,7 +2562,7 @@ pv.Flatten.prototype.key = function(key, f) {
  * Flattens using the specified leaf function. This is an alternative to
  * specifying an explicit set of keys; the tiers of the underlying tree will be
  * determined dynamically by recursing on the values, and the resulting keys
- * will be stored in the entries <tt>keys</tt> attribute. The leaf function must
+ * will be stored in the technologies <tt>keys</tt> attribute. The leaf function must
  * return true for leaves, and false for internal nodes.
  *
  * @param {function} f a leaf function.
@@ -2575,7 +2575,7 @@ pv.Flatten.prototype.leaf = function(f) {
 };
 
 /**
- * Returns the flattened array. Each entry in the array is an object; each
+ * Returns the flattened array. Each technology in the array is an object; each
  * object has attributes corresponding to this flatten operator's keys.
  *
  * @returns an array of elements from the flattened map.
@@ -2587,7 +2587,7 @@ pv.Flatten.prototype.array = function() {
   if (leaf) {
     function recurse(value, i) {
       if (leaf(value)) {
-        entries.push({keys: stack.slice(), value: value});
+        technologies.push({keys: stack.slice(), value: value});
       } else {
         for (var key in value) {
           stack.push(key);
@@ -2597,7 +2597,7 @@ pv.Flatten.prototype.array = function() {
       }
     }
     recurse(this.map, 0);
-    return entries;
+    return technologies;
   }
 
   /* Recursively visits the specified value. */
@@ -2609,12 +2609,12 @@ pv.Flatten.prototype.array = function() {
         stack.pop();
       }
     } else {
-      entries.push(stack.concat(value));
+      technologies.push(stack.concat(value));
     }
   }
 
   visit(this.map, 0);
-  return entries.map(function(stack) {
+  return technologies.map(function(stack) {
       var m = {};
       for (var i = 0; i < keys.length; i++) {
         var k = keys[i], v = stack[i];
@@ -8766,7 +8766,7 @@ pv.Panel.prototype.buildInstance = function(s) {
 
   /*
    * Build each child, passing in the parent (this panel) scene graph node. The
-   * child mark's scene is initialized from the corresponding entry in the
+   * child mark's scene is initialized from the corresponding technology in the
    * existing scene graph, such that properties from the previous build can be
    * reused; this is largely to facilitate the recycling of SVG elements.
    */
