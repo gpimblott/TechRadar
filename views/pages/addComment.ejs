@@ -25,53 +25,20 @@
 
 <div class="container bs-docs-container">
 
-    <h1>COMMENT BOX</h1>
-    <!-------Wrap------------>
-    <div id="wrap">
-        <div id="main">
-            <div class="row">
-                <div class="col-md-5">
-                    <h3 class="heading">Comments and Responses</h3>
-                </div>
-                <div class="col-md-7">
-                    <div id="upper_blank"></div>
-                </div>
-            </div>
-        </div>
-
-        <p>Your email address will not be published. Required fields are marked *</p>
-
-
-        <div id='form'>
-            <div class="row">
-                <div class="col-md-12">
-
-                    <form action="" method="POST" id="commentform">
-
-                        <div id="comment-name" class="form-row">
-                            <input type="text" placeholder="Name (required)" name="dname" id="name">
-                        </div>
-                        <div id="comment-email" class="form-row">
-                            <input type="text" placeholder="Mail (will not be published) (required)" name="demail"
-                                   id="email">
-                        </div>
-                        <div id="comment-url" class="form-row">
-                            <input type="text" placeholder="Website" name="url" id="url">
-                        </div>
-                        <div id="comment-message" class="form-row">
-                            <textarea name="comment" placeholder="Message" id="comment"></textarea>
-                        </div>
-                        <a href="#"><input type="submit" name="dsubmit" id="commentSubmit" value="Submit Comment"></a>
-                        <input style="width: 30px" type="checkbox" value="1" name="subscribe" id="subscribe"
-                               checked="checked">
-                        <p1><b>Notify me when new comments are added.</b></p1>
-                    </form>
+    <div class="row">
+        <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
+            <form action="/comments/add" method="POST">
+                <input type="hidden" name="technology" value="<%=technology.id%>">
+                <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea class="form-control" rows="3" id="comment" name="comment" placeholder="Comment"></textarea>
 
                 </div>
-            </div>
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
         </div>
     </div>
-
 
 </div><!-- /.container -->
 

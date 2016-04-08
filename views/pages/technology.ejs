@@ -16,30 +16,121 @@
 
 <% include ../partials/menu.ejs %>
 
-<div tabindex="-1" id="content" class="site-header">
-    <div class="container">
-        <h1><%=technology.name%></h1>
-        <p><%=technology.description%></p>
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
+    <div class="container" role="vote">
+        <row>
+            <div class="col-md-12">
+                <h1><%= technology.name %></h1>
+                <p><%= technology.description %></p>
+            </div>
+
+        </row>
+        <row>
+            <div class="col-md-12">
+                <div class="btn-group-justified btn-block btn-group-lg">
+                    <div class="btn-group">
+                        <button type="button" id="testBtn"
+                                class="btn   btn-success glyphicon glyphicon-thumbs-up"
+                                data-loading-text=" ... ">Adopt
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="testBtn2"
+                                class="btn  btn-success glyphicon glyphicon-thumbs-up"
+                                data-loading-text=" ... ">Trial
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="testBtn3"
+                                class="btn btn-success glyphicon glyphicon-thumbs-up"
+                                data-loading-text=" ... ">Assess
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="testBtn4"
+                                class="btn  btn-success glyphicon glyphicon-thumbs-up"
+                                data-loading-text=" ... ">Avoid
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </row>
     </div>
 </div>
 
 <div class="container bs-docs-container">
-    <div class="row">
-        <div class="col-md-1" style="padding-left: 15px; padding-top: 40px;">
-            <span class="glyphicon glyphicon-comment" aria-hidden="true"/>
-        </div>
-        <div class="col-md-11" style="padding-left: 15px; padding-top: 40px;">
-<p>hello 1</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12" style="padding-left: 15px; padding-top: 40px;">
-<p>hello</p>
-        </div>
 
-    </div>
-</div><!-- /.container -->
+    <row>
+        <div class="col-md-12" style="margin-top: 10px">
+            <a class="btn btn-default" href="/comments/add/<%= technology.id %>">Add a comment</a>
+        </div>
+    </row>
+    <row>
+        <div class="col-md-12">
+            <section class="comment-list" style="margin-top: 40px">
+
+                <%
+                for (var i = 0, len = comments.length; i < len; i++) {
+                    var comment = comments[i];
+                %>
+
+                <article class="row">
+                    <div class="col-md-2 col-sm-2 hidden-xs">
+                        <figure class="thumbnail">
+                            <img class="img-responsive"
+                                 src="http://www.keita-gaming.com/assets/profile/default-avatar-c5d8ec086224cb6fc4e395f4ba3018c2.jpg"/>
+                            <figcaption class="text-center">username</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-10 col-sm-10">
+                        <div class="panel panel-default arrow left">
+                            <div class="panel-body">
+                                <header class="text-left">
+                                    <div class="comment-user"><i class="fa fa-user"></i> That Guy</div>
+                                    <time class="comment-date" datetime="16-12-2014 01:05"><i
+                                                class="fa fa-clock-o"></i> <%= comment.date %>
+                                    </time>
+                                </header>
+                                <div class="comment-post">
+                                    <p>
+                                        <%= comment.text %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <% } %>
+
+            </section>
+        </div>
+    </row>
+</div>
 
 <% include ../partials/footer.ejs %>
+
+<script>
+
+
+
+var clickBtn = function () {
+    console.log('Button down');
+    var cnt=4;
+    var btn = $(this);
+    btn.button('loading');
+    setTimeout(function () {
+        cnt++;
+        btn.button('reset');
+        btn.text('  ' + cnt);
+    }, 1000);
+};
+
+$('#testBtn').click( clickBtn );
+$('#testBtn2').click( clickBtn );
+$('#testBtn3').click( clickBtn );
+$('#testBtn4').click( clickBtn );
+
+</script>
+
 </body>
 </html>
