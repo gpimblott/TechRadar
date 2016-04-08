@@ -5,28 +5,49 @@ require('console-stamp')(console, '[ddd mmm dd HH:MM:ss]]');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+
+var users = require('./dao/users');
+
 var bodyParser = require('body-parser');
 
-var routes = require('./routes.js');
 var cache = require('./dao/cache.js');
 
 var passport = require('passport');
-var Strategy = require('passport-http').BasicStrategy;
-var users = require('./dao/users');
+var Strategy = require('passport-local').Strategy;
 
 
-// =========================================================================
-// Basic HTTP Authentication  ===============================================
-// =========================================================================
+
+var routes = require('./routes.js');
+
+
 passport.use(new Strategy(
-    function(username, password, cb) {
-        users.findByUsername(username, function(err, user) {
-            if (err) { return cb(err); }
-            if (!user) { return cb(null, false); }
-            if (user.password != password) { return cb(null, false); }
+    function (username, password, cb) {
+        users.findByUsername(username, function (err, user) {
+            if (err) {
+                return cb(err);
+            }
+            if (!user) {
+                return cb(null, false);
+            }
+            if (user.password != password) {
+                return cb(null, false);
+            }
             return cb(null, user);
         });
     }));
+
+passport.serializeUser(function (user, cb) {
+    cb(null, user.id);
+});
+
+passport.deserializeUser(function (id, cb) {
+    users.findById(id, function (err, user) {
+        if (err) {
+            return cb(err);
+        }
+        cb(null, user);
+    });
+});
 
 
 /**
@@ -86,10 +107,6 @@ var TechRadar = function () {
     };
 
 
-    /*  ================================================================  */
-    /*  App server functions (main app logic here).                       */
-    /*  ================================================================  */
-
 
     /**
      *  Initialize the server (express) and create the routes and register
@@ -104,40 +121,46 @@ var TechRadar = function () {
         self.app.set('view engine', 'ejs');
 
         self.app.use(cookieParser());
-       // self.app.use(bodyParser );
+        // self.app.use(bodyParser );
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({
             extended: true
         }));
 
+
         self.app.use(session({secret: 'myothersecretkeyforthiscookie'}));
+
 
         // Browser Cache
         var oneDay = 86400000;
         self.app.use('/', express.static('public', {maxAge: oneDay}));
 
+        // Initialize Passport and restore authentication state, if any, from the
+        // session.
+        self.app.use(passport.initialize());
+        self.app.use(passport.session());
 
         // update the cache
         cache.refresh();
-        
+
         // Create all the routes and refresh the cache
-        routes.create(self.app);
+        routes.createRoutes(self);
     };
-
-
 
     /**
      *  Start the server (starts up the sample application).
      */
     self.start = function () {
         //  Start the app on the specific interface (and port).
-        self.app.listen( self.port,  function () {
+        self.app.listen(self.port, function () {
             console.log('%s: Node server started on %s:%d ...',
                 Date(Date.now()), self.port);
         });
     };
 
 };
+
+
 
 
 /**

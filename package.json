@@ -30,7 +30,7 @@
     "pg" : "latest",
     "async": "latest",
     "passport" : "latest",
-    "passport-http" : "latest"
+    "passport-local" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
