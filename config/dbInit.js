@@ -15,8 +15,11 @@ var statements = [
     'DROP TABLE IF EXISTS categories',
     'DROP TABLE IF EXISTS status',
     'DROP TABLE IF EXISTS users',
+    'DROP TABLE IF EXISTS roles',
 
-    'CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(15) not null, password VARCHAR(15) not null, displayName VARCHAR(40) )',
+    'CREATE TABLE IF NOT EXISTS roles(id SERIAL PRIMARY KEY, name VARCHAR(15) not null, admin boolean default false )',
+    'CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(15) not null, ' +
+                'password VARCHAR(15) not null, displayName VARCHAR(40), role integer references roles(id) )',
     'CREATE TABLE IF NOT EXISTS categories(id SERIAL PRIMARY KEY, name VARCHAR(40) not null, description TEXT )',
     'CREATE TABLE IF NOT EXISTS status(id SERIAL PRIMARY KEY, name VARCHAR(10)  )',
     'CREATE TABLE IF NOT EXISTS technologies(id SERIAL PRIMARY KEY, name VARCHAR(40) not null, website VARCHAR(100), description TEXT , ' +
@@ -28,6 +31,8 @@ var statements = [
             "text TEXT, date TIMESTAMP without time zone default (now() at time zone 'utc') )",
     'CREATE TABLE IF NOT EXISTS votes(id SERIAL PRIMARY KEY, technology integer references technologies(id) , score INTEGER)',
 
+    "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
+    "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
 
     "INSERT INTO status (id , name) VALUES (1,'Adopt'),(2,'Trial'),(3,'Assess'), (4,'Hold') , (5, 'Avoid'), (6, 'TBD')",
     "INSERT INTO categories (id , name, description) VALUES " +

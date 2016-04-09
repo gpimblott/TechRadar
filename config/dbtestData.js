@@ -49,7 +49,8 @@ var statements = [
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('AWS' , 'IaaS' , 3,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java EE' , 'The big bad bits of java' , 3,6)",
 
-    "INSERT INTO users (username , password , displayName ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott') "
+ 
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) "
 
 ];
 

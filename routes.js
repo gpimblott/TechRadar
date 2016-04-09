@@ -29,7 +29,7 @@ Routes.createRoutes = function (self) {
 
     self.app.get('/', isAuthenticated,
         function (req, res) {
-            res.render('pages/index')
+            res.render('pages/index' , { user : req.user});
         });
 
 
@@ -72,7 +72,7 @@ Routes.createRoutes = function (self) {
 
                 var category = cache.getCategory(values[0].category);
 
-                res.render('pages/radar', {category: category, technologies: values});
+                res.render('pages/radar', {category: category, technologies: values,  user : req.user});
             }
         });
     });
@@ -85,11 +85,11 @@ Routes.createRoutes = function (self) {
         var num = req.params.id;
         technology.getById(num, function (value) {
             if (value.length == 0 || value.length > 1) {
-                res.render('pages/error');
+                res.render('pages/error', { user: req.user});
             } else {
 
                 comments.getValuesForTechnology(num, function (comments) {
-                    res.render('pages/technology', {technology: value[0], comments: comments});
+                    res.render('pages/technology', {technology: value[0], comments: comments, user : req.user});
                 });
             }
         });
@@ -100,7 +100,7 @@ Routes.createRoutes = function (self) {
      * Technology Add GET and POST
      */
     self.app.get('/technology/add', isAuthenticated, function (req, res) {
-        res.render('pages/addTechnology', {categories: cache.getCategories()});
+        res.render('pages/addTechnology', {categories: cache.getCategories(), user : req.user});
     });
 
 
@@ -122,7 +122,7 @@ Routes.createRoutes = function (self) {
     });
 
     self.app.get('/technology/search', isAuthenticated, jsonParser, function (req, res) {
-        res.render('pages/search');
+        res.render('pages/search', {user: req.user});
     });
 
     self.app.get('/technology/dosearch', isAuthenticated, jsonParser, function (req, res) {
@@ -147,7 +147,7 @@ Routes.createRoutes = function (self) {
                 if (value.length == 0 || value.length > 1) {
                     res.render('pages/error');
                 } else {
-                    res.render('pages/addComment', {technology: value[0]});
+                    res.render('pages/addComment', {technology: value[0], user: req.user});
                 }
             });
 

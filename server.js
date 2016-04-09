@@ -15,8 +15,6 @@ var cache = require('./dao/cache.js');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
-
-
 var routes = require('./routes.js');
 
 
@@ -57,12 +55,7 @@ var TechRadar = function () {
 
     //  Scope.
     var self = this;
-
-
-    /*  ================================================================  */
-    /*  Helper functions.                                                 */
-    /*  ================================================================  */
-
+    
     /**
      *  Set up server IP address and port # using env variables/defaults.
      */
@@ -169,4 +162,3 @@ var TechRadar = function () {
 var radarApp = new TechRadar();
 radarApp.initialize();
 radarApp.start();
-

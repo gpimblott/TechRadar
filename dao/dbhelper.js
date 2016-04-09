@@ -33,9 +33,8 @@ DBHelper.query = function (sql, parameters, done, error) {
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
-            client.end();
             done(results);
-
+            client.end();
         });
 
     });

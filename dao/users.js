@@ -4,7 +4,10 @@ var dbhelper = require('../dao/dbhelper.js');
 
 
 exports.findById = function(id, done) {
-    var sql = "SELECT * FROM users where id=$1 ";
+    var sql = "SELECT users.*,roles.admin,roles.name " +
+            " FROM users " +
+            " INNER JOIN roles on users.role=roles.id" +
+            " where users.id=$1 ";
 
     dbhelper.query(sql, [id],
         function (results) {
