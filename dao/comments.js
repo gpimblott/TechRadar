@@ -15,7 +15,9 @@ var Comments = function () {
  * @param done
  */
 Comments.getValuesForTechnology = function (technology, done) {
-    var sql = "SELECT * FROM comments where technology=$1 order by date desc";
+    var sql = "SELECT comments.*, users.displayName, users.username FROM comments " +
+        " inner join users on comments.userid=users.id" +
+        " where technology=$1 order by date desc";
 
     dbhelper.query(sql, [technology],
         function (results) {
@@ -29,9 +31,9 @@ Comments.getValuesForTechnology = function (technology, done) {
 /**
  * Add a new comment
  */
-Comments.add = function (technology, text , done) {
-    var sql = "INSERT INTO comments ( technology , text ) values ( $1 , $2 ) returning id";
-    var params = [ technology, text ];
+Comments.add = function (technology, text , userid, done) {
+    var sql = "INSERT INTO comments ( technology , text , userid) values ( $1 , $2 , $3 ) returning id";
+    var params = [ technology, text, userid ];
 
     dbhelper.insert( sql, params ,
         function( result ) {

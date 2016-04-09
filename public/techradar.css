@@ -19,6 +19,10 @@ div.navbar-header a {
     color: #000;
 }
 
+a {
+    color: #6f5499;
+}
+
 .site-header, .site-masthead {
     background-color: #6f5499;
     background-image: linear-gradient(to bottom, #563d7c 0px, #6f5499 100%);

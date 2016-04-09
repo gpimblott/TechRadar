@@ -57,4 +57,22 @@ Technology.getValuesForCategory = function (cname, done) {
         } );
 }
 
+Technology.search = function (value, done) {
+    
+    var sql = "SELECT technologies.id, technologies.name,status.name as Status,categories.name as Category" +
+        " FROM technologies" +
+        " inner join status on technologies.status=status.id " +
+        " inner join categories on technologies.category=categories.id " +
+        " WHERE technologies.name ILIKE '%" + value + "%'"
+
+    console.log(sql);
+    dbhelper.query( sql, [] ,
+        function( results ) {
+            done(results);
+        },
+        function( error ) {
+            console.log(error);
+        } );
+}
+
 module.exports = Technology;

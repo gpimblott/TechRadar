@@ -79,14 +79,14 @@
                         <figure class="thumbnail">
                             <img class="img-responsive"
                                  src="/default-avatar.jpg"/>
-                            <figcaption class="text-center">username</figcaption>
+                            <figcaption class="text-center"><%=comment.username%></figcaption>
                         </figure>
                     </div>
                     <div class="col-md-10 col-sm-10">
                         <div class="panel panel-default arrow left">
                             <div class="panel-body">
                                 <header class="text-left">
-                                    <div class="comment-user"><i class="fa fa-user"></i> That Guy</div>
+                                    <div class="comment-user"><i class="fa fa-user"></i> <%=comment.displayname%></div>
                                     <time class="comment-date" datetime="16-12-2014 01:05"><i
                                                 class="fa fa-clock-o"></i> <%= comment.date %>
                                     </time>
@@ -110,8 +110,6 @@
 <% include ../partials/footer.ejs %>
 
 <script>
-
-
 
 var clickBtn = function () {
     console.log('Button down');

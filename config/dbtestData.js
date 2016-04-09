@@ -29,6 +29,7 @@ var statements = [
     "DELETE FROM comments",
     "DELETE FROM votes",
     "DELETE FROM technologies",
+    "DELETE FROM users",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Scala' , 'Its like java but with hipster syntax' , 2,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Drop Wizard' , 'REST Services ok' , 2,1)",
@@ -48,6 +49,7 @@ var statements = [
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('AWS' , 'IaaS' , 3,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java EE' , 'The big bad bits of java' , 3,6)",
 
+    "INSERT INTO users (username , password , displayName ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott') "
 
 ];
 

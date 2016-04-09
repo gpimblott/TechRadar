@@ -11,6 +11,15 @@ var jsonParser = bodyParser.json();
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
+/**
+ * Check if the users is authenticated
+ */
+var isAuthenticated = function (req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    res.redirect('/login');
+}
+
 var Routes = function () {
 };
 /**
@@ -18,14 +27,9 @@ var Routes = function () {
  */
 Routes.createRoutes = function (self) {
 
-    self.app.get('/',
+    self.app.get('/', isAuthenticated,
         function (req, res) {
-
-            if( req.isAuthenticated() ) {
-                res.render('pages/index')
-            } else {
-                res.redirect('/login');
-            }
+            res.render('pages/index')
         });
 
 
@@ -33,7 +37,7 @@ Routes.createRoutes = function (self) {
      * Login GET and POST
      */
     self.app.get('/login', function (req, res) {
-        if( res.isAuthenticated ) {
+        if (res.isAuthenticated) {
             res.render('pages/index')
         } else {
             res.render('pages/login');
@@ -49,15 +53,15 @@ Routes.createRoutes = function (self) {
     /**
      * Logout
      */
-    self.app.get('/logout', function(req, res){
+    self.app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/login');
     });
-    
+
     /**
      * Main category 'radar' pages
      */
-    self.app.get('/radar/:category',function (req, res) {
+    self.app.get('/radar/:category', isAuthenticated, function (req, res) {
 
         var cname = replaceAll(req.params.category, '-', ' ');
         technology.getValuesForCategory(cname, function (values) {
@@ -77,7 +81,7 @@ Routes.createRoutes = function (self) {
     /**
      * Technology View pages
      */
-    self.app.get('/technology/view/:id', function (req, res) {
+    self.app.get('/technology/view/:id', isAuthenticated, function (req, res) {
         var num = req.params.id;
         technology.getById(num, function (value) {
             if (value.length == 0 || value.length > 1) {
@@ -95,7 +99,7 @@ Routes.createRoutes = function (self) {
     /**
      * Technology Add GET and POST
      */
-    self.app.get('/technology/add', function (req, res) {
+    self.app.get('/technology/add', isAuthenticated, function (req, res) {
         res.render('pages/addTechnology', {categories: cache.getCategories()});
     });
 
@@ -117,56 +121,62 @@ Routes.createRoutes = function (self) {
             });
     });
 
+    self.app.get('/technology/search', isAuthenticated, jsonParser, function (req, res) {
+        res.render('pages/search');
+    });
+
+    self.app.get('/technology/dosearch', isAuthenticated, jsonParser, function (req, res) {
+
+        technology.search(req.query.search, function (result) {
+            res.send(result);
+        })
+
+
+    });
 
     /**
      * Comments
      *
      */
-    self.app.get('/comments/add/:id',
+    self.app.get('/comments/add/:id', isAuthenticated,
         function (req, res) {
 
-            if (req.isAuthenticated()) {
 
-                var num = req.params.id;
-                technology.getById(num, function (value) {
-                    if (value.length == 0 || value.length > 1) {
-                        res.render('pages/error');
-                    } else {
-                        res.render('pages/addComment', {technology: value[0]});
-                    }
-                });
-            } else {
-                res.redirect('')
-            }
+            var num = req.params.id;
+            technology.getById(num, function (value) {
+                if (value.length == 0 || value.length > 1) {
+                    res.render('pages/error');
+                } else {
+                    res.render('pages/addComment', {technology: value[0]});
+                }
+            });
+
         });
 
 
-    self.app.post('/comments/add', jsonParser,
+    self.app.post('/comments/add', isAuthenticated, jsonParser,
         function (req, res) {
+            
+            comments.add(
+                req.body.technology,
+                req.body.comment,
+                req.user.id,
 
-            if (req.isAuthenticated()) {
-                comments.add(
-                    req.body.technology,
-                    req.body.comment,
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/technology/view/' + req.body.technology);
+                    }
+                });
 
-                    function (result) {
-                        if (undefined === result) {
-                            res.render('pages/error');
-                        } else {
-                            res.redirect('/technology/view/' + req.body.technology);
-                        }
-                    });
-            } else {
-                res.render('pages/error');
-            }
 
         });
 }
-
 
 
 function replaceAll(str, find, replace) {
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
-module.exports=Routes;
+module.exports = Routes;
