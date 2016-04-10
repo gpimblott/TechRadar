@@ -29,12 +29,14 @@ var statements = [
     'CREATE TABLE IF NOT EXISTS project_tech_link(project integer references projects(id), technology integer references technologies(id)  )',
     "CREATE TABLE IF NOT EXISTS comments(id SERIAL PRIMARY KEY, technology integer references technologies(id), userid integer references users(id) , " +
             "text TEXT, date TIMESTAMP without time zone default (now() at time zone 'utc') )",
-    'CREATE TABLE IF NOT EXISTS votes(id SERIAL PRIMARY KEY, technology integer references technologies(id) , score INTEGER)',
+    "CREATE TABLE IF NOT EXISTS votes(id SERIAL PRIMARY KEY, technology integer references technologies(id) ," +
+            " status INTEGER references status(id) , userid INTEGER references users(id), UNIQUE( technology,status,userid)," +
+            " date TIMESTAMP without time zone default (now() at time zone 'utc') )",
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
 
-    "INSERT INTO status (id , name) VALUES (1,'Adopt'),(2,'Trial'),(3,'Assess'), (4,'Hold') , (5, 'Avoid'), (6, 'TBD')",
+    "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Assess'), (4,'Hold') , (5, 'Avoid')",
     "INSERT INTO categories (id , name, description) VALUES " +
                 "(1,'Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
                 "(2,'Languages and Frameworks','Languages and highlevel libraries for building application and systems')," +
@@ -54,7 +56,6 @@ function doQuery(item, callback) {
 }
 
 async.eachSeries(statements, doQuery, function (err) {
-    // Release the client to the pg module
     if (err) {
         console.error(err);
     } else {

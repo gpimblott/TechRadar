@@ -29,25 +29,25 @@
             <div class="col-md-12">
                 <div class="btn-group-justified btn-block btn-group-lg">
                     <div class="btn-group">
-                        <button type="button" id="testBtn"
+                        <button type="button" id="testBtn" value="1"
                                 class="btn   btn-success glyphicon glyphicon-thumbs-up"
                                 data-loading-text=" ... ">Adopt
                         </button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" id="testBtn2"
+                        <button type="button" id="testBtn2" value="2"
                                 class="btn  btn-success glyphicon glyphicon-thumbs-up"
                                 data-loading-text=" ... ">Trial
                         </button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" id="testBtn3"
+                        <button type="button" id="testBtn3" value="3"
                                 class="btn btn-success glyphicon glyphicon-thumbs-up"
                                 data-loading-text=" ... ">Assess
                         </button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" id="testBtn4"
+                        <button type="button" id="testBtn4" value="5"
                                 class="btn  btn-success glyphicon glyphicon-thumbs-up"
                                 data-loading-text=" ... ">Avoid
                         </button>
@@ -111,16 +111,14 @@
 
 <script>
 
+
 var clickBtn = function () {
-    console.log('Button down');
-    var cnt=4;
-    var btn = $(this);
-    btn.button('loading');
-    setTimeout(function () {
-        cnt++;
-        btn.button('reset');
-        btn.text('  ' + cnt);
-    }, 1000);
+
+    var data = { statusvalue: $(this).val(), technology: <%=technology.id%>};
+    console.log(data);
+    $.post( '/technology/vote/add', data, function(result) {
+        console.log( result );
+    });
 };
 
 $('#testBtn').click( clickBtn );

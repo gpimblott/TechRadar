@@ -47,7 +47,7 @@ var statements = [
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Kubernetes' , 'Hipster container management tech' , 3,3)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('RHEL 7' , 'Java mocking library for testing' , 3,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('AWS' , 'IaaS' , 3,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java EE' , 'The big bad bits of java' , 3,6)",
+    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java EE' , 'The big bad bits of java' , 3,0)",
 
  
     "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) "
@@ -62,7 +62,6 @@ function doQuery(item, callback) {
 }
 
 async.eachSeries(statements, doQuery, function (err) {
-    // Release the client to the pg module
     if (err) {
         console.error(err);
     } else {

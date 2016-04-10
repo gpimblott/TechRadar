@@ -3,6 +3,7 @@ var users = require('./dao/users');
 var technology = require('./dao/technology.js');
 var category = require('./dao/category.js');
 var comments = require('./dao/comments.js');
+var votes = require('./dao/vote.js');
 
 
 var bodyParser = require('body-parser');
@@ -17,6 +18,16 @@ var Strategy = require('passport-local').Strategy;
 var isAuthenticated = function (req, res, next) {
     if (req.isAuthenticated())
         return next();
+
+    req.session.redirect_to = req.url;
+    res.redirect('/login');
+}
+
+var isAuthenticatedAdmin = function (req, res, next) {
+    if (req.isAuthenticated() && req.user.admin)
+        return next();
+
+    req.session.redirect_to = req.url;
     res.redirect('/login');
 }
 
@@ -29,7 +40,14 @@ Routes.createRoutes = function (self) {
 
     self.app.get('/', isAuthenticated,
         function (req, res) {
-            res.render('pages/index' , { user : req.user});
+            var url = req.session.redirect_to;
+            if( url != undefined ) {
+                delete req.session.redirect_to;
+                res.redirect( url );
+            }
+            else {
+                res.render('pages/index', {user: req.user});
+            }
         });
 
 
@@ -130,8 +148,20 @@ Routes.createRoutes = function (self) {
         technology.search(req.query.search, function (result) {
             res.send(result);
         })
+    });
 
+    self.app.post('/technology/vote/add', isAuthenticated, jsonParser, function (req, res) {
+        console.log("status:" + req.body.statusvalue)
+        console.log( "User:" + req.user.id);
+        console.log("Technology:" + req.body.technology)
 
+        votes.add( req.body.technology , req.body.statusvalue , req.user.id , function(result,error) {
+            if( error != null ) {
+                res.send({value: "nok" });
+            } else {
+                res.send({value: "ok", vote: result});
+            }
+        });
     });
 
     /**
@@ -140,8 +170,6 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/comments/add/:id', isAuthenticated,
         function (req, res) {
-
-
             var num = req.params.id;
             technology.getById(num, function (value) {
                 if (value.length == 0 || value.length > 1) {
@@ -169,8 +197,52 @@ Routes.createRoutes = function (self) {
                         res.redirect('/technology/view/' + req.body.technology);
                     }
                 });
+        });
 
 
+    /**
+     * Users
+     *
+     */
+
+    self.app.get('/users', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/users', { user: req.user} );
+        });
+
+    self.app.get('/users/list', isAuthenticatedAdmin,
+        function (req, res) {
+            users.getAll( function (result) {
+                console.log(result);
+                res.send(result);
+            });
+        });
+
+    self.app.get('/users/add', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/addUser', { user: req.user} );
+        });
+
+    self.app.post('/users/add', isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            console.log(req.body.username );
+            console.log(req.body.displayName);
+            console.log(req.body.password);
+            console.log(req.body.role );
+            
+            users.add(
+                req.body.username,
+                req.body.displayName,
+                req.body.password,
+                req.body.admin,
+
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/index');
+                    }
+                });
         });
 }
 

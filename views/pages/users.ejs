@@ -22,22 +22,10 @@
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Technology Search</h1>
-                <p>Enter name of technology</p>
+                <h1>Users</h1>
+                <p>Manage system users</p>
             </div>
         </row>
-        <div class="row" style="margin-bottom: 40px">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="search-field" name="search-field" placeholder="Search term...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" id="search-btn" type="button">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
-                </div>
-            </div>
-        </div>
 
     </div>
 </div>
@@ -58,28 +46,36 @@
 <script>
 
     $('#results').bootstrapTable( {
-        data : [],
+        method: 'get',
+        url: '/users/list',
         cache: false,
         striped: true,
         escape: true,
         idField: 'id',
+        search: true,
+        showColumns: true,
+        showRefresh: true,
         columns: [{
             field: 'id',
-            title: 'Item ID',
+            title: 'ID',
             visible: false
         }, {
-            field: 'name',
-            title: 'Technology',
+            field: 'username',
+            title: 'Username',
             sortable: true,
-            formatter: operateFormatter
         }, {
-            field: 'status',
-            title: 'Status',
+            field: 'displayname',
+            title: 'Full Name',
             align: 'center',
             sortable: true
         }, {
-            field: 'category',
-            title: 'Category',
+            field: 'rolename',
+            title: 'Role',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'isadmin',
+            title: 'Admin',
             align: 'center',
             sortable: true
         }]
