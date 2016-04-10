@@ -32,7 +32,13 @@
 
 <div class="container bs-docs-container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
+            <div id="custom-toolbar">
+                <div class="form-inline" role="form">
+                    <a href="/user/add"  class="btn btn-default">Add user</a>
+                    <a href="/error"  class="btn btn-default">Delete user</a>
+                </div>
+            </div>
             <table id="results"></table>
         </div>
     </div>
@@ -47,7 +53,7 @@
 
     $('#results').bootstrapTable( {
         method: 'get',
-        url: '/users/list',
+        url: '/api/users',
         cache: false,
         striped: true,
         escape: true,
@@ -56,6 +62,9 @@
         showColumns: true,
         showRefresh: true,
         columns: [{
+            field:'state',
+            checkbox:'true'
+        },   {
             field: 'id',
             title: 'ID',
             visible: false
@@ -77,22 +86,23 @@
             field: 'isadmin',
             title: 'Admin',
             align: 'center',
-            sortable: true
+            sortable: true,
+            formatter: adminFormatter
         }]
     })
 
 
-    window.operateEvents = {
-        'click .like': function (e, value, row, index) {
-            alert('You click like action, row: ' + JSON.stringify(row));
-        },
-        'click .remove': function (e, value, row, index) {
-            $table.bootstrapTable('remove', {
-                field: 'id',
-                values: [row.id]
-            });
+    function adminFormatter(value, row, index) {
+
+        var column = [];
+        if( row['isadmin']) {
+            column = [ "<span class='glyphicon glyphicon-ok' aria-hidden='true'/>"]
+        } else {
+            column = [ "<span class='glyphicon glyphicon-remove' aria-hidden='true'/>"]
         }
-    };
+        return column;
+    }
+
 
     function operateFormatter(value, row, index) {
         return [
@@ -100,21 +110,7 @@
         ].join('');
     }
 
-    $('#search-field').keypress(function(event){
-        if(event.keyCode == 13){
-            $('#search-btn').click();
-        }
-    });
 
-    var clickBtn = function () {
-        var parameters = { search: $('#search-field').val() };
-        $.get( '/technology/dosearch',parameters, function(data) {
-            $('#results').bootstrapTable( 'load' , data );
-
-        });
-    };
-
-    $('#search-btn').click( clickBtn );
 
 </script>
 

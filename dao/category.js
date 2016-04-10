@@ -19,6 +19,7 @@ Category.getValuesForCategory = function (done) {
         },
         function (error) {
             console.log(error);
+            done(null);
         });
 }
 

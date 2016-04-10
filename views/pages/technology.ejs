@@ -114,9 +114,9 @@
 
 var clickBtn = function () {
 
-    var data = { statusvalue: $(this).val(), technology: <%=technology.id%>};
+    var data = { statusvalue: $(this).val() };
     console.log(data);
-    $.post( '/technology/vote/add', data, function(result) {
+    $.post( '/api/technology/<%=technology.id%>/vote', data, function(result) {
         console.log( result );
     });
 };

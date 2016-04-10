@@ -7,6 +7,23 @@ var Technology = function () {
 };
 
 
+Technology.getAll = function(done) {
+    var sql = "SELECT t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+        " FROM technologies t" +
+        " INNER JOIN categories c on t.category=c.id" +
+        " INNER JOIN status s on t.status=s.id";
+
+
+    dbhelper.query(sql, [],
+        function (results) {
+            done( results);
+        },
+        function (error) {
+            console.log(error);
+            return done( null );
+        });
+}
+
 /**
  * Add a new technology
  */

@@ -30,6 +30,11 @@ var statements = [
     "DELETE FROM votes",
     "DELETE FROM technologies",
     "DELETE FROM users",
+    "DELETE FROM projects",
+
+    "INSERT INTO projects (name) VALUES ('DVSA'), ('ONS'), ('Home Office'), ('DVLA'), ('DEFRA'), ('MoJ') ",
+
+
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Scala' , 'Its like java but with hipster syntax' , 2,1)",
     "INSERT INTO technologies ( name , description , category, status ) VALUES ('Drop Wizard' , 'REST Services ok' , 2,1)",

@@ -43,7 +43,6 @@ var statements = [
                 "(3,'Platforms' , 'A platform is a group of technologies that are used as a base upon which other applications, processes or technologies are developed.')," +
                 "(4,'Infrastructure' , 'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services') ",
 
-    "INSERT INTO projects (id , name) VALUES (1, 'DVSA'), (2,'ONS'), (3,'Home Office'), (4,'DVLA'), (5,'DEFRA'), (6,'MoJ') "
     ];
 
 

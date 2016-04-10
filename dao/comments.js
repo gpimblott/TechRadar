@@ -42,6 +42,7 @@ Comments.add = function (technology, text , userid, done) {
         },
         function(error) {
             console.log(error);
+            done(null);
         } );
 }
 

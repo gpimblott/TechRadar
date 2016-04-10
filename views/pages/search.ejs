@@ -100,7 +100,7 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<a href="/technology/view/' + row['id'] + '" target="_blank">' + value + '</a>'
+            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
         ].join('');
     }
 
@@ -112,7 +112,7 @@
 
     var clickBtn = function () {
         var parameters = { search: $('#search-field').val() };
-        $.get( '/technology/dosearch',parameters, function(data) {
+        $.get( '/api/technology',parameters, function(data) {
             $('#results').bootstrapTable( 'load' , data );
 
         });

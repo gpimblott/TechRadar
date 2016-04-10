@@ -3,6 +3,7 @@ var users = require('./dao/users');
 var technology = require('./dao/technology.js');
 var category = require('./dao/category.js');
 var comments = require('./dao/comments.js');
+var projects = require('./dao/projects.js');
 var votes = require('./dao/vote.js');
 
 
@@ -18,7 +19,6 @@ var Strategy = require('passport-local').Strategy;
 var isAuthenticated = function (req, res, next) {
     if (req.isAuthenticated())
         return next();
-
     req.session.redirect_to = req.url;
     res.redirect('/login');
 }
@@ -26,7 +26,6 @@ var isAuthenticated = function (req, res, next) {
 var isAuthenticatedAdmin = function (req, res, next) {
     if (req.isAuthenticated() && req.user.admin)
         return next();
-
     req.session.redirect_to = req.url;
     res.redirect('/login');
 }
@@ -41,15 +40,19 @@ Routes.createRoutes = function (self) {
     self.app.get('/', isAuthenticated,
         function (req, res) {
             var url = req.session.redirect_to;
-            if( url != undefined ) {
+            if (url != undefined) {
                 delete req.session.redirect_to;
-                res.redirect( url );
+                res.redirect(url);
             }
             else {
                 res.render('pages/index', {user: req.user});
             }
         });
 
+    self.app.get('/error', isAuthenticated,
+        function (req, res) {
+            res.render('pages/error');
+        });
 
     /**
      * Login GET and POST
@@ -90,24 +93,36 @@ Routes.createRoutes = function (self) {
 
                 var category = cache.getCategory(values[0].category);
 
-                res.render('pages/radar', {category: category, technologies: values,  user : req.user});
+                res.render('pages/radar', {category: category, technologies: values, user: req.user});
             }
         });
     });
 
-
     /**
-     * Technology View pages
+     * Technology pages
      */
-    self.app.get('/technology/view/:id', isAuthenticated, function (req, res) {
+    self.app.get('/technologies', isAuthenticatedAdmin, jsonParser, function (req, res) {
+        res.render('pages/listTechnologies', {user: req.user});
+    });
+
+    self.app.get('/technology/search', isAuthenticated, jsonParser, function (req, res) {
+        res.render('pages/search', {user: req.user});
+    });
+
+    self.app.get('/technology/add', isAuthenticated, function (req, res) {
+        res.render('pages/addTechnology', {categories: cache.getCategories(), user: req.user});
+    });
+
+
+    self.app.get('/technology/:id', isAuthenticated, function (req, res) {
         var num = req.params.id;
         technology.getById(num, function (value) {
             if (value.length == 0 || value.length > 1) {
-                res.render('pages/error', { user: req.user});
+                res.render('pages/error', {user: req.user});
             } else {
 
                 comments.getValuesForTechnology(num, function (comments) {
-                    res.render('pages/technology', {technology: value[0], comments: comments, user : req.user});
+                    res.render('pages/technology', {technology: value[0], comments: comments, user: req.user});
                 });
             }
         });
@@ -115,58 +130,7 @@ Routes.createRoutes = function (self) {
 
 
     /**
-     * Technology Add GET and POST
-     */
-    self.app.get('/technology/add', isAuthenticated, function (req, res) {
-        res.render('pages/addTechnology', {categories: cache.getCategories(), user : req.user});
-    });
-
-
-    self.app.post('/technology/add', jsonParser, function (req, res) {
-
-        var status = cache.getStatus('tbd');
-        technology.add(req.body.technologyName,
-            req.body.technologyWebsite,
-            req.body.technologyCategory,
-            req.body.technologyDescription, status.id,
-            function (result) {
-
-                if (undefined === result) {
-                    res.render('pages/error');
-                } else {
-                    res.redirect('/technology/view/' + result);
-                }
-            });
-    });
-
-    self.app.get('/technology/search', isAuthenticated, jsonParser, function (req, res) {
-        res.render('pages/search', {user: req.user});
-    });
-
-    self.app.get('/technology/dosearch', isAuthenticated, jsonParser, function (req, res) {
-
-        technology.search(req.query.search, function (result) {
-            res.send(result);
-        })
-    });
-
-    self.app.post('/technology/vote/add', isAuthenticated, jsonParser, function (req, res) {
-        console.log("status:" + req.body.statusvalue)
-        console.log( "User:" + req.user.id);
-        console.log("Technology:" + req.body.technology)
-
-        votes.add( req.body.technology , req.body.statusvalue , req.user.id , function(result,error) {
-            if( error != null ) {
-                res.send({value: "nok" });
-            } else {
-                res.send({value: "ok", vote: result});
-            }
-        });
-    });
-
-    /**
      * Comments
-     *
      */
     self.app.get('/comments/add/:id', isAuthenticated,
         function (req, res) {
@@ -182,9 +146,125 @@ Routes.createRoutes = function (self) {
         });
 
 
-    self.app.post('/comments/add', isAuthenticated, jsonParser,
+    /**
+     * Users
+     *
+     */
+    self.app.get('/users', isAuthenticatedAdmin,
         function (req, res) {
-            
+            res.render('pages/listUsers', {user: req.user});
+        });
+
+
+    self.app.get('/user/add', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/addUser', {user: req.user});
+        });
+
+
+    /**
+     * Projects
+     *
+     */
+    self.app.get('/projects', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/listProjects', {user: req.user});
+        });
+
+    self.app.get('/project/add', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/addProject', {user: req.user});
+        });
+
+    /*****************************************************
+     * API Interfaces
+     ******************************************************/
+
+    /**
+     * Technology
+     */
+
+    self.app.get('/api/technologies', isAuthenticatedAdmin, jsonParser, function (req, res) {
+
+        technology.getAll( function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+    });
+
+    self.app.get('/api/technology', isAuthenticated, jsonParser, function (req, res) {
+
+        technology.search(req.query.search, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+    });
+
+
+    self.app.post('/api/technology', isAuthenticated, jsonParser, function (req, res) {
+
+        var status = cache.getStatus('tbd');
+        technology.add(req.body.technologyName,
+            req.body.technologyWebsite,
+            req.body.technologyCategory,
+            req.body.technologyDescription, status.id,
+            function (result) {
+
+                if (undefined === result) {
+                    res.render('pages/error');
+                } else {
+                    res.redirect('/technology/' + result);
+                }
+            });
+    });
+
+    self.app.post('/api/technology/:technology/vote', isAuthenticated, jsonParser, function (req, res) {
+
+        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
+            if (error != null) {
+                res.send({value: "nok"});
+            } else {
+                res.send({value: "ok", vote: result});
+            }
+        });
+    });
+
+
+    /**
+     * Users
+     */
+    self.app.post('/api/user', isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+
+            users.add(
+                req.body.username,
+                req.body.displayName,
+                req.body.password,
+                req.body.role,
+
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/users');
+                    }
+                });
+        });
+
+    self.app.get('/api/users', isAuthenticatedAdmin,
+        function (req, res) {
+            users.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+    /**
+     * Comments
+     */
+    self.app.post('/api/comments', isAuthenticated, jsonParser,
+        function (req, res) {
+
             comments.add(
                 req.body.technology,
                 req.body.comment,
@@ -194,56 +274,35 @@ Routes.createRoutes = function (self) {
                     if (undefined === result) {
                         res.render('pages/error');
                     } else {
-                        res.redirect('/technology/view/' + req.body.technology);
+                        res.redirect('/technology/' + req.body.technology);
                     }
                 });
         });
 
-
-    /**
-     * Users
-     *
-     */
-
-    self.app.get('/users', isAuthenticatedAdmin,
+    self.app.get('/api/projects', isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/users', { user: req.user} );
-        });
-
-    self.app.get('/users/list', isAuthenticatedAdmin,
-        function (req, res) {
-            users.getAll( function (result) {
-                console.log(result);
-                res.send(result);
+            projects.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
             });
         });
 
-    self.app.get('/users/add', isAuthenticatedAdmin,
+    self.app.post('/api/project', isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            res.render('pages/addUser', { user: req.user} );
-        });
 
-    self.app.post('/users/add', isAuthenticatedAdmin, jsonParser,
-        function (req, res) {
-            console.log(req.body.username );
-            console.log(req.body.displayName);
-            console.log(req.body.password);
-            console.log(req.body.role );
-            
-            users.add(
-                req.body.username,
-                req.body.displayName,
-                req.body.password,
-                req.body.admin,
+            console.log( "Project:"+req.body.projectname);
+            projects.add(
+                req.body.projectname,
 
                 function (result) {
                     if (undefined === result) {
                         res.render('pages/error');
                     } else {
-                        res.redirect('/index');
+                        res.redirect('/projects');
                     }
                 });
         });
+
 }
 
 
