@@ -8,7 +8,7 @@ var Technology = function () {
 
 
 Technology.getAll = function(done) {
-    var sql = "SELECT t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+    var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
         " INNER JOIN status s on t.status=s.id";
@@ -33,7 +33,6 @@ Technology.add = function (name, website, category, description, status, done) {
 
     dbhelper.insert( sql, params ,
         function( result ) {
-            console.log( result );
             done( result.rows[0].id );
         },
         function(error) {
@@ -45,7 +44,10 @@ Technology.add = function (name, website, category, description, status, done) {
  * Get a specific technology using its ID
  */
 Technology.getById = function (id, done) {
-    var sql = "SELECT * FROM technologies where id=$1";
+    var sql = "SELECT t.* ,s.name as statusName, c.name as categoryName FROM technologies t" +
+        " inner join status s on t.status=s.id " +
+        " inner join categories c on t.category=c.id " +
+        " where t.id=$1";
 
     dbhelper.query( sql, [id] ,
         function( results ) {

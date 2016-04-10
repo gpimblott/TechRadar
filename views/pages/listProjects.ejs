@@ -35,8 +35,8 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/project/add"  class="btn btn-default">Add project</a>
-                    <a href="/error"  class="btn btn-default">Delete project</a>
+                    <a href="/project/add"  class="btn btn-default">Add</a>
+                    <a href="/error"  class="btn btn-default">Delete</a>
                 </div>
             </div>
             <table id="results"></table>
@@ -61,6 +61,8 @@
         search: true,
         showColumns: true,
         showRefresh: true,
+        showPaginationSwitch: true,
+        pagination: true,
         columns: [{
             field:'state',
             checkbox:'true'

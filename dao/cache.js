@@ -34,6 +34,10 @@ Cache.getCategory = function( value ) {
     return null;
 }
 
+Cache.getStatuses= function() {
+    return statuses;
+}
+
 Cache.getStatus= function( value ) {
 
     for(var i=0;i<statuses.length;i++) {

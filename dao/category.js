@@ -10,6 +10,21 @@ var Category = function () {
 };
 
 
+Category.getAll = function(done) {
+    var sql = "SELECT * " +
+        " FROM categories";
+
+
+    dbhelper.query(sql, [],
+        function (results) {
+            done( results);
+        },
+        function (error) {
+            console.log(error);
+            return done( null );
+        });
+}
+
 Category.getValuesForCategory = function (done) {
     var sql = "SELECT * FROM categories ";
 

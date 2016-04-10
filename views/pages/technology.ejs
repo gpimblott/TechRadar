@@ -21,6 +21,8 @@
         <row>
             <div class="col-md-12">
                 <h1><%= technology.name %></h1>
+                <p><%= technology.categoryname %> - <%= technology.statusname %></p>
+                <hr>
                 <p><%= technology.description %></p>
             </div>
 
@@ -62,11 +64,41 @@
 
     <row>
         <div class="col-md-12" style="margin-top: 10px">
-            <a class="btn btn-default" href="/comments/add/<%= technology.id %>">Add a comment</a>
+            <row>
+                <div class="col-md-2" style="margin-top: 10px">
+            <div class="btn-group btn-block btn-group-lg">
+                <div class="btn-group">
+                    <a class="btn btn-default" href="/comments/add/<%= technology.id %>">Add a comment</a>
+                </div>
+            </div>
+                    </div>
+                <div class="col-md-10" style="margin-top: 10px">
+            <% if( user.admin ) {%>
+            <form class="form-inline">
+                <fieldset class="form-group">
+                    <select class="form-control" value='<%=technology.status%>'>
+                        <% statuses.forEach( function(value) { %>
+                        <option value='<%=value.id%>'
+
+                        <% if (technology.status==value.id ) { %>
+                                selected="selected"
+                                <% } %>
+                        ><%=value.name%></option>
+                        <% }); %>
+                    </select>
+                    <button type="submit" class="btn btn-default">Set Status</button>
+                </fieldset>
+            </form>
+            <% } %>
+                    </div>
+            </row>
         </div>
+
+
     </row>
+
     <row>
-        <div class="col-md-12">
+        <div class="col-md-8">
             <section class="comment-list" style="margin-top: 40px">
 
                 <%
@@ -79,14 +111,15 @@
                         <figure class="thumbnail">
                             <img class="img-responsive"
                                  src="/default-avatar.jpg"/>
-                            <figcaption class="text-center"><%=comment.username%></figcaption>
+                            <figcaption class="text-center"><%= comment.username %></figcaption>
                         </figure>
                     </div>
                     <div class="col-md-10 col-sm-10">
                         <div class="panel panel-default arrow left">
                             <div class="panel-body">
                                 <header class="text-left">
-                                    <div class="comment-user"><i class="fa fa-user"></i> <%=comment.displayname%></div>
+                                    <div class="comment-user"><i class="fa fa-user"></i> <%= comment.displayname %>
+                                    </div>
                                     <time class="comment-date" datetime="16-12-2014 01:05"><i
                                                 class="fa fa-clock-o"></i> <%= comment.date %>
                                     </time>
@@ -104,6 +137,28 @@
 
             </section>
         </div>
+        <div class="col-md-4">
+            <h3 align="center">Votes</h3>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Username</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% votes.forEach( function (vote) { %>
+                <tr>
+                    <td><%= vote.status %></td>
+                    <td><%= vote.username %></td>
+                    <td><%= vote.date %></td>
+                </tr>
+                <% }); %>
+
+                </tbody>
+            </table>
+        </div>
     </row>
 </div>
 
@@ -112,19 +167,19 @@
 <script>
 
 
-var clickBtn = function () {
+    var clickBtn = function () {
 
-    var data = { statusvalue: $(this).val() };
-    console.log(data);
-    $.post( '/api/technology/<%=technology.id%>/vote', data, function(result) {
-        console.log( result );
-    });
-};
+        var data = {statusvalue: $(this).val()};
+        console.log(data);
+        $.post('/api/technology/<%= technology.id %>/vote', data, function (result) {
+            console.log(result);
+        });
+    };
 
-$('#testBtn').click( clickBtn );
-$('#testBtn2').click( clickBtn );
-$('#testBtn3').click( clickBtn );
-$('#testBtn4').click( clickBtn );
+    $('#testBtn').click(clickBtn);
+    $('#testBtn2').click(clickBtn);
+    $('#testBtn3').click(clickBtn);
+    $('#testBtn4').click(clickBtn);
 
 </script>
 

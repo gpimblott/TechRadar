@@ -8,14 +8,21 @@ var Vote = function () {
 
 
 Vote.getVotesForTechnology = function (techid, done) {
-    var sql = "SELECT * FROM votes where technology=$1 ";
-
+    var sql = "SELECT to_char(v.date, 'DD/MM/YY HH:MI') as date,t.name as technology,s.name as status, u.username " +
+                " FROM votes v" +
+                " INNER JOIN technologies t on v.technology=t.id " +
+                " INNER JOIN status s on v.status=s.id " +
+                " INNER JOIN users u on v.userid=u.id " +
+                " WHERE v.technology=$1" +
+                " ORDER BY date desc";
+   
     dbhelper.query(sql, [techid],
         function (results) {
             done(results);
         },
         function (error) {
             console.log(error);
+            done(null);
         });
 }
 
@@ -28,7 +35,6 @@ Vote.add = function (technology, status, userid, done ) {
 
     dbhelper.insert( sql, params ,
         function( result ) {
-            console.log( result );
             done( result.rows[0].id , null);
         },
         function(error) {

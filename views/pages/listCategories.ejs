@@ -22,8 +22,8 @@
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Technologies</h1>
-                <p>Manage defined technologies</p>
+                <h1>Categories</h1>
+                <p>Manage technology categories</p>
             </div>
         </row>
 
@@ -35,7 +35,7 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/technology/add"  class="btn btn-default">Add</a>
+                    <a href="/category/add"  class="btn btn-default">Add</a>
                     <a href="/error"  class="btn btn-default">Delete</a>
                 </div>
             </div>
@@ -53,7 +53,7 @@
 
     $('#results').bootstrapTable( {
         method: 'get',
-        url: '/api/technologies',
+        url: '/api/categories',
         cache: false,
         striped: true,
         escape: true,
@@ -66,7 +66,7 @@
         columns: [{
             field:'state',
             checkbox:'true'
-        }, {
+        },   {
             field: 'id',
             title: 'ID',
             visible: false
@@ -74,31 +74,13 @@
             field: 'name',
             title: 'Name',
             sortable: true,
-            formatter: operateFormatter
         }, {
-            field: 'status',
-            title: 'Status',
-            align: 'center',
-            sortable: true,
-            editable : true
-        }, {
-            field: 'website',
-            title: 'Website',
+            field: 'description',
+            title: 'Description',
             align: 'center',
             sortable: true
-        }, {
-            field: 'category',
-            title: 'Category',
-            align: 'center',
-            sortable: true
-        },]
-    });
-
-    function operateFormatter(value, row, index) {
-        return [
-            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
-        ].join('');
-    }
+        }]
+    })
 
 </script>
 

@@ -120,9 +120,13 @@ Routes.createRoutes = function (self) {
             if (value.length == 0 || value.length > 1) {
                 res.render('pages/error', {user: req.user});
             } else {
-
                 comments.getValuesForTechnology(num, function (comments) {
-                    res.render('pages/technology', {technology: value[0], comments: comments, user: req.user});
+                    votes.getVotesForTechnology( num, function ( votes ) {
+                        var statuses = cache.getStatuses();
+                        res.render('pages/technology', 
+                            {technology: value[0], comments: comments, votes: votes, user: req.user, statuses: statuses});
+                    })
+                    
                 });
             }
         });
@@ -174,6 +178,15 @@ Routes.createRoutes = function (self) {
     self.app.get('/project/add', isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/addProject', {user: req.user});
+        });
+
+    /**
+     * Categories
+     *
+     */
+    self.app.get('/categories', isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/listCategories', {user: req.user});
         });
 
     /*****************************************************
@@ -279,6 +292,10 @@ Routes.createRoutes = function (self) {
                 });
         });
 
+
+    /**
+     * Projects
+     */
     self.app.get('/api/projects', isAuthenticatedAdmin,
         function (req, res) {
             projects.getAll(function (result) {
@@ -302,6 +319,18 @@ Routes.createRoutes = function (self) {
                     }
                 });
         });
+
+    /**
+     * Categories
+     */
+    self.app.get('/api/categories', isAuthenticatedAdmin,
+        function (req, res) {
+            category.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+    
 
 }
 
