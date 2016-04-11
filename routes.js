@@ -201,6 +201,29 @@ Routes.createRoutes = function (self) {
     /**
      * Technology
      */
+    self.app.post('/api/technology/:technology/vote', isAuthenticated, jsonParser, function (req, res) {
+        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            if (error != null) {
+                res.end(JSON.stringify({value: "nok"}));
+            } else {
+                res.end(JSON.stringify({value: "ok", vote: result}));
+            }
+        });
+    });
+
+    /**
+     * Update the status of a technology
+     */
+    self.app.post('/api/technology/:technology/status', isAuthenticatedAdmin, jsonParser, function (req, res) {
+        var status = req.body.statusvalue;
+        var tech = req.params.technology;
+        technology.updateStatus( tech, status, function(result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({value: "ok", vote: result}));
+        })
+
+    });
 
     self.app.get('/api/technologies', isAuthenticatedAdmin, jsonParser, function (req, res) {
 
@@ -220,7 +243,6 @@ Routes.createRoutes = function (self) {
 
 
     self.app.post('/api/technology', isAuthenticated, jsonParser, function (req, res) {
-        console.log("Hello world1");
         var status = cache.getStatus('tbd');
         technology.add(req.body.technologyName,
             req.body.technologyWebsite,
@@ -234,23 +256,6 @@ Routes.createRoutes = function (self) {
                     res.redirect('/technology/' + result);
                 }
             });
-    });
-
-    self.app.post('/api/technology/:technology/vote', isAuthenticated, jsonParser, function (req, res) {
-        console.log("Hello world2");
-        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
-            if (error != null) {
-                res.send({value: "nok"});
-            } else {
-                res.send({value: "ok", vote: result});
-            }
-        });
-    });
-
-    self.app.post('/api/technology/:technology/status', isAuthenticatedAdmin, jsonParser, function (req, res) {
-
-       console.log("Hello world3");
-        console.log(req.params.statusvalue);
     });
 
 
@@ -318,7 +323,6 @@ Routes.createRoutes = function (self) {
     self.app.post('/api/project', isAuthenticatedAdmin, jsonParser,
         function (req, res) {
 
-            console.log( "Project:"+req.body.projectname);
             projects.add(
                 req.body.projectname,
 

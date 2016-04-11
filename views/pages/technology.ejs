@@ -74,7 +74,7 @@
                     </div>
                 <div class="col-md-10" style="margin-top: 10px">
             <% if( user.admin ) {%>
-            <form class="form-inline">
+            <form class="form-inline" action="javascript:void(0);">
                 <fieldset class="form-group">
                     <select class="form-control" id="statusPulldown" value='<%=technology.status%>'>
                         <% statuses.forEach( function(value) { %>
@@ -165,24 +165,27 @@
     var clickBtn = function () {
         var data = {statusvalue: $(this).val()};
         $.post('/api/technology/<%= technology.id %>/vote', data, function (result) {
-            console.log(result);
+            location.reload();
         });
     };
 
-    var statusBtn = function () {
-        var data = {statusvalue: $('#statusPulldown').val()};
-        console.log(data);
-        $.post('/api/technology/<%= technology.id %>/status', data, function (result) {
-            console.log(result);
-        });
-    };
+
 
     $('#testBtn').click(clickBtn);
     $('#testBtn2').click(clickBtn);
     $('#testBtn3').click(clickBtn);
     $('#testBtn4').click(clickBtn);
 
-    if( <%=user.admin%> ) {
+    <% if (user.admin ) { %>
+
+        var statusBtn = function () {
+            var data = { statusvalue:$('#statusPulldown').val(),technology:<%=technology.id%>};
+            // $.post('/api/technology/<%= technology.id %>/status', data, function (result) {
+            $.post('/api/technology/<%=technology.id%>/status', data, function (result) {
+                location.reload();
+            });
+        };
+
         $(function () {
             $('select[value]').each(function () {
                 $(this).val(this.getAttribute("value"));
@@ -191,7 +194,8 @@
 
 
         $('#statusBtn').click(statusBtn);
-    }
+
+   <% } %>
 </script>
 
 </body>

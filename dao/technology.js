@@ -37,6 +37,24 @@ Technology.add = function (name, website, category, description, status, done) {
         },
         function(error) {
             console.log(error);
+            done(null);
+        } );
+}
+
+/**
+ * Add a new technology
+ */
+Technology.updateStatus = function (technology, status, done) {
+    var sql = "UPDATE technologies SET status=$1 where id=$2";
+    var params = [ status, technology ];
+
+    dbhelper.query( sql, params ,
+        function( result ) {
+            done( result );
+        },
+        function(error) {
+            console.log(error);
+            done(null);
         } );
 }
 
@@ -55,6 +73,7 @@ Technology.getById = function (id, done) {
         },
         function( error ) {
             console.log(error);
+            done(null);
         } );
 }
 
@@ -73,6 +92,7 @@ Technology.getValuesForCategory = function (cname, done) {
         },
         function( error ) {
             console.log(error);
+            done(null);
         } );
 }
 
@@ -90,6 +110,7 @@ Technology.search = function (value, done) {
         },
         function( error ) {
             console.log(error);
+            done(null);
         } );
 }
 
