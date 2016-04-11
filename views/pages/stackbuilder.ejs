@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
+    <div class="container">
+        <row>
+            <div class="col-md-12">
+                <h1>Stack Builder</h1>
+                <p>Coming soon</p>
+            </div>
+        </row>
+
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            <h3>Stack Builder</h3>
+            <ul>
+            <li>Associated individual technologies into a 'Stack'.  </li>
+            <li>See the comments and status of each in a single place.</li>
+            <li>See the 'stacks' being used by other projects.</li>
+            <li>Comments on the 'Stack' as a whole</li>
+            </ul>
+            <br>
+            <p>Coming soon...</p>
+        </div>
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<script>
+
+    $('#results').bootstrapTable( {
+        data : [],
+        cache: false,
+        striped: true,
+        escape: true,
+        idField: 'id',
+        columns: [{
+            field: 'id',
+            title: 'Item ID',
+            visible: false
+        }, {
+            field: 'name',
+            title: 'Technology',
+            sortable: true,
+            formatter: operateFormatter
+        }, {
+            field: 'status',
+            title: 'Status',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'category',
+            title: 'Category',
+            align: 'center',
+            sortable: true
+        }]
+    })
+
+
+    window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+            alert('You click like action, row: ' + JSON.stringify(row));
+        },
+        'click .remove': function (e, value, row, index) {
+            $table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+            });
+        }
+    };
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
+        ].join('');
+    }
+
+    $('#search-field').keypress(function(event){
+        if(event.keyCode == 13){
+            $('#search-btn').click();
+        }
+    });
+
+    var clickBtn = function () {
+        var parameters = { search: $('#search-field').val() };
+        $.get( '/api/technology',parameters, function(data) {
+            $('#results').bootstrapTable( 'load' , data );
+
+        });
+    };
+
+    $('#search-btn').click( clickBtn );
+
+</script>
+
+</body>
+</html>

@@ -79,6 +79,11 @@ Routes.createRoutes = function (self) {
         res.redirect('/login');
     });
 
+
+    self.app.get('/stackbuilder', isAuthenticated, function (req, res) {
+            res.render('pages/stackbuilder', { user: req.user});
+    });
+
     /**
      * Main category 'radar' pages
      */
@@ -215,7 +220,7 @@ Routes.createRoutes = function (self) {
 
 
     self.app.post('/api/technology', isAuthenticated, jsonParser, function (req, res) {
-
+        console.log("Hello world1");
         var status = cache.getStatus('tbd');
         technology.add(req.body.technologyName,
             req.body.technologyWebsite,
@@ -232,7 +237,7 @@ Routes.createRoutes = function (self) {
     });
 
     self.app.post('/api/technology/:technology/vote', isAuthenticated, jsonParser, function (req, res) {
-
+        console.log("Hello world2");
         votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
             if (error != null) {
                 res.send({value: "nok"});
@@ -240,6 +245,12 @@ Routes.createRoutes = function (self) {
                 res.send({value: "ok", vote: result});
             }
         });
+    });
+
+    self.app.post('/api/technology/:technology/status', isAuthenticatedAdmin, jsonParser, function (req, res) {
+
+       console.log("Hello world3");
+        console.log(req.params.statusvalue);
     });
 
 
