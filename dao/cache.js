@@ -10,11 +10,11 @@ var Cache = function () {
 
 
 Cache.refresh = function () {
-    categoryDao.getValuesForCategory( function (results ) {
+    categoryDao.getAll( function (results ) {
         categories = results;
     });
     
-    statusDao.getValuesForCategory( function (results ) {
+    statusDao.getAll( function (results ) {
         statuses = results;
     })
 }

@@ -13,22 +13,8 @@ var jsonParser = bodyParser.json();
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
-/**
- * Check if the users is authenticated
- */
-var isAuthenticated = function (req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-    req.session.redirect_to = req.url;
-    res.redirect('/login');
-}
+var security = require('./utils/security.js');
 
-var isAuthenticatedAdmin = function (req, res, next) {
-    if (req.isAuthenticated() && req.user.admin)
-        return next();
-    req.session.redirect_to = req.url;
-    res.redirect('/login');
-}
 
 var Routes = function () {
 };
@@ -37,7 +23,7 @@ var Routes = function () {
  */
 Routes.createRoutes = function (self) {
 
-    self.app.get('/', isAuthenticated,
+    self.app.get('/', security.isAuthenticated,
         function (req, res) {
             var url = req.session.redirect_to;
             if (url != undefined) {
@@ -49,7 +35,7 @@ Routes.createRoutes = function (self) {
             }
         });
 
-    self.app.get('/error', isAuthenticated,
+    self.app.get('/error', security.isAuthenticated,
         function (req, res) {
             res.render('pages/error');
         });
@@ -80,17 +66,17 @@ Routes.createRoutes = function (self) {
     });
 
 
-    self.app.get('/stackbuilder', isAuthenticated, function (req, res) {
-            res.render('pages/stackbuilder', { user: req.user});
+    self.app.get('/stackbuilder', security.isAuthenticated, function (req, res) {
+        res.render('pages/stackbuilder', {user: req.user});
     });
 
     /**
      * Main category 'radar' pages
      */
-    self.app.get('/radar/:category', isAuthenticated, function (req, res) {
+    self.app.get('/radar/:category', security.isAuthenticated, function (req, res) {
 
         var cname = replaceAll(req.params.category, '-', ' ');
-        technology.getValuesForCategory(cname, function (values) {
+        technology.getAllForCategory(cname, function (values) {
 
             if (values.length == 0) {
                 res.render('pages/error');
@@ -106,33 +92,37 @@ Routes.createRoutes = function (self) {
     /**
      * Technology pages
      */
-    self.app.get('/technologies', isAuthenticatedAdmin, jsonParser, function (req, res) {
+    self.app.get('/technologies', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
         res.render('pages/listTechnologies', {user: req.user});
     });
 
-    self.app.get('/technology/search', isAuthenticated, jsonParser, function (req, res) {
+    self.app.get('/technology/search', security.isAuthenticated, jsonParser, function (req, res) {
         res.render('pages/search', {user: req.user});
     });
 
-    self.app.get('/technology/add', isAuthenticated, function (req, res) {
+    self.app.get('/technology/add', security.isAuthenticated, function (req, res) {
         res.render('pages/addTechnology', {categories: cache.getCategories(), user: req.user});
     });
 
 
-    self.app.get('/technology/:id', isAuthenticated, function (req, res) {
+    self.app.get('/technology/:id', security.isAuthenticated, function (req, res) {
         var num = req.params.id;
         technology.getById(num, function (value) {
             if (value.length == 0 || value.length > 1) {
                 res.render('pages/error', {user: req.user});
             } else {
-                comments.getValuesForTechnology(num, function (comments) {
-                    votes.getVotesForTechnology( num, function ( votes ) {
-                        var statuses = cache.getStatuses();
-                        res.render('pages/technology', 
-                            {technology: value[0], comments: comments, votes: votes, user: req.user, statuses: statuses});
-                    })
-                    
-                });
+                comments.getForTechnology(num, function (comments) {
+                    var statuses = cache.getStatuses();
+                    res.render('pages/technology',
+                        {
+                            technology: value[0],
+                            comments: comments,
+                            user: req.user,
+                            statuses: statuses
+                        });
+                })
+
+            
             }
         });
     });
@@ -141,7 +131,7 @@ Routes.createRoutes = function (self) {
     /**
      * Comments
      */
-    self.app.get('/comments/add/:id', isAuthenticated,
+    self.app.get('/comments/add/:id', security.isAuthenticated,
         function (req, res) {
             var num = req.params.id;
             technology.getById(num, function (value) {
@@ -159,13 +149,13 @@ Routes.createRoutes = function (self) {
      * Users
      *
      */
-    self.app.get('/users', isAuthenticatedAdmin,
+    self.app.get('/users', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/listUsers', {user: req.user});
         });
 
 
-    self.app.get('/user/add', isAuthenticatedAdmin,
+    self.app.get('/user/add', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/addUser', {user: req.user});
         });
@@ -175,12 +165,12 @@ Routes.createRoutes = function (self) {
      * Projects
      *
      */
-    self.app.get('/projects', isAuthenticatedAdmin,
+    self.app.get('/projects', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/listProjects', {user: req.user});
         });
 
-    self.app.get('/project/add', isAuthenticatedAdmin,
+    self.app.get('/project/add', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/addProject', {user: req.user});
         });
@@ -189,169 +179,15 @@ Routes.createRoutes = function (self) {
      * Categories
      *
      */
-    self.app.get('/categories', isAuthenticatedAdmin,
+    self.app.get('/categories', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/listCategories', {user: req.user});
         });
 
-    /*****************************************************
-     * API Interfaces
-     ******************************************************/
 
-    /**
-     * Technology
-     */
-    self.app.post('/api/technology/:technology/vote', isAuthenticated, jsonParser, function (req, res) {
-        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            if (error != null) {
-                res.end(JSON.stringify({value: "nok"}));
-            } else {
-                res.end(JSON.stringify({value: "ok", vote: result}));
-            }
-        });
-    });
-
-    /**
-     * Update the status of a technology
-     */
-    self.app.post('/api/technology/:technology/status', isAuthenticatedAdmin, jsonParser, function (req, res) {
-        var status = req.body.statusvalue;
-        var tech = req.params.technology;
-        technology.updateStatus( tech, status, function(result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({value: "ok", vote: result}));
-        })
-
-    });
-
-    self.app.get('/api/technologies', isAuthenticatedAdmin, jsonParser, function (req, res) {
-
-        technology.getAll( function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-    });
-
-    self.app.get('/api/technology', isAuthenticated, jsonParser, function (req, res) {
-
-        technology.search(req.query.search, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-    });
-
-
-    self.app.post('/api/technology', isAuthenticated, jsonParser, function (req, res) {
-        var status = cache.getStatus('tbd');
-        technology.add(req.body.technologyName,
-            req.body.technologyWebsite,
-            req.body.technologyCategory,
-            req.body.technologyDescription, status.id,
-            function (result) {
-
-                if (undefined === result) {
-                    res.render('pages/error');
-                } else {
-                    res.redirect('/technology/' + result);
-                }
-            });
-    });
-
-
-    /**
-     * Users
-     */
-    self.app.post('/api/user', isAuthenticatedAdmin, jsonParser,
-        function (req, res) {
-
-            users.add(
-                req.body.username,
-                req.body.displayName,
-                req.body.password,
-                req.body.role,
-
-                function (result) {
-                    if (undefined === result) {
-                        res.render('pages/error');
-                    } else {
-                        res.redirect('/users');
-                    }
-                });
-        });
-
-    self.app.get('/api/users', isAuthenticatedAdmin,
-        function (req, res) {
-            users.getAll(function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            });
-        });
-
-    /**
-     * Comments
-     */
-    self.app.post('/api/comments', isAuthenticated, jsonParser,
-        function (req, res) {
-
-            comments.add(
-                req.body.technology,
-                req.body.comment,
-                req.user.id,
-
-                function (result) {
-                    if (undefined === result) {
-                        res.render('pages/error');
-                    } else {
-                        res.redirect('/technology/' + req.body.technology);
-                    }
-                });
-        });
-
-
-    /**
-     * Projects
-     */
-    self.app.get('/api/projects', isAuthenticatedAdmin,
-        function (req, res) {
-            projects.getAll(function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            });
-        });
-
-    self.app.post('/api/project', isAuthenticatedAdmin, jsonParser,
-        function (req, res) {
-
-            projects.add(
-                req.body.projectname,
-
-                function (result) {
-                    if (undefined === result) {
-                        res.render('pages/error');
-                    } else {
-                        res.redirect('/projects');
-                    }
-                });
-        });
-
-    /**
-     * Categories
-     */
-    self.app.get('/api/categories', isAuthenticatedAdmin,
-        function (req, res) {
-            category.getAll(function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            });
-        });
-    
-
-}
-
-
-function replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find, 'g'), replace);
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
 }
 
 module.exports = Routes;
