@@ -1,6 +1,6 @@
 var db = require('../config/dbConfig.js');
 var pg = require('pg');
-var dbhelper = require('../dao/dbhelper.js');
+var dbhelper = require('../utils/dbhelper.js');
 
 /**
  * Database routines for 'Category's'
@@ -25,7 +25,7 @@ Category.getAll = function(done) {
         });
 }
 
-Category.getValuesForCategory = function (done) {
+Category.getAll = function (done) {
     var sql = "SELECT * FROM categories ";
 
     dbhelper.query(sql, [],

@@ -16,6 +16,7 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
 var routes = require('./routes.js');
+var apiroutes = require('./api-routes.js');
 
 
 passport.use(new Strategy(
@@ -138,6 +139,7 @@ var TechRadar = function () {
 
         // Create all the routes and refresh the cache
         routes.createRoutes(self);
+        apiroutes.createRoutes(self);
     };
 
     /**

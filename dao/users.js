@@ -1,6 +1,6 @@
 var db = require('../config/dbConfig.js');
 var pg = require('pg');
-var dbhelper = require('../dao/dbhelper.js');
+var dbhelper = require('../utils/dbhelper.js');
 
 
 exports.getAll = function(done) {

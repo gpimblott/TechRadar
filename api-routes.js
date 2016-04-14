@@ -1,0 +1,224 @@
+var cache = require('./dao/cache.js');
+var users = require('./dao/users');
+var technology = require('./dao/technology.js');
+var category = require('./dao/category.js');
+var comments = require('./dao/comments.js');
+var projects = require('./dao/projects.js');
+var votes = require('./dao/vote.js');
+var status = require('./dao/status.js');
+
+
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json();
+
+var passport = require('passport');
+var strategy = require('passport-local').Strategy;
+
+var security = require('./utils/security.js');
+
+
+var ApiRoutes = function () {
+};
+/**
+ *  Create the routing table entries + handlers for the application.
+ */
+
+/*****************************************************
+ * API Interfaces
+ ******************************************************/
+ApiRoutes.createRoutes = function (self) {
+
+    /**
+     * Technology
+     */
+    self.app.post('/api/technology/:technology/vote', security.isAuthenticated, jsonParser, function (req, res) {
+        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            if (error != null) {
+                res.end(JSON.stringify({value: "nok"}));
+            } else {
+                res.end(JSON.stringify({value: "ok", vote: result}));
+            }
+        });
+    });
+
+
+
+    /**
+     * Get the status of a technology
+     */
+    self.app.get('/api/technology/:technology/status', jsonParser, function (req, res) {
+        var tech = req.params.technology;
+        var limit = req.query.limit;
+        status.getHistoryForTechnology( tech , limit, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+
+    });
+
+    /**
+     * Update the status of a technology
+     */
+    self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+        var status = req.body.statusvalue;
+        var tech = req.params.technology;
+        technology.updateStatus(tech, status, req.user.id, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({value: "ok", vote: result}));
+        })
+
+    });
+
+    self.app.get('/api/technologies', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+
+        technology.getAll(function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+    });
+
+    self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
+
+        technology.search(req.query.search, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+    });
+
+
+    self.app.post('/api/technology', security.isAuthenticated, jsonParser,
+        function (req, res) {
+
+            technology.add(req.body.technologyName,
+                req.body.technologyWebsite,
+                req.body.technologyCategory,
+                req.body.technologyDescription,
+                function (result) {
+
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/technology/' + result);
+                    }
+                });
+        });
+
+    /**
+     * Votes
+     */
+    self.app.get('/api/votes/:technology', security.isAuthenticated,
+        function (req, res) {
+            var techid = req.params.technology;
+            var limit = req.query.limit;
+            votes.getVotesForTechnology(techid, limit, function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+
+
+    /**
+     * Users
+     */
+    self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+
+            users.add(
+                req.body.username,
+                req.body.displayName,
+                req.body.password,
+                req.body.role,
+
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/users');
+                    }
+                });
+        });
+
+    self.app.get('/api/users', security.isAuthenticatedAdmin,
+        function (req, res) {
+            users.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+
+    /**
+     * Comments
+     */
+
+    self.app.get('/api/comments', security.isAuthenticated,
+        function (req, res) {
+            var techid = req.query.technologyid;
+            comments.getForTechnology(techid, function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+    
+    self.app.post('/api/comments', security.isAuthenticated, jsonParser,
+        function (req, res) {
+
+            comments.add(
+                req.body.technology,
+                req.body.comment,
+                req.user.id,
+
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/technology/' + req.body.technology);
+                    }
+                });
+        });
+
+
+    /**
+     * Projects
+     */
+    self.app.get('/api/projects', security.isAuthenticatedAdmin,
+        function (req, res) {
+            projects.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+    self.app.post('/api/project', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+
+            projects.add(
+                req.body.projectname,
+
+                function (result) {
+                    if (undefined === result) {
+                        res.render('pages/error');
+                    } else {
+                        res.redirect('/projects');
+                    }
+                });
+        });
+
+    /**
+     * Categories
+     */
+    self.app.get('/api/categories', security.isAuthenticatedAdmin,
+        function (req, res) {
+            category.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+
+}
+
+
+module.exports = ApiRoutes;

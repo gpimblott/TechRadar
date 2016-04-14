@@ -1,6 +1,6 @@
 var db = require('../config/dbConfig.js');
 var pg = require('pg');
-var dbhelper = require('../dao/dbhelper.js');
+var dbhelper = require('../utils/dbhelper.js');
 
 /**
  * Database routines for 'Comments'
@@ -14,7 +14,7 @@ var Comments = function () {
  * @param technology
  * @param done
  */
-Comments.getValuesForTechnology = function (technology, done) {
+Comments.getForTechnology = function (technology, done) {
     var sql = "SELECT comments.*, users.displayName, users.username FROM comments " +
         " inner join users on comments.userid=users.id" +
         " where technology=$1 order by date desc";

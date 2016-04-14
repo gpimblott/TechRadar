@@ -35,27 +35,31 @@ var statements = [
     "INSERT INTO projects (name) VALUES ('DVSA'), ('ONS'), ('Home Office'), ('DVLA'), ('DEFRA'), ('MoJ') ",
 
 
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Scala' , 'Its like java but with hipster syntax' , 2,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Drop Wizard' , 'REST Services ok' , 2,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Hadoop' , 'Its java ok we all know about it' , 2,2)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Ember' , 'Its java ok we all know about it' , 2,3)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Spring Boot' , 'Its spring but easy' , 2,3)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('On Hold Tech' , 'Something thats on hold' , 2,4)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Scala' , 'Its like java but with hipster syntax' , 2 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Drop Wizard' , 'REST Services ok' , 2 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Hadoop' , 'Its java ok we all know about it' , 2)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Ember' , 'Its java ok we all know about it' , 2)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Spring Boot' , 'Its spring but easy' , 2)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('On Hold Tech' , 'Something thats on hold' , 2)",
 
 
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Docker' , 'Hipster container tech' , 1,3)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Mochito' , 'Java mocking library for testing' , 1,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Git' , 'Code management/repository' , 1,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Liquibase' , 'Database management' , 1,1)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Docker' , 'Hipster container tech' , 1 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Mochito' , 'Java mocking library for testing' , 1)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Git' , 'Code management/repository' , 1)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Liquibase' , 'Database management' , 1)",
 
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Kubernetes' , 'Hipster container management tech' , 3,3)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('RHEL 7' , 'Java mocking library for testing' , 3,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('AWS' , 'IaaS' , 3,1)",
-    "INSERT INTO technologies ( name , description , category, status ) VALUES ('Java EE' , 'The big bad bits of java' , 3,0)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Kubernetes' , 'Hipster container management tech' , 3 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('RHEL 7' , 'Java mocking library for testing' , 3 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('AWS' , 'IaaS' , 3 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The big bad bits of java' , 3 )",
 
  
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) "
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('davey' , 'letmein' , 'Davey McGlade', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('darren' , 'letmein' , 'Darren Martin', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('pater' , 'letmein' , 'Peter Campbell', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('rory' , 'letmein' , 'Rory', 0) "
 
 ];
 
