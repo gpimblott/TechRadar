@@ -41,6 +41,14 @@
                 <%
                 var heading="";
 
+                if( technologies.length==0) {
+                %>
+
+                <li class="list-group-item active">No technologies found</li>
+
+                <%
+                }
+
                 for (var i = 0, len = technologies.length; i < len; i++) {
                     var technology = technologies[i];
 

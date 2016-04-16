@@ -10,6 +10,8 @@
 
     <% include ../partials/head.ejs %>
 
+    <link href="/timeline.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body>
@@ -19,7 +21,7 @@
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
         <h1>Tech Radar</h1>
-        <p>Practical community technology management</p>
+        <p>Community technology management</p>
     </div>
 </div>
 
@@ -38,105 +40,70 @@
     </div>
 
 
-    <div class="row">
-        <div class="col-md-12" align="center" style="padding-top: 40px;">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default" id="addtechnology">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Add a technology</h3>
+    <ul class="timeline">
+        <li id="addtechnology">
+            <div class="timeline-badge"><i class="glyphicon glyphicon-plus"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Add a technology</h4>
                 </div>
-                <div class="panel-body">
+                <div class="timeline-body">
                     Anyone can add a technology to the database, the more the merrier.
                     Once added anyone can comment and vote on its status.
-                    Should it be 'Adopted' , 'Assessed' or 'Avoided' ? You decide...
+                    Should it be 'Adopted' or 'Avoided' ? You decide...
                 </div>
             </div>
-        </div>
-      </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" align="center">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default" id>
-                <div class="panel-heading">
-                    <h3 class="panel-title">Comment</h3>
+        </li>
+        <li class="timeline-inverted" id="comment">
+            <div class="timeline-badge warning"><i class="glyphicon glyphicon-comment"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Comment</h4>
                 </div>
-                <div class="panel-body">
-                    Add a comment or experience to a technology to help the assessment as to how successful it's use has
-                    been.
-                    This should include guidance,hints,tips and pitfalls of the technology for future projects.
+                <div class="timeline-body">
+                    <p> Add a comment or experience to a technology to help the assessment as to how successful it's use has
+                        been.
+                        This should include guidance,hints,tips and pitfalls of the technology for future projects.</p>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" align="center">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/>
-        </div>
-    </div>
-
-
-    <div class="row" id="vote">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Vote</h3>
+        </li>
+        <li id="vote">
+            <div class="timeline-badge danger"><i class="glyphicon glyphicon-ok"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Vote</h4>
                 </div>
-                <div class="panel-body">
-                    Vote whether you think each technology should be 'Adopted', 'Assessed' or 'Avoided'.
-                    The votes and comments can then be assessed by the steering group.
+                <div class="timeline-body">
+                    <p> Vote whether you think each technology should be 'Adopted' or 'Avoided'.
+                        The votes and comments can then be assessed.</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" align="center">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/>
-        </div>
-    </div>
-
-    <div class="row" id="vote">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Manage</h3>
+        </li>
+        <li class="timeline-inverted" id="manage">
+            <div class="timeline-badge danger"><i class="glyphicon glyphicon-briefcase"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Manage</h4>
                 </div>
-                <div class="panel-body">
-                    Manage the status of each technology based on the communities response ('Adopted', 'Assessed' or 'Avoided').
-                    The results are reflected in the dynamic reports.
+                <div class="timeline-body">
+                    <p> Manage the status of each technology based on the communities response.
+                        The results are reflected in the dynamic reports.</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" align="center">
-            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/>
-        </div>
-    </div>
-
-    <div class="row"  id="reports">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Reports</h3>
+        </li>
+        <li id="reports">
+            <div class="timeline-badge info"><i class="glyphicon glyphicon-list-alt"></i></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Reports</h4>
                 </div>
-                <div class="panel-body">
-                    Results of the voting and comments. Displays simple a table and chart showing whether individual
-                    technologies should be adopted, assessed or avoided.
+                <div class="timeline-body">
+                    <p>Results of the voting and comments. View simple a tables and charts showing the communities response.</p>
                 </div>
             </div>
-        </div>
-    </div>
+        </li>
+    </ul>
+
 </div><!-- /.container -->
 
 <% include ../partials/footer.ejs %>

@@ -23,6 +23,10 @@ a {
     color: #6f5499;
 }
 
+.table td, .table th {
+    text-align: center;
+}
+
 .site-header, .site-masthead {
     background-color: #6f5499;
     background-image: linear-gradient(to bottom, #563d7c 0px, #6f5499 100%);
