@@ -9,13 +9,15 @@ var Cache = function () {
 };
 
 
-Cache.refresh = function () {
+Cache.refresh = function ( app ) {
     categoryDao.getAll( function (results ) {
         categories = results;
+        app.locals.categories = results;
     });
     
     statusDao.getAll( function (results ) {
         statuses = results;
+        app.locals.statuses = results;
     })
 }
 

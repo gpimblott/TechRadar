@@ -75,17 +75,17 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/radar/:category', security.isAuthenticated, function (req, res) {
 
-        var cname = replaceAll(req.params.category, '-', ' ');
+        var cname = decodeURI(req.params.category);
         technology.getAllForCategory(cname, function (values) {
 
-            if (values.length == 0) {
-                res.render('pages/error');
-            } else {
+            // if (values.length == 0) {
+            //     res.render('pages/error');
+            // } else {
 
-                var category = cache.getCategory(values[0].category);
+                var category = cache.getCategory(cname);
 
                 res.render('pages/radar', {category: category, technologies: values, user: req.user});
-            }
+           // }
         });
     });
 

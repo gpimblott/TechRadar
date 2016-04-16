@@ -17,10 +17,11 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/radar/tools">Tools</a></li>
-                        <li><a href="/radar/platforms">Platforms</a></li>
-                        <li><a href="/radar/languages-and-frameworks">Languages & Frameworks</a></li>
-                        <li><a href="/radar/infrastructure">Infrastructure</a></li>
+                        <% categories.forEach( function( category ) {
+                            var url = encodeURI('/radar/' + category.name ).toLowerCase(); %>
+                            <li><a href="<%=url%>"><%=category.name%></a></li>
+                        <% }); %>
+
                     </ul>
                 </li>
                 <li class="dropdown">

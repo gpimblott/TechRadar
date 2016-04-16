@@ -58,7 +58,7 @@ var statements = [
     "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('davey' , 'letmein' , 'Davey McGlade', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('darren' , 'letmein' , 'Darren Martin', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('pater' , 'letmein' , 'Peter Campbell', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('peter' , 'letmein' , 'Peter Campbell', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('rory' , 'letmein' , 'Rory', 0) "
 
 ];

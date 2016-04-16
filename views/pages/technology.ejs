@@ -30,30 +30,19 @@
         <row>
             <div class="col-md-12">
                 <div class="btn-group-justified btn-block btn-group-lg">
+                    <% statuses.forEach( function(status) {
+
+                        if (status.id == 0) {
+                            return;
+                        }
+                    %>
                     <div class="btn-group">
-                        <button type="button" id="testBtn" value="1"
+                        <button type="button" id="voteBtn_<%= status.id %>" value="<%= status.id %>"
                                 class="btn   btn-success glyphicon glyphicon-thumbs-up"
-                                data-loading-text=" ... ">Adopt
-                        </button>
+                                data-loading-text=" ... "><%= status.name %></button>
                     </div>
-                    <div class="btn-group">
-                        <button type="button" id="testBtn2" value="2"
-                                class="btn  btn-success glyphicon glyphicon-thumbs-up"
-                                data-loading-text=" ... ">Trial
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" id="testBtn3" value="3"
-                                class="btn btn-success glyphicon glyphicon-thumbs-up"
-                                data-loading-text=" ... ">Assess
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" id="testBtn4" value="5"
-                                class="btn  btn-success glyphicon glyphicon-thumbs-up"
-                                data-loading-text=" ... ">Avoid
-                        </button>
-                    </div>
+                    <% }); %>
+
                 </div>
             </div>
         </row>
@@ -133,22 +122,30 @@
             </section>
         </div>
         <div class="col-md-4">
-            <h4 align="center">Lastest votes</h4>
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Username</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <tbody id="votes">
 
-                </tbody>
-            </table>
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Lastest votes cast</div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Username</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="votes">
+
+                    </tbody>
+                </table>
+            </div>
             <br>
-            <h4 align="center">Latest status changes</h4>
-            <table class="table table-condensed">
+
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Lastest status changes</div>
+
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Status</th>
@@ -160,6 +157,7 @@
 
                 </tbody>
             </table>
+                </div>
         </div>
     </row>
 </div>
@@ -170,7 +168,7 @@
 
     var data = {limit: 5};
 
-    var refreshVotes= function () {
+    var refreshVotes = function () {
         $.get('/api/votes/<%= technology.id %>', data, function (result) {
 
             var output = "";
@@ -211,10 +209,9 @@
     };
 
 
-    $('#testBtn').click(clickBtn);
-    $('#testBtn2').click(clickBtn);
-    $('#testBtn3').click(clickBtn);
-    $('#testBtn4').click(clickBtn);
+    <% statuses.forEach( function(status) { %>
+    $('#voteBtn_<%= status.id %>').click(clickBtn);
+    <% }); %>
 
     <% if (user.admin ) { %>
 

@@ -41,12 +41,15 @@ var statements = [
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
 
-    "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Assess'), (4,'Hold') , (5, 'Avoid')",
+    "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Assess') , (4, 'Avoid')",
     "INSERT INTO categories (id , name, description) VALUES " +
-                "(1,'Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
-                "(2,'Languages and Frameworks','Languages and highlevel libraries for building application and systems')," +
+                "(1,'Development Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
+                "(2,'Languages and Frameworks','Languages and high-level libraries for developing application and systems')," +
                 "(3,'Platforms' , 'A platform is a group of technologies that are used as a base upon which other applications, processes or technologies are developed.')," +
-                "(4,'Infrastructure' , 'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services') ",
+                "(4,'Infrastructure' , " +
+                        "'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services'), " +
+                "(5, 'Testing Tools','Tools and libraries that support testing of systems and infrastructure'), " +
+                "(6, 'Security Tools' , 'Specialist tools and libraries to support the securing of infrastructure and applications ') "
 
     ];
 

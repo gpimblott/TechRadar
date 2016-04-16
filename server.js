@@ -135,11 +135,14 @@ var TechRadar = function () {
         self.app.use(passport.session());
 
         // update the cache
-        cache.refresh();
+        cache.refresh(self.app);
+
 
         // Create all the routes and refresh the cache
         routes.createRoutes(self);
         apiroutes.createRoutes(self);
+
+
     };
 
     /**

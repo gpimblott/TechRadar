@@ -37,7 +37,6 @@ Comments.add = function (technology, text , userid, done) {
 
     dbhelper.insert( sql, params ,
         function( result ) {
-            console.log( result );
             done( result.rows[0].id );
         },
         function(error) {
