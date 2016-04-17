@@ -34,7 +34,7 @@ var statements = [
             " status INTEGER references status(id) , userid INTEGER references users(id), UNIQUE( technology,status,userid)," +
             " date TIMESTAMP without time zone default (now() at time zone 'utc') )",
 
-    "CREATE TABLE IF NOT EXISTS tech_status_link( id SERIAL PRIMARY KEY, statusid INTEGER references status(id) , userid INTEGER references users(id)," +
+    "CREATE TABLE IF NOT EXISTS tech_status_link( id SERIAL PRIMARY KEY, reason TEXT , statusid INTEGER references status(id) , userid INTEGER references users(id)," +
             "technologyid INTEGER references technologies(id)," +
             "date TIMESTAMP without time zone default (now() at time zone 'utc'))",
 

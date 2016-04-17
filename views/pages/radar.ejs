@@ -27,13 +27,21 @@
 <% include ../partials/menu.ejs %>
 
 
-<div tabindex="-1" id="content" class="site-header">
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
         <h1><%=category.name %></h1>
         <p><%=category.description%></p>
     </div>
 </div>
+
 <div class="container bs-docs-container">
+
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active"><%=category.name%></li>
+        </ol>
+    </div>
 
     <div class="row" style="padding-top: 20px;">
         <div class="col-sm-6" >

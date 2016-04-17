@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../../partials/head.ejs %>
+
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
+
+</head>
+
+<body>
+<%
+    getBreadcrumb = function() {
+        return technology.categoryname.toLowerCase();
+    }
+%>
+
+<% include ../../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
+    <div class="container">
+        <row>
+            <div class="col-md-12">
+                <h1><%= technology.name %></h1>
+                <p>Current status : <%= technology.statusname%></p>
+
+            </div>
+        </row>
+
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+    <div class="col-md-10 col-md-offset-1">
+        <ol class="breadcrumb" style="margin-bottom: 5px;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
+            <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
+            <li class="active">status</li>
+        </ol>
+    </div>
+    <row>
+        <div class="col-md-12" style="margin-top: 10px">
+            <row>
+                <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
+                    <% if( user.admin ) { %>
+                    <form  action="javascript:void(0);">
+                        <fieldset class="form-group">
+                            <label for="newStatusLabel">New status for <%=technology.name%></label>
+                            <select class="form-control" id="statusPulldown" value='<%= technology.status %>'>
+                                <% statuses.forEach( function(value) { %>
+                                <option value='<%= value.id %>'><%= value.name %></option>
+                                <% }); %>
+                            </select>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="reasonTestArea">Reason for status change</label>
+                            <textarea class="form-control" id="reasonTextArea" rows="3"></textarea>
+                        </fieldset>
+                        <button type="submit" id="statusBtn" class="btn btn-default">Set new status</button>
+                    </form>
+                    <% } %>
+                </div>
+            </row>
+        </div>
+    </row>
+    <row>
+        <div class="col-md-10 col-md-offset-1">
+            <hr>
+            <table id="results"></table>
+        </div>
+    </row>
+
+
+</div>
+
+<% include ../../partials/footer.ejs %>
+
+
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script>
+
+    $('#results').bootstrapTable( {
+        method: 'get',
+        url: '/api/technology/<%=technology.id%>/status/',
+        cache: false,
+        striped: true,
+        escape: true,
+        idField: 'id',
+        search: false,
+        showColumns: true,
+        showRefresh: true,
+        showPaginationSwitch: true,
+        pagination: true,
+        columns: [ {
+            field: 'id',
+            title: 'ID',
+            visible: false
+        }, {
+            field: 'name',
+            title: 'Name',
+            align: 'center',
+            sortable: true,
+        }, {
+            field: 'username',
+            title: 'Username',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'date',
+            title: 'Date',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'reason',
+            title: 'Reason',
+        }]
+    });
+
+
+
+    <% if (user.admin ) { %>
+
+    var statusBtn = function () {
+        var data = {statusvalue: $('#statusPulldown').val(), reason: $('#reasonTextArea').val(), technology:<%= technology.id %>};
+        $.post('/api/technology/<%= technology.id %>/status', data, function (result) {
+            location.reload()
+        });
+    };
+
+    $(function () {
+        $('select[value]').each(function () {
+            $(this).val(this.getAttribute("value"));
+        });
+    });
+
+
+
+    $('#statusBtn').click(statusBtn);
+
+    <% } %>
+
+</script>
+
+</body>
+</html>

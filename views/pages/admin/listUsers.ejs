@@ -8,22 +8,23 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../partials/head.ejs %>
+    <% include ../../partials/head.ejs %>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
 </head>
 
 <body>
 
-<% include ../partials/menu.ejs %>
+<% include ../../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Projects</h1>
-                <p>Manage defined projects</p>
+                <h1>Users</h1>
+                <p>Manage system users</p>
             </div>
         </row>
 
@@ -35,7 +36,7 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/project/add"  class="btn btn-default">Add</a>
+                    <a href="/user/add"  class="btn btn-default">Add</a>
                     <a href="/error"  class="btn btn-default">Delete</a>
                 </div>
             </div>
@@ -45,15 +46,14 @@
 
 </div>
 
-<% include ../partials/footer.ejs %>
+<% include ../../partials/footer.ejs %>
 
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
     $('#results').bootstrapTable( {
         method: 'get',
-        url: '/api/projects',
+        url: '/api/users',
         cache: false,
         striped: true,
         escape: true,
@@ -71,11 +71,48 @@
             title: 'ID',
             visible: false
         }, {
-            field: 'name',
-            title: 'Name',
+            field: 'username',
+            title: 'Username',
             sortable: true,
+        }, {
+            field: 'displayname',
+            title: 'Full Name',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'rolename',
+            title: 'Role',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'isadmin',
+            title: 'Admin',
+            align: 'center',
+            sortable: true,
+            formatter: adminFormatter
         }]
     })
+
+
+    function adminFormatter(value, row, index) {
+
+        var column = [];
+        if( row['isadmin']) {
+            column = [ "<span class='glyphicon glyphicon-ok' aria-hidden='true'/>"]
+        } else {
+            column = [ "<span class='glyphicon glyphicon-remove' aria-hidden='true'/>"]
+        }
+        return column;
+    }
+
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a href="/technology/view/' + row['id'] + '" target="_blank">' + value + '</a>'
+        ].join('');
+    }
+
+
 
 </script>
 
