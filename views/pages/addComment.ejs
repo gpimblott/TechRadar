@@ -15,6 +15,11 @@
 <body>
 
 <% include ../partials/menu.ejs %>
+<%
+getBreadcrumb = function() {
+    return technology.categoryname.toLowerCase();
+}
+%>
 
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
@@ -25,10 +30,18 @@
     </div>
 </div>
 
-<div class="container bs-docs-container">
+<div class="container bs-docs-container" style="padding-top: 10px;">
+    <div class="col-md-8 col-md-offset-2">
+        <ol class="breadcrumb" style="margin-bottom: 5px;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
+            <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
+            <li class="active">Comment</li>
+        </ol>
+    </div>
 
     <div class="row">
-        <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
+        <div class="col-md-8 col-md-offset-2" style="padding-top: 10px;">
             <form action="/api/comments" method="POST">
                 <input type="hidden" name="technology" value="<%=technology.id%>">
                 <div class="form-group">
@@ -37,7 +50,7 @@
 
                 </div>
 
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default">Add comment</button>
             </form>
         </div>
     </div>
