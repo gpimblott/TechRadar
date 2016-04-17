@@ -16,6 +16,12 @@
 
 <% include ../partials/menu.ejs %>
 
+<%
+getBreadcrumb = function() {
+    return technology.categoryname.toLowerCase();
+}
+%>
+
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container" role="vote">
         <row>
