@@ -41,42 +41,19 @@ ApiRoutes.createRoutes = function (self) {
             }
         });
     });
+    
 
-
-
-    /**
-     * Get the status of a technology
-     */
-    self.app.get('/api/technology/:technology/status', jsonParser, function (req, res) {
-        var tech = req.params.technology;
-        var limit = req.query.limit;
-        status.getHistoryForTechnology( tech , limit, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-
-    });
-
-    /**
-     * Update the status of a technology
-     */
-    self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
-        var status = req.body.statusvalue;
-        var tech = req.params.technology;
-        technology.updateStatus(tech, status, req.user.id, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({value: "ok", vote: result}));
-        })
-
-    });
+ 
 
     self.app.get('/api/technologies', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
-
+        
         technology.getAll(function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
         })
     });
+
+ 
 
     self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
 
@@ -117,6 +94,34 @@ ApiRoutes.createRoutes = function (self) {
             });
         });
 
+    /**
+     * Get the status of a technology
+     */
+    self.app.get('/api/technology/:technology/status', jsonParser, function (req, res) {
+        var tech = req.params.technology;
+        var limit = req.query.limit;
+        status.getHistoryForTechnology( tech , limit, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+
+    });
+
+    /**
+     * Update the status of a technology
+     */
+    self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+        var status = req.body.statusvalue;
+        var reason = req.body.reason;
+        var tech = req.params.technology;
+        
+        technology.updateStatus(tech, status, reason, req.user.id, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({value: "ok", statusid: result}));
+        })
+
+    });
+    
 
 
     /**
@@ -148,11 +153,10 @@ ApiRoutes.createRoutes = function (self) {
             });
         });
 
-
+  
     /**
      * Comments
      */
-
     self.app.get('/api/comments', security.isAuthenticated,
         function (req, res) {
             var techid = req.query.technologyid;

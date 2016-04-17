@@ -24,8 +24,14 @@
 </div>
 
 <div class="container bs-docs-container">
-    <div class="row">
-        <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
+    <div class="col-md-8 col-md-offset-2">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Add Technology</li>
+        </ol>
+    </div>
+
+        <div class="col-md-8 col-md-offset-2" style="padding-top: 10px;">
             <form action="/api/technology" method="POST">
                 <div class="form-group">
                     <label for="technologyName">Name of Technology</label>
@@ -59,7 +65,7 @@
 
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
-        </div>
+
     </div>
 </div><!-- /.container -->
 

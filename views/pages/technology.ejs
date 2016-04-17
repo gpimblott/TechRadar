@@ -21,9 +21,10 @@
         <row>
             <div class="col-md-12">
                 <h1><%= technology.name %></h1>
-                <p><%= technology.categoryname %> - <%= technology.statusname %></p>
-                <hr>
-                <p><%= technology.description %></p>
+                <h3><%= technology.description %></h3>
+                <p>Category : <%= technology.categoryname %></p>
+                <p>Status : <%= technology.statusname %></p>
+
             </div>
 
         </row>
@@ -50,35 +51,34 @@
 </div>
 
 <div class="container bs-docs-container">
-
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-bottom: 5px;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
+            <li class="active"><%=technology.name%></li>
+        </ol>
+    </div>
     <row>
         <div class="col-md-12" style="margin-top: 10px">
             <row>
                 <div class="col-md-2" style="margin-top: 10px">
                     <div class="btn-group btn-block btn-group-lg">
                         <div class="btn-group">
-                            <a class="btn btn-default" href="/comments/add/<%= technology.id %>">Add a comment</a>
+                            <a class="btn btn-default" href="/comments/add/<%=technology.id%>">Add a comment</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-10" style="margin-top: 10px">
                     <% if( user.admin ) { %>
-                    <form class="form-inline" action="javascript:void(0);">
-                        <fieldset class="form-group">
-                            <select class="form-control" id="statusPulldown" value='<%= technology.status %>'>
-                                <% statuses.forEach( function(value) { %>
-                                <option value='<%= value.id %>'><%= value.name %></option>
-                                <% }); %>
-                            </select>
-                            <button type="submit" id="statusBtn" class="btn btn-default">Set Status</button>
-                        </fieldset>
-                    </form>
+                    <div class="btn-group btn-block btn-group-lg">
+                        <div class="btn-group">
+                            <a class="btn btn-default" href="/technology/<%=technology.id%>/status">Change current status</a>
+                        </div>
+                    </div>
                     <% } %>
                 </div>
             </row>
         </div>
-
-
     </row>
 
     <row>
@@ -222,11 +222,11 @@
         });
     };
 
-    $(function () {
-        $('select[value]').each(function () {
-            $(this).val(this.getAttribute("value"));
-        });
-    });
+//    $(function () {
+//        $('select[value]').each(function () {
+//            $(this).val(this.getAttribute("value"));
+//        });
+//    });
 
 
     $('#statusBtn').click(statusBtn);

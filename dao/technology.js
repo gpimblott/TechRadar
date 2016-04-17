@@ -29,9 +29,9 @@ Technology.add = function (name, website, category, description, done) {
 /**
  * Add a new technology
  */
-Technology.updateStatus = function (technology, status, userid, done) {
-    var sql = "INSERT INTO tech_status_link ( technologyid , statusid , userid ) VALUES ( $1 , $2 , $3 ) returning id";
-    var params = [ technology, status , userid ];
+Technology.updateStatus = function (technology, status, reason, userid, done) {
+    var sql = "INSERT INTO tech_status_link ( technologyid ,statusid , userid , reason ) VALUES ( $1 , $2 , $3 , $4) returning id";
+    var params = [ technology, status , userid, reason ];
 
     dbhelper.insert( sql, params ,
         function( result ) {
@@ -57,7 +57,11 @@ Technology.getById = function (id, done) {
 
     dbhelper.query( sql, [id] ,
         function( results ) {
-            done(results);
+            if (results.length != 1) {
+                done(null);
+            } else {
+                done(results[0]);
+            }
         },
         function( error ) {
             console.log(error);

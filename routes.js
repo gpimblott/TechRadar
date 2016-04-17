@@ -66,26 +66,24 @@ Routes.createRoutes = function (self) {
     });
 
 
+    /**
+     * Stack builder
+     */
     self.app.get('/stackbuilder', security.isAuthenticated, function (req, res) {
         res.render('pages/stackbuilder', {user: req.user});
     });
 
     /**
-     * Main category 'radar' pages
+     * Radar pages
      */
     self.app.get('/radar/:category', security.isAuthenticated, function (req, res) {
 
         var cname = decodeURI(req.params.category);
-        technology.getAllForCategory(cname, function (values) {
+        technology.getAllForCategory(cname.toLowerCase(), function (values) {
 
-            // if (values.length == 0) {
-            //     res.render('pages/error');
-            // } else {
+            var category = cache.getCategory(cname);
 
-                var category = cache.getCategory(cname);
-
-                res.render('pages/radar', {category: category, technologies: values, user: req.user});
-           // }
+            res.render('pages/radar', {category: category, technologies: values, user: req.user});
         });
     });
 
@@ -93,7 +91,7 @@ Routes.createRoutes = function (self) {
      * Technology pages
      */
     self.app.get('/technologies', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
-        res.render('pages/listTechnologies', {user: req.user});
+        res.render('pages/admin/listTechnologies', {user: req.user});
     });
 
     self.app.get('/technology/search', security.isAuthenticated, jsonParser, function (req, res) {
@@ -115,18 +113,32 @@ Routes.createRoutes = function (self) {
                     var statuses = cache.getStatuses();
                     res.render('pages/technology',
                         {
-                            technology: value[0],
+                            technology: value,
                             comments: comments,
                             user: req.user,
                             statuses: statuses
                         });
                 })
-
-            
             }
         });
     });
 
+    /**
+     * Status for technology
+     */
+    self.app.get('/technology/:id/status', security.isAuthenticatedAdmin, function (req, res) {
+        var techid = req.params.id;
+
+        technology.getById(techid, function (value) {
+            var statuses = cache.getStatuses();
+            res.render('pages/admin/updateStatus',
+                {
+                    technology: value,
+                    user: req.user,
+                    statuses: statuses
+                });
+        });
+    });
 
     /**
      * Comments
@@ -135,13 +147,8 @@ Routes.createRoutes = function (self) {
         function (req, res) {
             var num = req.params.id;
             technology.getById(num, function (value) {
-                if (value.length == 0 || value.length > 1) {
-                    res.render('pages/error');
-                } else {
-                    res.render('pages/addComment', {technology: value[0], user: req.user});
-                }
+                res.render('pages/addComment', {technology: value, user: req.user});
             });
-
         });
 
 
@@ -151,13 +158,13 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/users', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/listUsers', {user: req.user});
+            res.render('pages/admin/listUsers', {user: req.user});
         });
 
 
     self.app.get('/user/add', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/addUser', {user: req.user});
+            res.render('pages/admin/addUser', {user: req.user});
         });
 
 
@@ -167,12 +174,12 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/projects', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/listProjects', {user: req.user});
+            res.render('pages/admin/listProjects', {user: req.user});
         });
 
     self.app.get('/project/add', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/addProject', {user: req.user});
+            res.render('pages/admin/addProject', {user: req.user});
         });
 
     /**
@@ -181,13 +188,9 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/categories', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/listCategories', {user: req.user});
+            res.render('pages/admin/listCategories', {user: req.user});
         });
 
-
-    function replaceAll(str, find, replace) {
-        return str.replace(new RegExp(find, 'g'), replace);
-    }
 }
 
 module.exports = Routes;

@@ -22,7 +22,7 @@ Status.getAll = function (done) {
 
 Status.getHistoryForTechnology = function( technologyid , limit, done)
 {
-    var sql = "SELECT s.name , u.username, to_char(tsl.date, 'DD/MM/YY') as date  " +
+    var sql = "SELECT s.name, tsl.reason as reason , u.username, to_char(tsl.date, 'DD/MM/YY') as date  " +
         " FROM tech_status_link tsl" +
         " JOIN STATUS s on tsl.statusid=s.id " +
             " JOIN users u on u.id=tsl.userid" + 
