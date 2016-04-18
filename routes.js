@@ -126,7 +126,34 @@ Routes.createRoutes = function (self) {
     /**
      * Status for technology
      */
-    self.app.get('/technology/:id/status', security.isAuthenticatedAdmin, function (req, res) {
+    self.app.get('/technology/:id/statushistory', security.isAuthenticated, function (req, res) {
+        var techid = req.params.id;
+
+        technology.getById(techid, function (value) {
+            res.render('pages/statushistory',
+                {
+                    technology: value,
+                    user: req.user
+                });
+        });
+    });
+
+    /**
+     * Votes for technology
+     */
+    self.app.get('/technology/:id/votehistory', security.isAuthenticated, function (req, res) {
+        var techid = req.params.id;
+
+        technology.getById(techid, function (value) {
+            res.render('pages/votehistory',
+                {
+                    technology: value,
+                    user: req.user
+                });
+        });
+    });
+    
+    self.app.get('/technology/:id/updatestatus', security.isAuthenticatedAdmin, function (req, res) {
         var techid = req.params.id;
 
         technology.getById(techid, function (value) {

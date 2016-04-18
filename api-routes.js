@@ -107,6 +107,16 @@ ApiRoutes.createRoutes = function (self) {
 
     });
 
+    self.app.get('/api/technology/:technology/vote', jsonParser, function (req, res) {
+        var tech = req.params.technology;
+        var limit = req.query.limit;
+        votes.getVotesForTechnology( tech , limit, function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+
+    });
+
     /**
      * Update the status of a technology
      */

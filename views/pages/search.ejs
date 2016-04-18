@@ -10,7 +10,7 @@
 
     <% include ../partials/head.ejs %>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
 </head>
 
@@ -61,8 +61,7 @@
 
 <% include ../partials/footer.ejs %>
 
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
     $('#results').bootstrapTable( {
@@ -71,6 +70,10 @@
         striped: true,
         escape: true,
         idField: 'id',
+        showColumns: true,
+        showRefresh: true,
+        showPaginationSwitch: true,
+        pagination: true,
         columns: [{
             field: 'id',
             title: 'Item ID',

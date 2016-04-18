@@ -27,7 +27,7 @@ getBreadcrumb = function() {
         <row>
             <div class="col-md-12">
                 <h1><%= technology.name %></h1>
-                <h3><%= technology.description %></h3>
+                <p><%= technology.description %></p>
                 <p>Category : <%= technology.categoryname %></p>
                 <p>Status : <%= technology.statusname %></p>
             </div>
@@ -66,18 +66,18 @@ getBreadcrumb = function() {
     <row>
         <div class="col-md-12" style="margin-top: 10px">
             <row>
-                <div class="col-md-2" style="margin-top: 10px">
-                    <div class="btn-group btn-block btn-group-lg">
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="/comments/add/<%=technology.id%>">Add a comment</a>
-                        </div>
+                <div class="col-md-6" style="margin-top: 10px">
+                    <div class="btn-group-justified btn-block">
+                        <a class="btn btn-default" href="/comments/add/<%=technology.id%>">Add a comment</a>
+                        <a class="btn btn-default" href="/technology/<%=technology.id%>/statushistory">Status history</a>
+                        <a class="btn btn-default" href="/technology/<%=technology.id%>/votehistory">Voting history</a>
                     </div>
                 </div>
-                <div class="col-md-10" style="margin-top: 10px">
+                <div class="col-md-6" style="margin-top: 10px">
                     <% if( user.admin ) { %>
                     <div class="btn-group btn-block btn-group-lg">
                         <div class="btn-group">
-                            <a class="btn btn-default" href="/technology/<%=technology.id%>/status">Change current status</a>
+                            <a class="btn btn-default" href="/technology/<%=technology.id%>/updatestatus">Change current status</a>
                         </div>
                     </div>
                     <% } %>
@@ -227,11 +227,6 @@ getBreadcrumb = function() {
         });
     };
 
-//    $(function () {
-//        $('select[value]').each(function () {
-//            $(this).val(this.getAttribute("value"));
-//        });
-//    });
 
 
     $('#statusBtn').click(statusBtn);

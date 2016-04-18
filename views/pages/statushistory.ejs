@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../partials/head.ejs %>
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
@@ -21,7 +21,7 @@
     }
 %>
 
-<% include ../../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
@@ -42,37 +42,12 @@
             <li><a href="/">Home</a></li>
             <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
             <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
-            <li class="active">Update status</li>
+            <li class="active">Status History</li>
         </ol>
     </div>
-    <row>
-        <div class="col-md-12" style="margin-top: 10px">
-            <row>
-                <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
-                    <form  action="javascript:void(0);">
-                        <fieldset class="form-group">
-                            <label for="newStatusLabel">New status for <%=technology.name%></label>
-                            <select class="form-control" id="statusPulldown" value='<%= technology.status %>'>
-                                <% statuses.forEach( function(value) { %>
-                                <option value='<%= value.id %>'><%= value.name %></option>
-                                <% }); %>
-                            </select>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <label for="reasonTestArea">Reason for status change</label>
-                            <textarea class="form-control" id="reasonTextArea" rows="3"></textarea>
-                        </fieldset>
-                        <button type="submit" id="statusBtn" class="btn btn-default">Set new status</button>
-                    </form>
-                    <% } %>
-                </div>
-            </row>
-        </div>
-    </row>
+
     <row>
         <div class="col-md-10 col-md-offset-1">
-            <hr>
             <table id="results"></table>
         </div>
     </row>
@@ -80,7 +55,7 @@
 
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
