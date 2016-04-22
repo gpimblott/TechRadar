@@ -1,4 +1,4 @@
-# TechRadar
+# Tech Radar
 
 Status : Alpha - WIP
 
