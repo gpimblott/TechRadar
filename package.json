@@ -30,7 +30,8 @@
     "pg" : "latest",
     "async": "latest",
     "passport" : "latest",
-    "passport-local" : "latest"
+    "passport-local" : "latest",
+    "dotenv" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
