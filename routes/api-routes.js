@@ -1,20 +1,20 @@
-var cache = require('./dao/cache.js');
-var users = require('./dao/users');
-var technology = require('./dao/technology.js');
-var category = require('./dao/category.js');
-var comments = require('./dao/comments.js');
-var projects = require('./dao/projects.js');
-var votes = require('./dao/vote.js');
-var status = require('./dao/status.js');
+var cache = require('../dao/cache.js');
+var users = require('../dao/users');
+var technology = require('../dao/technology.js');
+var category = require('../dao/category.js');
+var comments = require('../dao/comments.js');
+var projects = require('../dao/projects.js');
+var votes = require('../dao/vote.js');
+var status = require('../dao/status.js');
 
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
 var passport = require('passport');
-var strategy = require('passport-local').Strategy;
+//var strategy = require('passport-local').Strategy;
 
-var security = require('./utils/security.js');
+var security = require('../utils/security.js');
 
 
 var ApiRoutes = function () {
