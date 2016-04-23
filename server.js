@@ -1,52 +1,31 @@
 #!/bin/env node
-//  Tech-radar
+/**
+ * Tech-radar
+ */
+
+// Setup the console logging format
 require('console-stamp')(console, '[ddd mmm dd HH:MM:ss]]');
 
+// Load in the environment variables
+require('dotenv').config({path: 'process.env'});
+
+// Express
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-
-var users = require('./dao/users');
-
 var bodyParser = require('body-parser');
 
+// Caching to remove some frequent db operations
 var cache = require('./dao/cache.js');
 
+// Authentication
+var users = require('./dao/users');
 var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
+require('./utils/passport.js');
 
-var routes = require('./routes.js');
-var apiroutes = require('./api-routes.js');
-
-
-passport.use(new Strategy(
-    function (username, password, cb) {
-        users.findByUsername(username, function (err, user) {
-            if (err) {
-                return cb(err);
-            }
-            if (!user) {
-                return cb(null, false);
-            }
-            if (user.password != password) {
-                return cb(null, false);
-            }
-            return cb(null, user);
-        });
-    }));
-
-passport.serializeUser(function (user, cb) {
-    cb(null, user.id);
-});
-
-passport.deserializeUser(function (id, cb) {
-    users.findById(id, function (err, user) {
-        if (err) {
-            return cb(err);
-        }
-        cb(null, user);
-    });
-});
+// Load the routes for the web Application and API REST services
+var routes = require('./routes/routes.js');
+var apiroutes = require('./routes/api-routes.js');
 
 
 /**
@@ -115,7 +94,6 @@ var TechRadar = function () {
         self.app.set('view engine', 'ejs');
 
         self.app.use(cookieParser());
-        // self.app.use(bodyParser );
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({
             extended: true
@@ -134,14 +112,13 @@ var TechRadar = function () {
         self.app.use(passport.initialize());
         self.app.use(passport.session());
 
-        // update the cache
+        // update the cache of static information from the DB
         cache.refresh(self.app);
 
 
         // Create all the routes and refresh the cache
         routes.createRoutes(self);
         apiroutes.createRoutes(self);
-
 
     };
 
@@ -157,7 +134,6 @@ var TechRadar = function () {
     };
 
 };
-
 
 
 

@@ -14,10 +14,10 @@ var DBHelper = function () {
  * @param error Function to call on error
  */
 DBHelper.query = function (sql, parameters, done, error) {
-    if (db.useSSL()) {
+    if (process.env.USE_SSL) {
         pg.defaults.ssl = true;
     }
-
+   
     pg.connect(db.getConnectionString(), function (err, client) {
         var results = [];
 
@@ -51,7 +51,7 @@ DBHelper.query = function (sql, parameters, done, error) {
  * @param error Error function to call on error
  */
 DBHelper.insert = function (sql, parameters, done, error) {
-    if (db.useSSL()) {
+    if (process.env.USE_SSL) {
         pg.defaults.ssl = true;
     }
 
