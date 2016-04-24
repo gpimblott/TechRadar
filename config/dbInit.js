@@ -1,8 +1,11 @@
-var dbp = require('./dbConfig.js');
+// Load in the environment variables
+require('dotenv').config({path: 'process.env'});
+
+
 var pg = require('pg');
 var async = require('async');
 
-var client = new pg.Client(dbp.getConnectionString());
+var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
 var statements = [

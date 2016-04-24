@@ -1,4 +1,3 @@
-var db = require('../config/dbConfig.js');
 var pg = require('pg');
 
 
@@ -18,7 +17,7 @@ DBHelper.query = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
    
-    pg.connect(db.getConnectionString(), function (err, client) {
+    pg.connect(process.env.DATABASE_URL, function (err, client) {
         var results = [];
 
         // Handle connection errors
@@ -55,7 +54,7 @@ DBHelper.insert = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
-    pg.connect(db.getConnectionString(), function (err, client) {
+    pg.connect(process.env.DATABASE_URL, function (err, client) {
         // Handle connection errors
         if (err) {
             error(err);

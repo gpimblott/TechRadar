@@ -1,4 +1,6 @@
-var dbp = require('./dbConfig.js');
+// Load in the environment variables
+require('dotenv').config({path: 'process.env'});
+
 var pg = require('pg');
 var async = require('async');
 
@@ -17,12 +19,6 @@ client.connect();
 // (3,'Platforms')
 // (4,'Infrastructure')
 
-// (1,'DVSA')
-// (2,'ONS')
-// (3,'Home Office')
-// (4,'DVLA')
-// (5,'DEFRA')
-// (6,'MoJ')
 
 
 var statements = [
@@ -31,8 +27,6 @@ var statements = [
     "DELETE FROM technologies",
     "DELETE FROM users",
     "DELETE FROM projects",
-
-    "INSERT INTO projects (name) VALUES ('DVSA'), ('ONS'), ('Home Office'), ('DVLA'), ('DEFRA'), ('MoJ') ",
 
 
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2 )",

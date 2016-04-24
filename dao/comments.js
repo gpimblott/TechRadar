@@ -1,4 +1,3 @@
-var db = require('../config/dbConfig.js');
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 
