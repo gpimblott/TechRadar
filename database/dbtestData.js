@@ -10,7 +10,7 @@ require('dotenv').config({path: 'process.env'});
 var pg = require('pg');
 var async = require('async');
 
-var client = new pg.Client(dbp.getConnectionString());
+var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
 // (1,'Adopt')
@@ -36,10 +36,9 @@ var statements = [
 
 
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2 )",
-    "INSERT INTO technologies ( name , description , category ) VALUES ('Scala' , 'Its like java but with hipster syntax' , 2 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Drop Wizard' , 'REST Services ok' , 2 )",
-    "INSERT INTO technologies ( name , description , category ) VALUES ('Hadoop' , 'Its java ok we all know about it' , 2)",
-    "INSERT INTO technologies ( name , description , category ) VALUES ('Ember' , 'Its java ok we all know about it' , 2)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Hadoop' , 'BIG Data' , 2)",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('Ember' , 'Javascript library' , 2)",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Spring Boot' , 'Its spring but easy' , 2)",
     "INSERT INTO technologies ( name , description , category ) VALUES ('On Hold Tech' , 'Something thats on hold' , 2)",
 
@@ -50,8 +49,8 @@ var statements = [
     "INSERT INTO technologies ( name , description , category ) VALUES ('Liquibase' , 'Database management' , 1)",
 
     "INSERT INTO technologies ( name , description , category ) VALUES ('Kubernetes' , 'Hipster container management tech' , 3 )",
-    "INSERT INTO technologies ( name , description , category ) VALUES ('RHEL 7' , 'Java mocking library for testing' , 3 )",
-    "INSERT INTO technologies ( name , description , category ) VALUES ('AWS' , 'IaaS' , 3 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('RHEL 7' , 'Enterprise grade Linux' , 3 )",
+    "INSERT INTO technologies ( name , description , category ) VALUES ('AWS' , 'Infrastructure as a Service' , 3 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The big bad bits of java' , 3 )",
 
  
