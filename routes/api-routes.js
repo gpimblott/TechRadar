@@ -1,3 +1,7 @@
+/**
+ *  These are the routes implement the REST API services
+ */
+
 var cache = require('../dao/cache.js');
 var users = require('../dao/users');
 var technology = require('../dao/technology.js');
@@ -12,13 +16,13 @@ var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
 var passport = require('passport');
-//var strategy = require('passport-local').Strategy;
 
 var security = require('../utils/security.js');
 
 
 var ApiRoutes = function () {
 };
+
 /**
  *  Create the routing table entries + handlers for the application.
  */
@@ -29,7 +33,7 @@ var ApiRoutes = function () {
 ApiRoutes.createRoutes = function (self) {
 
     /**
-     * Technology
+     * Add a vote for a technology
      */
     self.app.post('/api/technology/:technology/vote', security.isAuthenticated, jsonParser, function (req, res) {
         votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
@@ -42,9 +46,9 @@ ApiRoutes.createRoutes = function (self) {
         });
     });
     
-
- 
-
+    /**
+     * Get all technologies
+     */
     self.app.get('/api/technologies', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
         
         technology.getAll(function (result) {
@@ -53,8 +57,10 @@ ApiRoutes.createRoutes = function (self) {
         })
     });
 
- 
 
+    /**
+     * Get all of the technologies for a given search string
+     */
     self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
 
         technology.search(req.query.search, function (result) {
@@ -64,6 +70,9 @@ ApiRoutes.createRoutes = function (self) {
     });
 
 
+    /**
+     * Add a new technology
+     */
     self.app.post('/api/technology', security.isAuthenticated, jsonParser,
         function (req, res) {
 
@@ -82,7 +91,7 @@ ApiRoutes.createRoutes = function (self) {
         });
 
     /**
-     * Votes
+     * Get all votes for a technology
      */
     self.app.get('/api/votes/:technology', security.isAuthenticated,
         function (req, res) {
@@ -97,7 +106,7 @@ ApiRoutes.createRoutes = function (self) {
     /**
      * Get the status of a technology
      */
-    self.app.get('/api/technology/:technology/status', jsonParser, function (req, res) {
+    self.app.get('/api/technology/:technology/status', security.isAuthenticated, jsonParser, function (req, res) {
         var tech = req.params.technology;
         var limit = req.query.limit;
         status.getHistoryForTechnology( tech , limit, function (result) {
@@ -107,7 +116,10 @@ ApiRoutes.createRoutes = function (self) {
 
     });
 
-    self.app.get('/api/technology/:technology/vote', jsonParser, function (req, res) {
+    /**
+     * Get the votes for a technology
+     */
+    self.app.get('/api/technology/:technology/vote', security.isAuthenticated, jsonParser, function (req, res) {
         var tech = req.params.technology;
         var limit = req.query.limit;
         votes.getVotesForTechnology( tech , limit, function (result) {
@@ -135,7 +147,7 @@ ApiRoutes.createRoutes = function (self) {
 
 
     /**
-     * Users
+     * Add a new User
      */
     self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
@@ -155,6 +167,9 @@ ApiRoutes.createRoutes = function (self) {
                 });
         });
 
+    /**
+     * Get all users
+     */
     self.app.get('/api/users', security.isAuthenticatedAdmin,
         function (req, res) {
             users.getAll(function (result) {
@@ -165,7 +180,7 @@ ApiRoutes.createRoutes = function (self) {
 
   
     /**
-     * Comments
+     * Get comments for a technology
      */
     self.app.get('/api/comments', security.isAuthenticated,
         function (req, res) {
@@ -175,7 +190,10 @@ ApiRoutes.createRoutes = function (self) {
                 res.end(JSON.stringify(result));
             });
         });
-    
+
+    /**
+     * Add a new comment for a technology
+     */
     self.app.post('/api/comments', security.isAuthenticated, jsonParser,
         function (req, res) {
 
@@ -195,7 +213,7 @@ ApiRoutes.createRoutes = function (self) {
 
 
     /**
-     * Projects
+     * Get all projects
      */
     self.app.get('/api/projects', security.isAuthenticatedAdmin,
         function (req, res) {
@@ -205,6 +223,9 @@ ApiRoutes.createRoutes = function (self) {
             });
         });
 
+    /**
+     * Add a new project
+     */
     self.app.post('/api/project', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
 
@@ -221,7 +242,7 @@ ApiRoutes.createRoutes = function (self) {
         });
 
     /**
-     * Categories
+     * Get all categories
      */
     self.app.get('/api/categories', security.isAuthenticatedAdmin,
         function (req, res) {

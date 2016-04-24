@@ -6,10 +6,14 @@ var Technology = function () {
 };
 
 
-
-
 /**
  * Add a new technology
+ * @param name Name of the technology
+ * @param website Website for the technology
+ * @param category Category ID for the technology
+ * @param description Textual description of the technology
+ * @param done Function to call when stored
+ * @returns ID of the row created
  */
 Technology.add = function (name, website, category, description, done) {
     var sql = "INSERT INTO technologies ( name , website, category , description ) values ($1, $2, $3, $4 ) returning id";
@@ -26,7 +30,12 @@ Technology.add = function (name, website, category, description, done) {
 }
 
 /**
- * Add a new technology
+ * Update the status for a technology
+ * @param technology Technology ID
+ * @param status Status ID
+ * @param reason Reason for the change
+ * @param userid UserID making the change
+ * @param done Function to call when the update is finished
  */
 Technology.updateStatus = function (technology, status, reason, userid, done) {
     var sql = "INSERT INTO tech_status_link ( technologyid ,statusid , userid , reason ) VALUES ( $1 , $2 , $3 , $4) returning id";
@@ -44,6 +53,8 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
 
 /**
  * Get a specific technology using its ID
+ * @param id ID of the technology
+ * @param done Function to call with the results
  */
 Technology.getById = function (id, done) {
     var sql = "SELECT t.* ,s.name as statusName, s.id as status, c.name as categoryName FROM technologies t" +
@@ -68,6 +79,10 @@ Technology.getById = function (id, done) {
         } );
 }
 
+/**
+ * Get all technologies
+ * @param done Function to call with the results
+ */
 Technology.getAll = function( done) {
     var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
         " FROM technologies t" +
@@ -88,6 +103,12 @@ Technology.getAll = function( done) {
         });
 }
 
+
+/**
+ * Get all of the technologies in a category
+ * @param cname Name of the category
+ * @param done Function to call with the results
+ */
 Technology.getAllForCategory = function (cname, done) {
 
     var sql = "SELECT row_number() over (order by s) as num, t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
@@ -109,6 +130,11 @@ Technology.getAllForCategory = function (cname, done) {
         } );
 }
 
+/**
+ * Search for technologies
+ * @param value String to search for
+ * @param done Function to call with the results
+ */
 Technology.search = function (value, done) {
     
     var sql = "SELECT technologies.id, technologies.name,status.name as Status,categories.name as Category" +
@@ -118,9 +144,9 @@ Technology.search = function (value, done) {
         " LEFT OUTER JOIN tech_status_link tsl2 ON (technologies.id = tsl2.technologyid AND " +
         "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
         " INNER JOIN STATUS on COALESCE(tsl.statusid, 0)=status.id" +
-        " WHERE technologies.name ILIKE '%" + value + "%' AND tsl2.id IS NULL";
+        " WHERE technologies.name ILIKE $1 AND tsl2.id IS NULL";
     
-    dbhelper.query( sql, [] ,
+    dbhelper.query( sql, ['%'+value+'%'] ,
         function( results ) {
             done(results);
         },

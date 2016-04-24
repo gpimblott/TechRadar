@@ -1,10 +1,15 @@
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 
+var Projects = function () {
+};
 
-exports.getAll = function(done) {
-    var sql = "SELECT *" +
-        " FROM projects " ;
+/**
+ * Get all the projects
+ * @param done function to call with the results
+ */
+Projects.getAll = function(done) {
+    var sql = "SELECT * FROM projects " ;
 
     dbhelper.query(sql, [],
         function (results) {
@@ -16,26 +21,13 @@ exports.getAll = function(done) {
         });
 }
 
-exports.findById = function(id, done) {
-    var sql = "SELECT * " +
-            " FROM projects " +
-            " where id=$1 ";
-
-    dbhelper.query(sql, [id],
-        function (results) {
-            done(null , results[0]);
-        },
-        function (error) {
-            console.log(error);
-            return done( null , null );
-        });
-}
-
 
 /**
  * Add a new project
+ * @param name Name of the project to add
+ * @done function to call with the result
  */
-exports.add = function ( name, done) {
+Projects.add = function ( name, done) {
     var sql = "INSERT INTO projects ( name ) values ( $1  ) returning id";
     var params = [ name ];
 
@@ -48,3 +40,5 @@ exports.add = function ( name, done) {
             done(null);
         } );
 }
+
+module.exports = Projects;

@@ -1,9 +1,10 @@
+/**
+ * Helper function to perform base database operations (e.g. query, insert)
+ */
 var pg = require('pg');
-
 
 var DBHelper = function () {
 };
-
 
 /**
  * Perform a select query operation

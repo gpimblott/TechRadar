@@ -1,7 +1,10 @@
+/**
+ * Configure passport for simple database quthentication
+ */
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
-var users = require('../dao/users.js');
 
+var users = require('../dao/users.js');
 
 passport.use(new Strategy(
     function (username, password, cb) {

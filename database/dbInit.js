@@ -1,3 +1,9 @@
+/**
+ * This is a stand alone application that creates the database tables
+ * 
+ * Note: If the tables exists they will be droped
+ */
+
 // Load in the environment variables
 require('dotenv').config({path: 'process.env'});
 

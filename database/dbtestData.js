@@ -1,3 +1,9 @@
+/**
+ * This is a stand-alone application that inserts base data into the database
+ * 
+ * It assumes that the database has already been dreated
+ */
+
 // Load in the environment variables
 require('dotenv').config({path: 'process.env'});
 

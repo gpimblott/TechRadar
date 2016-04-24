@@ -1,3 +1,7 @@
+/**
+ *  These are the routes for the Web Application
+ */
+
 var cache = require('../dao/cache.js');
 var users = require('../dao/users');
 var technology = require('../dao/technology.js');
@@ -11,18 +15,21 @@ var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
 var passport = require('passport');
-//var Strategy = require('passport-local').Strategy;
 
 var security = require('../utils/security.js');
 
 
 var Routes = function () {
 };
+
 /**
  *  Create the routing table entries + handlers for the application.
  */
 Routes.createRoutes = function (self) {
 
+    /**
+     * Homw page
+     */
     self.app.get('/', security.isAuthenticated,
         function (req, res) {
             var url = req.session.redirect_to;
@@ -35,13 +42,16 @@ Routes.createRoutes = function (self) {
             }
         });
 
+    /**
+     * Error page
+     */
     self.app.get('/error', security.isAuthenticated,
         function (req, res) {
             res.render('pages/error');
         });
 
     /**
-     * Login GET and POST
+     * Login page
      */
     self.app.get('/login', function (req, res) {
         if (res.isAuthenticated) {
@@ -51,6 +61,9 @@ Routes.createRoutes = function (self) {
         }
     });
 
+    /**
+     * POST login credentials
+     */
     self.app.post('/login', passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/login'
@@ -67,14 +80,14 @@ Routes.createRoutes = function (self) {
 
 
     /**
-     * Stack builder
+     * Stack builder (hold page)
      */
     self.app.get('/stackbuilder', security.isAuthenticated, function (req, res) {
         res.render('pages/stackbuilder', {user: req.user});
     });
 
     /**
-     * Radar pages
+     * Radar for category
      */
     self.app.get('/radar/:category', security.isAuthenticated, function (req, res) {
 
@@ -124,7 +137,7 @@ Routes.createRoutes = function (self) {
     });
 
     /**
-     * Status for technology
+     * Status history for technology
      */
     self.app.get('/technology/:id/statushistory', security.isAuthenticated, function (req, res) {
         var techid = req.params.id;
@@ -139,7 +152,7 @@ Routes.createRoutes = function (self) {
     });
 
     /**
-     * Votes for technology
+     * Votes history for technology
      */
     self.app.get('/technology/:id/votehistory', security.isAuthenticated, function (req, res) {
         var techid = req.params.id;
@@ -152,7 +165,10 @@ Routes.createRoutes = function (self) {
                 });
         });
     });
-    
+
+    /**
+     * Status update history for a technology
+     */
     self.app.get('/technology/:id/updatestatus', security.isAuthenticatedAdmin, function (req, res) {
         var techid = req.params.id;
 
@@ -168,7 +184,7 @@ Routes.createRoutes = function (self) {
     });
 
     /**
-     * Comments
+     * Add a new comment for technology page
      */
     self.app.get('/comments/add/:id', security.isAuthenticated,
         function (req, res) {
@@ -180,8 +196,7 @@ Routes.createRoutes = function (self) {
 
 
     /**
-     * Users
-     *
+     * Users page
      */
     self.app.get('/users', security.isAuthenticatedAdmin,
         function (req, res) {
@@ -189,6 +204,9 @@ Routes.createRoutes = function (self) {
         });
 
 
+    /**
+     * Add new user page
+     */
     self.app.get('/user/add', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/admin/addUser', {user: req.user});
@@ -196,22 +214,23 @@ Routes.createRoutes = function (self) {
 
 
     /**
-     * Projects
-     *
+     * List projects page
      */
     self.app.get('/projects', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/admin/listProjects', {user: req.user});
         });
 
+    /**
+     * Add new project page
+     */
     self.app.get('/project/add', security.isAuthenticatedAdmin,
         function (req, res) {
             res.render('pages/admin/addProject', {user: req.user});
         });
 
     /**
-     * Categories
-     *
+     * List categories
      */
     self.app.get('/categories', security.isAuthenticatedAdmin,
         function (req, res) {

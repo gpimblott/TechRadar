@@ -1,6 +1,6 @@
 #!/bin/env node
 /**
- * Tech-radar
+ * Tech-radar Application
  */
 
 // Setup the console logging format

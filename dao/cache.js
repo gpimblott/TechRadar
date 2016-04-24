@@ -1,3 +1,12 @@
+/**
+ * Cache module
+ *
+ * This keeps frequently used values loaded in memory to reduce database calls.
+ * 
+ * Currently:
+ *  Statuses
+ *  Categories
+ */
 var categoryDao = require('./category.js');
 var statusDao = require('./status.js');
 

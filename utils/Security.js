@@ -1,4 +1,6 @@
-
+/**
+ * Security helper functions
+ */
 var Security = function () {
 };
 

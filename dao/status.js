@@ -5,7 +5,10 @@ var dbhelper = require('../utils/dbhelper.js');
 var Status = function () {
 };
 
-
+/**
+ * Get all the Status values
+ * @param done Function to call with the results
+ */
 Status.getAll = function (done) {
     var sql = "SELECT * FROM status ORDER BY id ASC";
 
@@ -19,6 +22,12 @@ Status.getAll = function (done) {
         });
 }
 
+/**
+ * Get the history of status changes for the specified technology
+ * @param technologyid ID of the technology to get history for
+ * @param limit The maximum number of results to return (or null for all)
+ * @param done Function to call with results
+ */
 Status.getHistoryForTechnology = function( technologyid , limit, done)
 {
     var sql = "SELECT s.name, tsl.reason as reason , u.username, to_char(tsl.date, 'DD/MM/YY') as date  " +

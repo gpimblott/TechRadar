@@ -1,8 +1,15 @@
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 
+var Users = function () {
+};
 
-exports.getAll = function(done) {
+
+/**
+ * Get all users 
+ * @param done Function to call with the results
+ */
+Users.getAll = function(done) {
     var sql = "SELECT users.*,roles.admin as isAdmin ,roles.name as roleName" +
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id";
@@ -17,7 +24,12 @@ exports.getAll = function(done) {
         });
 }
 
-exports.findById = function(id, done) {
+/**
+ * Get a user by ID
+ * @param id ID of the user to get
+ * @param done Function to call with the result
+ */
+Users.findById = function(id, done) {
     var sql = "SELECT users.*,roles.admin,roles.name " +
             " FROM users " +
             " INNER JOIN roles on users.role=roles.id" +
@@ -33,7 +45,12 @@ exports.findById = function(id, done) {
         });
 }
 
-exports.findByUsername = function(username, done) {
+/**
+ * Get a user by username
+ * @param username Username of the user to search for
+ * @param done Function to call with the result
+ */
+Users.findByUsername = function(username, done) {
     var sql = "SELECT * FROM users where username=$1 ";
     
     dbhelper.query(sql, [username],
@@ -48,8 +65,13 @@ exports.findByUsername = function(username, done) {
 
 /**
  * Add a new user
+ * @param username Username to insert
+ * @param displayName Full name of the user
+ * @param password Password for the user
+ * @param admin Is the user an admin (boolean)
+ * @param done Function to call when complete
  */
-exports.add = function (username, displayName, password, admin, done) {
+Users.add = function (username, displayName, password, admin, done) {
     var sql = "INSERT INTO users ( username, displayName, password, role) values ( $1 , $2 , $3 ,$4 ) returning id";
     var params = [ username,displayName,password,admin ];
 
@@ -62,3 +84,6 @@ exports.add = function (username, displayName, password, admin, done) {
             done(null);
         } );
 }
+
+
+module.exports = Users;

@@ -5,7 +5,12 @@ var dbhelper = require('../utils/dbhelper.js');
 var Vote = function () {
 };
 
-
+/**
+ * Get all the votes for a technology
+ * @param techid ID of the technology
+ * @param limit Maximum number of results to return (null==all)
+ * @param done Function to call with the results
+ */
 Vote.getVotesForTechnology = function (techid , limit, done) {
     var sql = "SELECT to_char(v.date, 'DD/MM/YY') as date,t.name as technology,s.name as status, u.username " +
                 " FROM votes v" +
@@ -33,7 +38,12 @@ Vote.getVotesForTechnology = function (techid , limit, done) {
 }
 
 
-Vote.getTotalVotesForTechnology = function (techid, done) {
+/**
+ * get the number of votes for each status for each technology
+ * @param techid ID of technology
+ * @param done Function to call with the results
+ */
+Vote.getTotalVotesForTechnologyAndStatus = function (techid, done) {
     var sql = "SELECT technologies.name as Technology, status.name as status, COUNT(status.name) AS count " +
         " FROM votes " +
         " INNER JOIN technologies on technologies.id=votes.technology " +
@@ -53,7 +63,11 @@ Vote.getTotalVotesForTechnology = function (techid, done) {
 }
 
 /**
- * Add a new technology
+ * Add a vote for a technology
+ * @param technology ID of technology
+ * @param status ID of status
+ * @param userid ID if the user viting
+ * @param done Function called when complete
  */
 Vote.add = function (technology, status, userid, done ) {
     var sql = "INSERT INTO votes ( technology, status, userid ) values ($1, $2, $3) returning id";
