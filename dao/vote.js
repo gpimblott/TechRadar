@@ -17,7 +17,7 @@ Vote.getVotesForTechnology = function (techid , limit, done) {
     
     
     var params = [techid];
-    if( limit !=null ) {
+    if( limit != null ) {
         sql += " limit $2";
         params.push(limit);
     }
