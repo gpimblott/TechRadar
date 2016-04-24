@@ -55,11 +55,10 @@ var statements = [
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The big bad bits of java' , 3 )",
 
  
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('gordon' , 'letmein' , 'Gordon Pimblott', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('davey' , 'letmein' , 'Davey McGlade', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('darren' , 'letmein' , 'Darren Martin', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('peter' , 'letmein' , 'Peter Campbell', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('rory' , 'letmein' , 'Rory', 0) "
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('admin' , 'letmein' , 'The Admin', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , 'letmein' , 'User One', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , 'letmein' , 'User Two', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , 'letmein' , 'User Three', 0) ",
 
 ];
 
