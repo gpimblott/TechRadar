@@ -49,6 +49,7 @@ It consists of two components:
 ## Installation
 
 Installation is as follows:
+
 1. Provision a node environment and PostgreSQL database
 2. Define the following environment variables; either by creating a process.env in the root directory or defining standard environment vairables
 3. Deploy code to target environment
