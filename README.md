@@ -46,10 +46,18 @@ It consists of two components:
 * NodeJS
 * PostGreSQL database (other databases are available and will probably work with small changes to the schema)
 
-## Install
+## Installation
 
+Installation is as follows:
+1. Provision a node environment and PostgreSQL database
+2. Define the following environment variables; either by creating a process.env in the root directory or defining standard environment vairables
+3. Deploy code to target environment
+4. Run 'database/dninit.js' to create all the required tables
+5. Run 'database/dbtestdata.js' to create some test data if required
+6. Run 'server.js' :)
 
-## Usage
+a case of deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku); and providing two
+
 
 
 
