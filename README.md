@@ -44,7 +44,7 @@ It consists of two components:
 ## Pre-requisites
 
 * NodeJS
-* PostGreSQL database (other databases are available and will probably work with small changes to the schema)
+* PostgreSQL database (other databases are available and will probably work with small changes to the schema)
 
 ## Installation
 
