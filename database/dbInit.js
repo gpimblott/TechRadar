@@ -11,6 +11,8 @@ require('dotenv').config({path: 'process.env'});
 var pg = require('pg');
 var async = require('async');
 
+console.log(process.env.DATABASE_URL);  
+
 var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 

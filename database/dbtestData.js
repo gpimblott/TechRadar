@@ -5,7 +5,7 @@
  */
 
 // Load in the environment variables
-require('dotenv').config({path: 'process.env'});
+require('dotenv').config({path:'process.env'});
 
 var pg = require('pg');
 var async = require('async');

@@ -1,5 +1,5 @@
 /**
- * Configure passport for simple database quthentication
+ * Configure passport for simple database authentication
  */
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
