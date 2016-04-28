@@ -130,6 +130,18 @@ ApiRoutes.createRoutes = function (self) {
     });
 
     /**
+     * Get the votes for a technology
+     */
+    self.app.get('/api/technology/:technology/vote/status', security.isAuthenticated, jsonParser, function (req, res) {
+        var tech = req.params.technology;
+        votes.getTotalVotesForTechnologyAndStatus( tech , function (result) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        })
+
+    });
+
+    /**
      * Update the status of a technology
      */
     self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {

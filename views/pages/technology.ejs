@@ -130,13 +130,12 @@ getBreadcrumb = function() {
 
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Lastest votes cast</div>
+                <div class="panel-heading">Total votes cast</div>
                 <table class="table">
                     <thead>
                     <tr>
                         <th>Status</th>
-                        <th>Username</th>
-                        <th>Date</th>
+                        <th>Count</th>
                     </tr>
                     </thead>
                     <tbody id="votes">
@@ -174,13 +173,12 @@ getBreadcrumb = function() {
     var data = {limit: 5};
 
     var refreshVotes = function () {
-        $.get('/api/votes/<%= technology.id %>', data, function (result) {
+        $.get('/api/technology/<%= technology.id %>/vote/status', data, function (result) {
 
             var output = "";
             result.forEach(function (vote) {
                 output += "<tr><td>" + vote.status + "</td>";
-                output += "<td>" + vote.username + "</td>";
-                output += "<td>" + vote.date + "</td></tr>";
+                output += "<td>" + vote.count + "</td></tr>";
 
             });
 

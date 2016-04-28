@@ -50,7 +50,7 @@ Vote.getTotalVotesForTechnologyAndStatus = function (techid, done) {
         " INNER JOIN status on status.id=votes.status " +
         " GROUP BY technologies.name,votes.technology, status.name " +
         " HAVING votes.technology=$1 " +
-        " ORDER BY technologies.name, status.name";
+        " ORDER BY technologies.name, count desc";
 
     dbhelper.query(sql, [techid],
         function (results) {
