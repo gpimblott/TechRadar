@@ -45,14 +45,15 @@ var statements = [
             " status INTEGER references status(id) , userid INTEGER references users(id), UNIQUE( technology,status,userid)," +
             " date TIMESTAMP without time zone default (now() at time zone 'utc') )",
 
-    "CREATE TABLE IF NOT EXISTS tech_status_link( id SERIAL PRIMARY KEY, reason TEXT , statusid INTEGER references status(id) , userid INTEGER references users(id)," +
+    "CREATE TABLE IF NOT EXISTS tech_status_link( id SERIAL PRIMARY KEY, reason TEXT , statusid INTEGER references status(id) ," +
+            "userid INTEGER references users(id)," +
             "technologyid INTEGER references technologies(id)," +
             "date TIMESTAMP without time zone default (now() at time zone 'utc'))",
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
 
-    "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Assess') , (4, 'Avoid')",
+    "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Discuss') , (4, 'Avoid')",
     "INSERT INTO categories (id , name, description) VALUES " +
                 "(1,'Development Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
                 "(2,'Languages and Frameworks','Languages and high-level libraries for developing application and systems')," +

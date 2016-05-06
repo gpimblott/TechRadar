@@ -17,19 +17,24 @@
 <% include ../partials/menu.ejs %>
 
 <%
-getBreadcrumb = function() {
+getBreadcrumb = function () {
     return technology.categoryname.toLowerCase();
 }
 %>
 
-<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
+<div tabindex="-1" id="content" class="site-header" >
     <div class="container" role="vote">
         <row>
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <h1><%= technology.name %></h1>
                 <p><%= technology.description %></p>
-                <p>Category : <%= technology.categoryname %></p>
-                <p>Status : <%= technology.statusname %></p>
+            </div>
+            <div class="col-md-4">
+                 <span class="pull-right" style="margin-top: 40px">
+                    <p>Status : <%= technology.statusname %></p>
+                    <p>Category : <%= technology.categoryname %></p>
+                    <p>Website : <%= (technology.website == null ? "" : technology.websute) %></p>
+                </span>
             </div>
 
         </row>
@@ -44,7 +49,7 @@ getBreadcrumb = function() {
                     %>
                     <div class="btn-group">
                         <button type="button" id="voteBtn_<%= status.id %>" value="<%= status.id %>"
-                                class="btn   btn-success glyphicon glyphicon-thumbs-up"
+                                class="btn btn-success glyphicon glyphicon-thumbs-up btn-sm"
                                 data-loading-text=" ... "><%= status.name %></button>
                     </div>
                     <% }); %>
@@ -59,29 +64,37 @@ getBreadcrumb = function() {
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
-            <li class="active"><%=technology.name%></li>
+            <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
+            <li class="active"><%= technology.name %></li>
         </ol>
     </div>
     <row>
         <div class="col-md-12" style="margin-top: 10px">
             <row>
-                <div class="col-md-6" style="margin-top: 10px">
-                    <div class="btn-group-justified btn-block">
-                        <a class="btn btn-default" href="/comments/add/<%=technology.id%>">Add a comment</a>
-                        <a class="btn btn-default" href="/technology/<%=technology.id%>/statushistory">Status history</a>
-                        <a class="btn btn-default" href="/technology/<%=technology.id%>/votehistory">Voting history</a>
-                    </div>
-                </div>
-                <div class="col-md-6" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
-                    <div class="btn-group btn-block btn-group-lg">
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="/technology/<%=technology.id%>/updatestatus">Change current status</a>
+                <div class="col-md-8" style="margin-top: 10px">
+                    <div class="btn-group btn-block">
+                        <a class="btn btn-default btn-sm" href="/comments/add/<%= technology.id %>">Add comment</a>
+
+                        <% if( user.admin ) { %>
+
+                        <div class="dropdown btn-group">
+                            <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false">Administration<span
+                                        class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
+                                        status</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a class="dropdown-item" href="/technology/<%= technology.id %>/edit">Edit technology</a></li>
+                            </ul>
                         </div>
+
+                        <% } %>
+
                     </div>
-                    <% } %>
+
                 </div>
+
             </row>
         </div>
     </row>
@@ -128,9 +141,15 @@ getBreadcrumb = function() {
         </div>
         <div class="col-md-4">
 
+
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Total votes cast</div>
+                <div class="panel-heading">
+                    <div>Total votes cast<span class="pull-right">
+                            <a href="/technology/<%= technology.id %>/votehistory">[History]</a></span>
+                    </div>
+
+                </div>
                 <table class="table">
                     <thead>
                     <tr>
@@ -145,23 +164,30 @@ getBreadcrumb = function() {
             </div>
             <br>
 
+
             <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading">Lastest status changes</div>
+                <div class="panel-heading">
+                    <div>Latest status changes
+                    <span class="pull-right">
+                        <a href="/technology/<%= technology.id %>/statushistory">[History]</a>
+                    </span>
+                    </div>
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Username</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <tbody id="history">
-
-                </tbody>
-            </table>
                 </div>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Username</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="history">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </row>
 </div>
@@ -224,7 +250,6 @@ getBreadcrumb = function() {
             refreshStatusHistory();
         });
     };
-
 
 
     $('#statusBtn').click(statusBtn);
