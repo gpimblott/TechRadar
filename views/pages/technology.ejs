@@ -31,9 +31,24 @@ getBreadcrumb = function () {
             </div>
             <div class="col-md-4">
                  <span class="pull-right" style="margin-top: 40px">
-                    <p>Status : <%= technology.statusname %></p>
-                    <p>Category : <%= technology.categoryname %></p>
-                    <p>Website : <%= (technology.website == null ? "" : technology.websute) %></p>
+                     <table class="table-condensed small">
+                         <tr>
+                             <td>Status</td>
+                             <td>-</td>
+                             <td class="highlight"><%= technology.statusname %></td>
+                         </tr>
+                        <tr>
+                            <td>Category</td>
+                             <td>-</td>
+                            <td class="highlight"><%= technology.categoryname %></td>
+                        </tr>
+                         <tr>
+                             <td>Website</td>
+                              <td>-</td>
+                             <td class="highlight"><%= (technology.website == null ? "" : technology.website) %></td>
+                         </tr>
+
+                         </table>
                 </span>
             </div>
 

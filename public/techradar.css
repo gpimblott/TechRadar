@@ -44,6 +44,10 @@ a {
     font-size: 50px;
 }
 
+.highlight	{
+    color: #fff;
+}
+
 button.btn-primary {
     background-color: #6f5499;
     border: none;
