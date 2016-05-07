@@ -115,6 +115,24 @@ Routes.createRoutes = function (self) {
         res.render('pages/addTechnology', {categories: cache.getCategories(), user: req.user});
     });
 
+    self.app.get('/technology/:id/edit', security.isAuthenticated, function (req, res) {
+        var num = req.params.id;
+        technology.getById(num, function (value) {
+            if (value.length == 0 || value.length > 1) {
+                res.render('pages/error', {user: req.user});
+            } else {
+
+                var statuses = cache.getStatuses();
+                res.render('pages/editTechnology',
+                    {
+                        technology: value,
+                        user: req.user,
+                        statuses: statuses
+                    });
+            }
+        });
+    });
+
 
     self.app.get('/technology/:id', security.isAuthenticated, function (req, res) {
         var num = req.params.id;

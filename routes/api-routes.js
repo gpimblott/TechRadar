@@ -91,6 +91,25 @@ ApiRoutes.createRoutes = function (self) {
         });
 
     /**
+     * Update a technology
+     */
+    self.app.put('/api/technology/:technology', security.isAuthenticated, jsonParser,
+        function (req, res) {
+            var techid = req.params.technology;
+
+            technology.update(
+                techid,
+                req.body.name,
+                req.body.website,
+                req.body.category,
+                req.body.description,
+                
+                function (result) {
+                    res.end(JSON.stringify({result: result}));
+                });
+        });
+
+    /**
      * Get all votes for a technology
      */
     self.app.get('/api/votes/:technology', security.isAuthenticated,

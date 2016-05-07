@@ -30,6 +30,31 @@ Technology.add = function (name, website, category, description, done) {
 }
 
 /**
+ * Add a new technology
+ * @param id ID of the technology
+ * @param name Name of the technology
+ * @param website Website for the technology
+ * @param category Category ID for the technology
+ * @param description Textual description of the technology
+ * @param done Function to call when stored
+ * @returns true/false
+ */
+Technology.update = function (id, name, website, category, description, done) {
+    var sql = "UPDATE technologies SET name=$1 , website=$2, category=$3 , description=$4 where id=$5";
+    var params = [ name , website , category , description , id ];
+
+
+    dbhelper.insert( sql, params ,
+        function( result ) {
+            done( true );
+        },
+        function( error ) {
+            console.log(error);
+            done( false );
+        } );
+}
+
+/**
  * Update the status for a technology
  * @param technology Technology ID
  * @param status Status ID

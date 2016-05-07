@@ -22,7 +22,7 @@ getBreadcrumb = function () {
 }
 %>
 
-<div tabindex="-1" id="content" class="site-header" >
+<div tabindex="-1" id="content" class="site-header">
     <div class="container" role="vote">
         <row>
             <div class="col-md-8">
@@ -53,25 +53,7 @@ getBreadcrumb = function () {
             </div>
 
         </row>
-        <row>
-            <div class="col-md-12">
-                <div class="btn-group-justified btn-block btn-group-lg">
-                    <% statuses.forEach( function(status) {
 
-                        if (status.id == 0) {
-                            return;
-                        }
-                    %>
-                    <div class="btn-group">
-                        <button type="button" id="voteBtn_<%= status.id %>" value="<%= status.id %>"
-                                class="btn btn-success glyphicon glyphicon-thumbs-up btn-sm"
-                                data-loading-text=" ... "><%= status.name %></button>
-                    </div>
-                    <% }); %>
-
-                </div>
-            </div>
-        </row>
     </div>
 </div>
 
@@ -88,19 +70,42 @@ getBreadcrumb = function () {
             <row>
                 <div class="col-md-8" style="margin-top: 10px">
                     <div class="btn-group btn-block">
-                        <a class="btn btn-default btn-sm" href="/comments/add/<%= technology.id %>">Add comment</a>
+                        <div class="dropdown btn-group">
+                            <a href="#" class="btn btn-default btn-sm dropdown-toggle"
+                               data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false">Vote<span
+                                        class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <% statuses.forEach( function(status) {
+
+                                    if (status.id == 0) {
+                                        return;
+                                    }
+                                %>
+                                <li><a class="dropdown-item"
+                                       id="voteBtn_<%= status.id %>"
+                                       href="javascript:void(0);"
+                                       value="<%= status.id %>"><%= status.name %></a>
+                                </li>
+
+                                <% }); %>
+                            </ul>
+                        </div>
+
+
+                        <a class="btn btn-default btn-sm" href="/comments/add/<%= technology.id %>">Comment</a>
+                        <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/edit">Edit</a>
 
                         <% if( user.admin ) { %>
 
                         <div class="dropdown btn-group">
                             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
-                               role="button" aria-haspopup="true" aria-expanded="false">Administration<span
+                               role="button" aria-haspopup="true" aria-expanded="false">Admin<span
                                         class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
                                         status</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a class="dropdown-item" href="/technology/<%= technology.id %>/edit">Edit technology</a></li>
+                         
                             </ul>
                         </div>
 
@@ -246,7 +251,9 @@ getBreadcrumb = function () {
 
 
     var clickBtn = function () {
-        var data = {statusvalue: $(this).val()};
+        console.log(this.getAttribute("value"));
+        var data = {statusvalue: this.getAttribute("value")};
+        console.log(data);
         $.post('/api/technology/<%= technology.id %>/vote', data, function (result) {
             refreshVotes();
         });
