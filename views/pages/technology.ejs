@@ -45,7 +45,11 @@ getBreadcrumb = function () {
                          <tr>
                              <td>Website</td>
                               <td>-</td>
-                             <td class="highlight"><%= (technology.website == null ? "" : technology.website) %></td>
+                             <td class="highlight">
+                                 <a class="highlight" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
+                                     <%= (technology.website == null ? "" : technology.website) %>
+                                 </a>
+                             </td>
                          </tr>
 
                          </table>
@@ -105,7 +109,7 @@ getBreadcrumb = function () {
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
                                         status</a></li>
-                         
+
                             </ul>
                         </div>
 
