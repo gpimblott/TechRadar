@@ -119,7 +119,12 @@
     var statusBtn = function () {
         var data = {statusvalue: $('#statusPulldown').val(), reason: $('#reasonTextArea').val(), technology:<%= technology.id %>};
         $.post('/api/technology/<%= technology.id %>/status', data, function (result) {
-            location.reload()
+            if( result.success ) {
+                location.href = "/technology/<%=technology.id%>";
+            } else {
+                alert("An error occurred updating the status");
+            }
+
         });
     };
 

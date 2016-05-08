@@ -31,7 +31,8 @@
     "async": "latest",
     "passport" : "latest",
     "passport-local" : "latest",
-    "dotenv" : "latest"
+    "dotenv" : "latest",
+    "sanitize-html" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

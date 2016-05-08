@@ -19,6 +19,7 @@ var passport = require('passport');
 
 var security = require('../utils/security.js');
 
+var sanitizer = require('sanitize-html');
 
 var ApiRoutes = function () {
 };
@@ -33,7 +34,11 @@ ApiRoutes.createRoutes = function (self) {
      * Add a vote for a technology
      */
     self.app.post('/api/technology/:technology/vote', security.isAuthenticated, jsonParser, function (req, res) {
-        votes.add(req.params.technology, req.body.statusvalue, req.user.id, function (result, error) {
+        var tech = sanitizer( req.params.technology );
+        var statusValue = sanitizer( req.body.statusvalue );
+        var userId = sanitizer( req.user.id );
+
+        votes.add(tech, statusValue , userId , function (result, error) {
             res.writeHead(200, {"Content-Type": "application/json"});
             if (error != null) {
                 res.end(JSON.stringify({success: false, error: error}));
@@ -48,7 +53,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
 
-        var search = req.query.search;
+        var search = req.query.search ;
 
         if (search == null) {
 
@@ -59,7 +64,7 @@ ApiRoutes.createRoutes = function (self) {
 
         } else {
 
-            technology.search(req.query.search, function (result) {
+            technology.search(sanitizer( search ), function (result) {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(result));
             })
@@ -73,10 +78,11 @@ ApiRoutes.createRoutes = function (self) {
     self.app.post('/api/technology', security.isAuthenticated, jsonParser,
         function (req, res) {
 
-            technology.add(req.body.technologyName,
-                req.body.technologyWebsite,
-                req.body.technologyCategory,
-                req.body.technologyDescription,
+            technology.add(
+                sanitizer( req.body.technologyName),
+                sanitizer( req.body.technologyWebsite),
+                sanitizer( req.body.technologyCategory),
+                sanitizer( req.body.technologyDescription) ,
                 function (result, error) {
 
                     if (null === result) {
@@ -100,14 +106,14 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.put('/api/technology/:technology', security.isAuthenticated, jsonParser,
         function (req, res) {
-            var techid = req.params.technology;
+            var techid = sanitizer( req.params.technology );
 
             technology.update(
                 techid,
-                req.body.name,
-                req.body.website,
-                req.body.category,
-                req.body.description,
+                sanitizer( req.body.name ),
+                sanitizer( req.body.website ),
+                sanitizer( req.body.category ),
+                sanitizer( req.body.description ),
 
                 function (result) {
 
@@ -131,7 +137,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.delete('/api/technology', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = req.body.id;
+            var data = sanitizer( req.body.id );
 
             technology.delete( data , function( result , error ) {
                 var data = {};
@@ -152,8 +158,8 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.get('/api/votes/:technology', security.isAuthenticated,
         function (req, res) {
-            var techid = req.params.technology;
-            var limit = req.query.limit;
+            var techid = sanitizer( req.params.technology );
+            var limit = sanitizer( req.query.limit );
 
             votes.getVotesForTechnology(techid, limit, function (result) {
                 res.writeHead(200, {"Content-Type": "application/json"});
@@ -165,8 +171,8 @@ ApiRoutes.createRoutes = function (self) {
      * Get the status history of a technology
      */
     self.app.get('/api/technology/:technology/status/history', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = req.params.technology;
-        var limit = req.query.limit;
+        var tech = sanitizer( req.params.technology );
+        var limit = sanitizer( req.query.limit );
 
         status.getHistoryForTechnology(tech, limit, function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
@@ -179,8 +185,8 @@ ApiRoutes.createRoutes = function (self) {
      * Get the vote history for a technology
      */
     self.app.get('/api/technology/:technology/vote/history', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = req.params.technology;
-        var limit = req.query.limit;
+        var tech = sanitizer( req.params.technology );
+        var limit = sanitizer( req.query.limit );
         votes.getVotesForTechnology(tech, limit, function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
@@ -192,7 +198,7 @@ ApiRoutes.createRoutes = function (self) {
      * Get the votes for a technology
      */
     self.app.get('/api/technology/:technology/vote/totals', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = req.params.technology;
+        var tech = sanitizer( req.params.technology );
         votes.getTotalVotesForTechnologyStatus(tech, function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
@@ -204,9 +210,9 @@ ApiRoutes.createRoutes = function (self) {
      * Update the status of a technology
      */
     self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
-        var status = req.body.statusvalue;
-        var reason = req.body.reason;
-        var tech = req.params.technology;
+        var status = sanitizer( req.body.statusvalue );
+        var reason = sanitizer( req.body.reason );
+        var tech = sanitizer( req.params.technology );
 
         technology.updateStatus(tech, status, reason, req.user.id, function (result, error) {
             res.writeHead(200, {"Content-Type": "application/json"});
@@ -234,10 +240,10 @@ ApiRoutes.createRoutes = function (self) {
         function (req, res) {
 
             users.add(
-                req.body.username,
-                req.body.displayName,
-                req.body.password,
-                req.body.role,
+                sanitizer( req.body.username ),
+                sanitizer( req.body.displayName ),
+                sanitizer( req.body.password ),
+                sanitizer( req.body.role ),
 
                 function (result) {
 
@@ -273,7 +279,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.delete('/api/user', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = req.body.id;
+            var data = sanitizer( req.body.id );
 
             users.delete( data , function( result , error ) {
                 var data = {};
@@ -294,7 +300,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.get('/api/comments', security.isAuthenticated,
         function (req, res) {
-            var techid = req.query.technologyid;
+            var techid = sanitizer( req.query.technologyid );
             comments.getForTechnology(techid, function (result) {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(result));
@@ -308,9 +314,9 @@ ApiRoutes.createRoutes = function (self) {
         function (req, res) {
 
             comments.add(
-                req.body.technology,
-                req.body.comment,
-                req.user.id,
+                sanitizer( req.body.technology ),
+                sanitizer( req.body.comment ),
+                sanitizer( req.user.id ),
 
                 function (result, error) {
 
@@ -334,7 +340,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.delete('/api/comments', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = req.body.id;
+            var data = sanitizer( req.body.id );
 
             comments.delete( data , function( result , error ) {
                 var data = {};
@@ -369,7 +375,7 @@ ApiRoutes.createRoutes = function (self) {
         function (req, res) {
 
             projects.add(
-                req.body.projectname,
+                sanitizer( req.body.projectname ),
 
                 function ( result , error ) {
 
