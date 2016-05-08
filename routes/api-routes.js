@@ -329,6 +329,27 @@ ApiRoutes.createRoutes = function (self) {
                 });
         });
 
+    /**
+     * Delete technologies
+     */
+    self.app.delete('/api/comments', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id;
+
+            comments.delete( data , function( result , error ) {
+                var data = {};
+                if (result) {
+                    data.result = result;
+                    data.success = true;
+                    res.end(JSON.stringify(data));
+                } else {
+                    data.error = error;
+                    data.success = false;
+                    res.end(JSON.stringify(data));
+                }
+            })
+        });
+
 
     /**
      * Get all projects

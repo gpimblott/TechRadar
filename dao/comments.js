@@ -47,4 +47,30 @@ Comments.add = function (technology, text , userid, done) {
         } );
 }
 
+/**
+ * Delete a set of comments using their ID numbers
+ * @param ids
+ * @param done
+ */
+Comments.delete = function (ids, done) {
+
+    var params = [];
+    for(var i = 1; i <= ids.length; i++) {
+        params.push('$' + i);
+    }
+
+    var sql = "DELETE FROM COMMENTS WHERE id IN (" +  params.join(',') + "  )";
+
+
+    dbhelper.query( sql, ids ,
+        function( result ) {
+            done( true );
+        },
+        function( error ) {
+            console.log(error);
+            done( false , error );
+        } );
+}
+
+
 module.exports = Comments;

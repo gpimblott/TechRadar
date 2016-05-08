@@ -107,6 +107,10 @@ getBreadcrumb = function () {
                             <div class="panel-body">
                                 <header class="text-left">
                                     <div class="comment-user"><i class="fa fa-user"></i> <%= comment.displayname %>
+                                        <% if ( user.admin ) { %>
+                                    <span onclick="javascript:deleteComment(<%=comment.id%>);"
+                                          class="pull-right glyphicon glyphicon-trash selectable"></span>
+                                        <% } %>
                                     </div>
                                     <time class="comment-date" datetime="16-12-2014 01:05"><i
                                                 class="fa fa-clock-o"></i> <%= comment.date %>
@@ -182,9 +186,33 @@ getBreadcrumb = function () {
 
 <script>
 
-    var data = {limit: 5};
+
+    var deleteComment = function(commentId) {
+        var r = confirm("Are you sure you want to delete this comment ?");
+        if (r == false) {
+            return;
+        }
+        var data = [];
+        data.push(commentId);
+
+        $.ajax({
+            type: "DELETE",
+            url: '/api/comments',
+            contentType: "application/json",
+            data: JSON.stringify( { id: [commentId] } ),
+            complete: function(result){
+                if (result.success) {
+                    location.reload();
+                } else {
+                    alert("There was an error deleting comment :(");
+                }
+            }
+        });
+    }
 
     var refreshVotes = function () {
+        var data = {limit: 5};
+
         $.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {
 
             var output = "";
@@ -200,6 +228,8 @@ getBreadcrumb = function () {
     };
 
     var refreshStatusHistory = function () {
+        var data = {limit: 5};
+
         $.get('/api/technology/<%= technology.id %>/status/history', data, function (result) {
             var output = "";
             result.forEach(function (status) {
@@ -234,17 +264,14 @@ getBreadcrumb = function () {
 
     <% if (user.admin ) { %>
 
-    var statusBtn = function () {
+    var statusBtnClick = function () {
         var data = {statusvalue: $('#statusPulldown').val(), technology:<%= technology.id %>};
         $.post('/api/technology/<%= technology.id %>/status', data, function (result) {
             refreshStatusHistory();
         });
     };
 
-
-    $('#statusBtn').click(statusBtn);
-
-
+    $('#statusBtn').click(statusBtnClick);
 
     <% } %>
 

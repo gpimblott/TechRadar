@@ -54,6 +54,10 @@ a {
     text-decoration: none;
 }
 
+.selectable {
+    cursor: pointer;
+}
+
 button.btn-primary {
     background-color: #6f5499;
     border: none;
