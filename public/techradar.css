@@ -44,8 +44,13 @@ a {
     font-size: 50px;
 }
 
-.highlight	{
+.banner-text, .banner-text-link	{
     color: #fff;
+}
+
+.banner-text-link:hover {
+    color: #cdbfe3;
+    text-decoration: none;
 }
 
 button.btn-primary {
@@ -196,22 +201,3 @@ form[role=login] > div {
     text-align: center;
 }
 
-div[role=vote] button {
-    margin: 10px 0;
-    color: #371B63;
-    border-color: #371B63;
-    background: #BFB1D7;
-}
-
-div[role=vote] button:hover {
-    background-color: #937DB5;
-    border-color: #371B63;
-    color: white;
-}
-
-div[role=vote] button:active, div[role=vote] button:active:focus {
-    background-color: #937DB5;
-    border-color: #371B63;
-    color: white;
-    box-shadow: none;
-}

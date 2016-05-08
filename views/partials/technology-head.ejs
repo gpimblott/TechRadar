@@ -11,18 +11,20 @@
                          <tr>
                              <td>Status</td>
                              <td>-</td>
-                             <td class="highlight"><%= technology.statusname %></td>
+                             <td class="banner-text"><%= technology.statusname %></td>
                          </tr>
                         <tr>
                             <td>Category</td>
                              <td>-</td>
-                            <td class="highlight"><%= technology.categoryname %></td>
+                            <td >
+                                <a class="banner-text-link" href="/radar/<%=technology.categoryname.toLowerCase()%>"><%= technology.categoryname %></a>
+                            </td>
                         </tr>
                          <tr>
                              <td>Website</td>
                               <td>-</td>
-                             <td class="highlight">
-                                 <a class="highlight" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
+                             <td>
+                                 <a class="banner-text-link" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
                                      <%= (technology.website == null ? "" : technology.website) %>
                                  </a>
                              </td>
