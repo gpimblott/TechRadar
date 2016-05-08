@@ -22,47 +22,10 @@ getBreadcrumb = function () {
 }
 %>
 
-<div tabindex="-1" id="content" class="site-header">
-    <div class="container" role="vote">
-        <row>
-            <div class="col-md-8">
-                <h1><%= technology.name %></h1>
-                <p><%= technology.description %></p>
-            </div>
-            <div class="col-md-4">
-                 <span class="pull-right" style="margin-top: 40px">
-                     <table class="table-condensed small">
-                         <tr>
-                             <td>Status</td>
-                             <td>-</td>
-                             <td class="highlight"><%= technology.statusname %></td>
-                         </tr>
-                        <tr>
-                            <td>Category</td>
-                             <td>-</td>
-                            <td class="highlight"><%= technology.categoryname %></td>
-                        </tr>
-                         <tr>
-                             <td>Website</td>
-                              <td>-</td>
-                             <td class="highlight">
-                                 <a class="highlight" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
-                                     <%= (technology.website == null ? "" : technology.website) %>
-                                 </a>
-                             </td>
-                         </tr>
+<% include ../partials/technology-head.ejs %>
 
-                         </table>
-                </span>
-            </div>
-
-        </row>
-
-    </div>
-</div>
-
-<div class="container bs-docs-container">
-    <div class="col-md-12">
+<div class="container bs-docs-container" style="padding-top: 10px;">
+    <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
             <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
@@ -109,7 +72,6 @@ getBreadcrumb = function () {
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
                                         status</a></li>
-
                             </ul>
                         </div>
 
@@ -223,7 +185,7 @@ getBreadcrumb = function () {
     var data = {limit: 5};
 
     var refreshVotes = function () {
-        $.get('/api/technology/<%= technology.id %>/vote/status', data, function (result) {
+        $.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {
 
             var output = "";
             result.forEach(function (vote) {
@@ -238,7 +200,7 @@ getBreadcrumb = function () {
     };
 
     var refreshStatusHistory = function () {
-        $.get('/api/technology/<%= technology.id %>/status', data, function (result) {
+        $.get('/api/technology/<%= technology.id %>/status/history', data, function (result) {
             var output = "";
             result.forEach(function (status) {
                 output += "<tr><td>" + status.name + "</td>";
@@ -254,18 +216,20 @@ getBreadcrumb = function () {
     };
 
 
-    var clickBtn = function () {
-        console.log(this.getAttribute("value"));
+    var voteClickedBtn = function () {
         var data = {statusvalue: this.getAttribute("value")};
-        console.log(data);
-        $.post('/api/technology/<%= technology.id %>/vote', data, function (result) {
-            refreshVotes();
+        $.post('/api/technology/<%= technology.id %>/vote',
+                data,
+                function (result) {
+                    if (result.success) {
+                    refreshVotes();
+                };
         });
     };
 
 
     <% statuses.forEach( function(status) { %>
-    $('#voteBtn_<%= status.id %>').click(clickBtn);
+    $('#voteBtn_<%= status.id %>').click(voteClickedBtn);
     <% }); %>
 
     <% if (user.admin ) { %>

@@ -27,7 +27,7 @@
 
     <div class="row">
         <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
-            <form action="/api/project" method="POST">
+            <form action="javascript:void(0);" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="projectname" name="projectname" placeholder="Project name">
@@ -40,5 +40,30 @@
 </div><!-- /.container -->
 
 <% include ../../partials/footer.ejs %>
+
+<script>
+
+    $("form").submit(function (event) {
+        var frm = $('form');
+        var data = serialiseForm(frm);
+
+        $.ajax({
+            type: "POST",
+            url: '/api/project',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (result) {
+
+                if (result.success) {
+                    location.href = "/projects";
+                } else {
+                    alert("There was an error adding a comment :(");
+                }
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>

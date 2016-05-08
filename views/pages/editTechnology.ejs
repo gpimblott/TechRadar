@@ -17,64 +17,62 @@
 
 <% include ../partials/menu.ejs %>
 
-<div tabindex="-1" id="content" class="site-header">
-    <div class="container">
-        <h1>Edit <%=technology.name %></h1>
-        <p>Update the catalogue</p>
-    </div>
-</div>
+<% include ../partials/technology-head.ejs %>
 
 <div class="container bs-docs-container">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li class="active">Edit <%=technology.name %></li>
+            <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
+            <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
+            <li class="active">Edit</li>
         </ol>
     </div>
 
-        <div class="col-md-8 col-md-offset-2" style="padding-top: 10px;">
-            <form action="javascript:void(0);" method="POST">
-                <input type="hidden" name="id" value="<%=technology.id%>">
-                <div class="form-group">
-                    <label for="technologyName">Name of Technology</label>
-                    <input type="text" class="form-control" id="name"
-                           value="<%=technology.name%>"
-                           name="name" placeholder="Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="technologyWebsite">Website</label>
-                    <input type="url" class="form-control" id="website"
-                           name="website" placeholder="Website"
-                           value="<%=(technology.website==null?"http://":technology.website)%>"
-                           required>
-                </div>
-                <div class="form-group">
-                    <label for="technologyGroup">Category:</label>
-                    <select class="form-control" id="category"
-                            name="category">
+    <div class="col-md-10 col-md-offset-1" style="padding-top: 10px;">
+        <form action="javascript:void(0);" method="POST">
+            <input type="hidden" name="id" value="<%= technology.id %>">
+            <div class="form-group">
+                <label for="technologyName">Name of Technology</label>
+                <input type="text" class="form-control" id="name"
+                       value="<%= technology.name %>"
+                       name="name" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+                <label for="technologyWebsite">Website</label>
+                <input type="url" class="form-control" id="website"
+                       name="website" placeholder="Website"
+                       value="<%= (technology.website == null ? "http://" : technology.website) %>"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="technologyGroup">Category:</label>
+                <select class="form-control" id="category"
+                        name="category">
 
-                     <%
-                     categories.forEach(function(category, index, arr) {
+                    <%
+                    categories.forEach(function(category, index, arr) {
 
-                     if (technology.category==category.id) { %>
-                        <option value="<%=category.id%>" selected="selected"><%=category.name%></option>
-                        <%} else { %>
-                        <option value="<%=category.id%>" ><%=category.name%></option>
-                        <% }
-                     });
-                     %>
+                    if (technology.category == category.id) { %>
+                    <option value="<%= category.id %>" selected="selected"><%= category.name %></option>
+                    <% } else { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                    <% }
+                    });
+                    %>
 
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="technologyDescription">Description</label>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="technologyDescription">Description</label>
                     <textarea class="form-control" rows="3" id="description"
-                              name="description" placeholder="Description" required><%=technology.description%></textarea>
+                              name="description" placeholder="Description"
+                              required><%= technology.description %></textarea>
 
-                </div>
+            </div>
 
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
 
     </div>
 </div><!-- /.container -->
@@ -82,29 +80,25 @@
 
 <script>
 
-    $( "form" ).submit(function( event ) {
+    $("form").submit(function (event) {
         var frm = $('form');
         var data = serialiseForm(frm);
 
         $.ajax({
             type: "PUT",
-            url: '/api/technology/<%=technology.id%>',
+            url: '/api/technology/<%= technology.id %>',
             contentType: "application/json",
             data: JSON.stringify(data),
-            success: function(result) {
-                var data = JSON.parse(result);
-                if( result) {
-                    location.href = "/technology/<%=technology.id%>";
+            success: function (result) {
+                if (result.success) {
+                    location.href = "/technology/<%= technology.id %>";
                 } else {
-                    alert( "There was an error updating the Technology :)" );
+                    alert("There was an error updating the Technology :)");
                 }
 
             }
         });
-
-       // location.href = "http://localhost:8090/";
     });
-
 
 </script>
 

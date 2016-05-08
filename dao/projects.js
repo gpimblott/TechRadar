@@ -37,7 +37,7 @@ Projects.add = function ( name, done) {
         },
         function(error) {
             console.log(error);
-            done(null);
+            done(null , error );
         } );
 }
 

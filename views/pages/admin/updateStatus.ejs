@@ -23,20 +23,9 @@
 
 <% include ../../partials/menu.ejs %>
 
-<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
-    <div class="container">
-        <row>
-            <div class="col-md-12">
-                <h1><%= technology.name %></h1>
-                <p>Current status : <%= technology.statusname%></p>
+<% include ../../partials/technology-head.ejs%>
 
-            </div>
-        </row>
-
-    </div>
-</div>
-
-<div class="container bs-docs-container">
+<div class="container bs-docs-container" style="padding-top: 10px;">
     <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
@@ -88,7 +77,7 @@
 
     $('#results').bootstrapTable( {
         method: 'get',
-        url: '/api/technology/<%=technology.id%>/status/',
+        url: '/api/technology/<%=technology.id%>/status/history',
         cache: false,
         striped: true,
         escape: true,

@@ -24,8 +24,7 @@ Technology.add = function (name, website, category, description, done) {
             done( result.rows[0].id );
         },
         function(error) {
-            console.log(error);
-            done(null);
+            done( null, error );
         } );
 }
 
@@ -50,7 +49,7 @@ Technology.update = function (id, name, website, category, description, done) {
         },
         function( error ) {
             console.log(error);
-            done( false );
+            done( false , error );
         } );
 }
 
@@ -72,7 +71,7 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
         },
         function(error) {
             console.log(error);
-            done(null);
+            done(null , error );
         } );
 }
 
@@ -124,7 +123,7 @@ Technology.getAll = function( done) {
         },
         function (error) {
             console.log(error);
-            return done( null );
+            return done( null , error );
         });
 }
 

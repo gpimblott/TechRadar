@@ -1,0 +1,38 @@
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container" >
+        <row>
+            <div class="col-md-8">
+                <h1><%= technology.name %></h1>
+                <p><%= technology.description %></p>
+            </div>
+            <div class="col-md-4">
+                 <span class="pull-right" style="margin-top: 40px">
+                     <table class="table-condensed small">
+                         <tr>
+                             <td>Status</td>
+                             <td>-</td>
+                             <td class="highlight"><%= technology.statusname %></td>
+                         </tr>
+                        <tr>
+                            <td>Category</td>
+                             <td>-</td>
+                            <td class="highlight"><%= technology.categoryname %></td>
+                        </tr>
+                         <tr>
+                             <td>Website</td>
+                              <td>-</td>
+                             <td class="highlight">
+                                 <a class="highlight" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
+                                     <%= (technology.website == null ? "" : technology.website) %>
+                                 </a>
+                             </td>
+                         </tr>
+
+                         </table>
+                </span>
+            </div>
+
+        </row>
+
+    </div>
+</div>

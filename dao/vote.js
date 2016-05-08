@@ -39,11 +39,11 @@ Vote.getVotesForTechnology = function (techid , limit, done) {
 
 
 /**
- * get the number of votes for each status for each technology
+ * Get the number of votes for each status for each technology
  * @param techid ID of technology
  * @param done Function to call with the results
  */
-Vote.getTotalVotesForTechnologyAndStatus = function (techid, done) {
+Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
     var sql = "SELECT technologies.name as Technology, status.name as status, COUNT(status.name) AS count " +
         " FROM votes " +
         " INNER JOIN technologies on technologies.id=votes.technology " +

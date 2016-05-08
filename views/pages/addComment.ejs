@@ -9,45 +9,38 @@
     <meta name="author" content="">
 
     <% include ../partials/head.ejs %>
-
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
 
 <% include ../partials/menu.ejs %>
 <%
-getBreadcrumb = function() {
+getBreadcrumb = function () {
     return technology.categoryname.toLowerCase();
 }
 %>
 
-<div tabindex="-1" id="content" class="site-header">
-    <div class="container">
-        <h1><%= technology.name %></h1>
-        <p><%= technology.categoryname %> - <%= technology.statusname %></p>
-        <hr>
-        <p><%= technology.description %></p>
-    </div>
-</div>
+<% include ../partials/technology-head.ejs %>
 
 <div class="container bs-docs-container" style="padding-top: 10px;">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
-            <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
+            <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
+            <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
             <li class="active">Comment</li>
         </ol>
     </div>
 
     <div class="row">
-        <div class="col-md-8 col-md-offset-2" style="padding-top: 10px;">
-            <form action="/api/comments" method="POST">
-                <input type="hidden" name="technology" value="<%=technology.id%>">
+        <div class="col-md-10 col-md-offset-1" style="padding-top: 10px;">
+            <form action="javascript:void(0);" method="POST">
+                <input type="hidden" name="technology" value="<%= technology.id %>">
                 <div class="form-group">
                     <label for="comment">Comment</label>
-                    <textarea class="form-control" rows="3" id="comment" name="comment" placeholder="Comment"></textarea>
-
+                    <textarea class="form-control" rows="3" id="comment" name="comment"
+                              placeholder="Comment"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-default">Add comment</button>
@@ -58,5 +51,30 @@ getBreadcrumb = function() {
 </div><!-- /.container -->
 
 <% include ../partials/footer.ejs %>
+
+<script>
+
+    $("form").submit(function (event) {
+        var frm = $('form');
+        var data = serialiseForm(frm);
+
+        $.ajax({
+            type: "POST",
+            url: '/api/comments',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (result) {
+
+                if (result.success) {
+                    location.href = "/technology/<%= technology.id %>";
+                } else {
+                    alert("There was an error adding a comment :(");
+                }
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>
