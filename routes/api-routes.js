@@ -137,7 +137,7 @@ ApiRoutes.createRoutes = function (self) {
      */
     self.app.delete('/api/technology', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = sanitizer( req.body.id );
+            var data = req.body.id ;
 
             technology.delete( data , function( result , error ) {
                 var data = {};
@@ -275,11 +275,11 @@ ApiRoutes.createRoutes = function (self) {
         });
 
     /**
-     * Delete technologies
+     * Delete users
      */
     self.app.delete('/api/user', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = sanitizer( req.body.id );
+            var data = req.body.id;
 
             users.delete( data , function( result , error ) {
                 var data = {};
@@ -336,11 +336,11 @@ ApiRoutes.createRoutes = function (self) {
         });
 
     /**
-     * Delete technologies
+     * Delete comments
      */
     self.app.delete('/api/comments', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = sanitizer( req.body.id );
+            var data =  req.body.id ;
 
             comments.delete( data , function( result , error ) {
                 var data = {};
