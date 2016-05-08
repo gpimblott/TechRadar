@@ -54,6 +54,31 @@ Technology.update = function (id, name, website, category, description, done) {
 }
 
 /**
+ * Delete a set of technologies using their ID numbers
+ * @param ids
+ * @param done
+ */
+Technology.delete = function (ids, done) {
+
+    var params = [];
+    for(var i = 1; i <= ids.length; i++) {
+        params.push('$' + i);
+    }
+
+    var sql = "DELETE FROM TECHNOLOGIES WHERE id IN (" +  params.join(',') + "  )";
+
+
+    dbhelper.query( sql, ids ,
+        function( result ) {
+            done( true );
+        },
+        function( error ) {
+            console.log(error);
+            done( false , error );
+        } );
+}
+
+/**
  * Update the status for a technology
  * @param technology Technology ID
  * @param status Status ID

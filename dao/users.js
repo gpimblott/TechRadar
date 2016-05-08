@@ -85,5 +85,30 @@ Users.add = function (username, displayName, password, admin, done) {
         } );
 }
 
+/**
+ * Delete a set of users using their ID numbers
+ * @param ids
+ * @param done
+ */
+Users.delete = function (ids, done) {
+
+    var params = [];
+    for(var i = 1; i <= ids.length; i++) {
+        params.push('$' + i);
+    }
+
+    var sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
+
+
+    dbhelper.query( sql, ids ,
+        function( result ) {
+            done( true );
+        },
+        function( error ) {
+            console.log(error);
+            done( false , error );
+        } );
+}
+
 
 module.exports = Users;

@@ -23,7 +23,7 @@
         <row>
             <div class="col-md-12">
                 <h1>Projects</h1>
-                <p>Manage defined projects</p>
+                <p>Manage projects</p>
             </div>
         </row>
 
@@ -31,12 +31,25 @@
 </div>
 
 <div class="container bs-docs-container">
+    <div class="col-md-10 col-md-offset-1">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Manage projects</li>
+        </ol>
+    </div>
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/project/add"  class="btn btn-default">Add</a>
-                    <a href="/error"  class="btn btn-default">Delete</a>
+                    <a href="/project/add"  class="btn btn-success">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add
+                    </a>
+                    <button id="deleteBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Delete
+                    </button>
                 </div>
             </div>
             <table id="results"></table>
@@ -50,7 +63,10 @@
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
-    $('#results').bootstrapTable( {
+    $table = $('#results');
+    $deleteBtn = $('#deleteBtn')
+
+    $table.bootstrapTable( {
         method: 'get',
         url: '/api/projects',
         cache: false,
@@ -74,7 +90,11 @@
             title: 'Name',
             sortable: true,
         }]
-    })
+    });
+
+    $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+    });
 
 </script>
 

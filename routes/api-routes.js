@@ -46,7 +46,7 @@ ApiRoutes.createRoutes = function (self) {
     /**
      * Get all technologies
      */
-    self.app.get('/api/technologies', security.isAuthenticated, jsonParser, function (req, res) {
+    self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
 
         var search = req.query.search;
 
@@ -124,6 +124,27 @@ ApiRoutes.createRoutes = function (self) {
                         res.end(JSON.stringify(data));
                     }
                 });
+        });
+
+    /**
+     * Delete technologies
+     */
+    self.app.delete('/api/technology', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id;
+
+            technology.delete( data , function( result , error ) {
+                var data = {};
+                if (result) {
+                    data.result = result;
+                    data.success = true;
+                    res.end(JSON.stringify(data));
+                } else {
+                    data.error = error;
+                    data.success = false;
+                    res.end(JSON.stringify(data));
+                }
+            })
         });
 
     /**
@@ -247,6 +268,26 @@ ApiRoutes.createRoutes = function (self) {
             });
         });
 
+    /**
+     * Delete technologies
+     */
+    self.app.delete('/api/user', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id;
+
+            users.delete( data , function( result , error ) {
+                var data = {};
+                if (result) {
+                    data.result = result;
+                    data.success = true;
+                    res.end(JSON.stringify(data));
+                } else {
+                    data.error = error;
+                    data.success = false;
+                    res.end(JSON.stringify(data));
+                }
+            })
+        });
 
     /**
      * Get comments for a technology

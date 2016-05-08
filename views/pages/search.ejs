@@ -23,13 +23,14 @@
         <row>
             <div class="col-md-12">
                 <h1>Technology Search</h1>
-                <p>Enter name of technology</p>
+                <br>
             </div>
         </row>
         <div class="row" style="margin-bottom: 40px">
             <div class="col-md-4 col-md-offset-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="search-field" name="search-field" placeholder="Search term...">
+                    <input type="text" class="form-control" id="search-field" name="search-field"
+                           placeholder="Search term...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" id="search-btn" type="button">
                         <span class="glyphicon glyphicon-search"></span>
@@ -44,7 +45,7 @@
 
 <div class="container bs-docs-container">
 
-    <div class="col-md-10 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
             <li class="active">Search</li>
@@ -52,7 +53,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-10 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <table id="results"></table>
         </div>
     </div>
@@ -64,8 +65,8 @@
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
-    $('#results').bootstrapTable( {
-        data : [],
+    $('#results').bootstrapTable({
+        data: [],
         cache: false,
         striped: true,
         escape: true,
@@ -111,25 +112,25 @@
 
     function operateFormatter(value, row, index) {
         return [
-            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
+            '<a href="/technology/' + row['id'] + '">' + value + '</a>'
         ].join('');
     }
 
-    $('#search-field').keypress(function(event){
-        if(event.keyCode == 13){
+    $('#search-field').keypress(function (event) {
+        if (event.keyCode == 13) {
             $('#search-btn').click();
         }
     });
 
     var clickBtn = function () {
-        var parameters = { search: $('#search-field').val() };
-        $.get( '/api/technology',parameters, function(data) {
-            $('#results').bootstrapTable( 'load' , data );
+        var parameters = {search: $('#search-field').val()};
+        $.get('/api/technology', parameters, function (data) {
+            $('#results').bootstrapTable('load', data);
 
         });
     };
 
-    $('#search-btn').click( clickBtn );
+    $('#search-btn').click(clickBtn);
 
 </script>
 

@@ -10,6 +10,7 @@
 
     <% include ../../partials/head.ejs %>
 
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
 <div class="container bs-docs-container">
 
     <div class="row">
-        <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
+        <div class="col-md-10 col-md-offset-1" style="padding-left: 15px; padding-top: 40px;">
             <form action="javascript:void(0);" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -73,9 +74,9 @@
             data: JSON.stringify(frmdata),
             success: function(result) {
                 if( result.success) {
-                    location.href = "/technology/" + result.id;
+                    location.href = "/users";
                 } else {
-                    alert( "There was an error adding the technology :)" );
+                    alert( "There was an error adding the user :)" );
                 }
 
             }
