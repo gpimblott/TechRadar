@@ -134,6 +134,7 @@
             complete: function(result){
                 if (result.success) {
                     $table.bootstrapTable('refresh' );
+                    $deleteBtn.prop('disabled', true );
                 } else {
                     alert("There was an error deleting technology :(");
                 }

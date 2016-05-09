@@ -8,17 +8,8 @@ var Projects = function () {
  * Get all the projects
  * @param done function to call with the results
  */
-Projects.getAll = function(done) {
-    var sql = "SELECT * FROM projects " ;
-
-    dbhelper.query(sql, [],
-        function (results) {
-            done( results);
-        },
-        function (error) {
-            console.log(error);
-            return done( null );
-        });
+Projects.getAll = function( done ) {
+    dbhelper.getAllFromTable("PROJECTS" , done );
 }
 
 
@@ -39,6 +30,15 @@ Projects.add = function ( name, done) {
             console.log(error);
             done(null , error );
         } );
+}
+
+/**
+ * Delete a set of projects using their ID numbers
+ * @param ids
+ * @param done
+ */
+Projects.delete = function (ids, done) {
+    dbhelper.deleteByIds( "PROJECTS" , ids , done );
 }
 
 module.exports = Projects;

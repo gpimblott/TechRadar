@@ -17,7 +17,7 @@ DBHelper.query = function (sql, parameters, done, error) {
     if (process.env.USE_SSL) {
         pg.defaults.ssl = true;
     }
-   
+
     pg.connect(process.env.DATABASE_URL, function (err, client) {
         var results = [];
 
@@ -27,7 +27,7 @@ DBHelper.query = function (sql, parameters, done, error) {
             error(err);
             return;
         }
-        
+
         var query = client.query(sql, parameters);
 
         query.on('row', function (row) {
@@ -73,6 +73,50 @@ DBHelper.insert = function (sql, parameters, done, error) {
                 }
             });
     });
+}
+
+/**
+ * Wrapper around delete function to delete by a set of ids
+ * @param tableName
+ * @param ids array of IDS to delete
+ * @param done function to call on completion
+ */
+DBHelper.deleteByIds = function (tableName, ids, done) {
+
+    var params = [];
+    for (var i = 1; i <= ids.length; i++) {
+        params.push('$' + i);
+    }
+
+    var sql = "DELETE FROM " + tableName + " WHERE id IN (" + params.join(',') + "  )";
+    
+    DBHelper.query(sql, ids,
+        function (result) {
+            done(true);
+        },
+        function (error) {
+            console.log(error);
+            done(false, error);
+        });
+    
+}
+
+DBHelper.getAllFromTable = function( tableName , done , order ) {
+    var sql = "SELECT * FROM " + tableName ;
+    
+    // if( order != null) {
+    //     sql = sql + " ";
+    //     sql = sql + order;
+    // }
+
+    DBHelper.query(sql, [],
+        function (results) {
+            done( results);
+        },
+        function (error) {
+            console.log(error);
+            return done( null );
+        });
 }
 
 

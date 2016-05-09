@@ -35,7 +35,7 @@ Users.findById = function(id, done) {
             " INNER JOIN roles on users.role=roles.id" +
             " where users.id=$1 ";
 
-    dbhelper.query(sql, [id],
+    dbhelper.query( sql, [id],
         function (results) {
             done(null , results[0]);
         },
@@ -77,11 +77,11 @@ Users.add = function (username, displayName, password, admin, done) {
 
     dbhelper.insert( sql, params ,
         function( result ) {
-            done( result.rows[0].id );
+            done( result.rows[0].id , null );
         },
         function(error) {
             console.log(error);
-            done(null);
+            done(null , error );
         } );
 }
 
@@ -98,7 +98,6 @@ Users.delete = function (ids, done) {
     }
 
     var sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
-
 
     dbhelper.query( sql, ids ,
         function( result ) {

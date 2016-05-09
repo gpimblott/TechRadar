@@ -25,6 +25,25 @@ var ApiRoutes = function () {
 };
 
 
+/**
+ * Standard approach to returning results
+ * @param res The response object
+ * @param result The result returned from the
+ */
+handleResultSet = function( res , result  , error ) {
+    res.writeHead(200, {"Content-Type": "application/json"});
+
+    var data = {};
+    if ( result ) {
+        data.result = result;
+        data.success = true;
+    } else {
+        data.error = error;
+        data.success = false;
+    }
+    res.end(JSON.stringify(data));
+}
+
 /*****************************************************
  * API Interfaces
  ******************************************************/
@@ -84,20 +103,7 @@ ApiRoutes.createRoutes = function (self) {
                 sanitizer( req.body.technologyCategory),
                 sanitizer( req.body.technologyDescription) ,
                 function (result, error) {
-
-                    if (null === result) {
-                        res.writeHead(200, {"Content-Type": "application/json"});
-                        var data = {};
-                        data.error = error;
-                        data.success = false;
-                        res.end(JSON.stringify(data));
-                    } else {
-                        res.writeHead(200, {"Content-Type": "application/json"});
-                        var data = {};
-                        data.id = result;
-                        data.success = true;
-                        res.end(JSON.stringify(data));
-                    }
+                    handleResultSet( res , result , error );
                 });
         });
 
@@ -115,20 +121,8 @@ ApiRoutes.createRoutes = function (self) {
                 sanitizer( req.body.category ),
                 sanitizer( req.body.description ),
 
-                function (result) {
-
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    var data = {};
-
-                    if (result) {
-                        data.result = result;
-                        data.success = true;
-                        res.end(JSON.stringify(data));
-                    } else {
-                        data.error = error;
-                        data.success = false;
-                        res.end(JSON.stringify(data));
-                    }
+                function (result , error ) {
+                    handleResultSet( res, result , error );
                 });
         });
 
@@ -140,16 +134,7 @@ ApiRoutes.createRoutes = function (self) {
             var data = req.body.id ;
 
             technology.delete( data , function( result , error ) {
-                var data = {};
-                if (result) {
-                    data.result = result;
-                    data.success = true;
-                    res.end(JSON.stringify(data));
-                } else {
-                    data.error = error;
-                    data.success = false;
-                    res.end(JSON.stringify(data));
-                }
+                handleResultSet( res, result , error );
             })
         });
 
@@ -215,19 +200,7 @@ ApiRoutes.createRoutes = function (self) {
         var tech = sanitizer( req.params.technology );
 
         technology.updateStatus(tech, status, reason, req.user.id, function (result, error) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            var data = {};
-
-            if ( result != null ) {
-                data.success = true;
-                data.id = result;
-                res.end(JSON.stringify(data));
-            } else {
-                data.success = false;
-                data.error = error;
-                res.end(JSON.stringify(data));
-            }
-
+            handleResultSet( res, result , error );
         })
 
     });
@@ -245,21 +218,8 @@ ApiRoutes.createRoutes = function (self) {
                 sanitizer( req.body.password ),
                 sanitizer( req.body.role ),
 
-                function (result) {
-
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    var data = {};
-
-                    if ( result != null  ) {
-                        data.id = result;
-                        data.success = true;
-                        res.end(JSON.stringify(data));
-                    } else {
-                        data.error = error;
-                        data.success = false;
-                        res.end(JSON.stringify(data));
-                    }
-
+                function (result , error ) {
+                    handleResultSet( res, result , error );
                 });
         });
 
@@ -282,16 +242,7 @@ ApiRoutes.createRoutes = function (self) {
             var data = req.body.id;
 
             users.delete( data , function( result , error ) {
-                var data = {};
-                if (result) {
-                    data.result = result;
-                    data.success = true;
-                    res.end(JSON.stringify(data));
-                } else {
-                    data.error = error;
-                    data.success = false;
-                    res.end(JSON.stringify(data));
-                }
+                handleResultSet( res, result , error );
             })
         });
 
@@ -319,19 +270,7 @@ ApiRoutes.createRoutes = function (self) {
                 sanitizer( req.user.id ),
 
                 function (result, error) {
-
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    var data = {};
-
-                    if ( result != null  ) {
-                        data.id = result;
-                        data.success = true;
-                        res.end(JSON.stringify(data));
-                    } else {
-                        data.error = error;
-                        data.success = false;
-                        res.end(JSON.stringify(data));
-                    }
+                    handleResultSet( res, result , error );
                 });
         });
 
@@ -343,16 +282,7 @@ ApiRoutes.createRoutes = function (self) {
             var data =  req.body.id ;
 
             comments.delete( data , function( result , error ) {
-                var data = {};
-                if (result) {
-                    data.result = result;
-                    data.success = true;
-                    res.end(JSON.stringify(data));
-                } else {
-                    data.error = error;
-                    data.success = false;
-                    res.end(JSON.stringify(data));
-                }
+                handleResultSet( res, result , error );
             })
         });
 
@@ -378,23 +308,22 @@ ApiRoutes.createRoutes = function (self) {
                 sanitizer( req.body.projectname ),
 
                 function ( result , error ) {
-
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    var data = {};
-
-                    if ( result != null  ) {
-                        data.id = result;
-                        data.success = true;
-                        res.end(JSON.stringify(data));
-                    } else {
-                        data.error = error;
-                        data.success = false;
-                        res.end(JSON.stringify(data));
-                    }
-                    
+                    handleResultSet( res, result , error );
                 });
         });
 
+    /**
+     * Delete projects from the database
+     */
+    self.app.delete('/api/project', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id ;
+
+            projects.delete( data , function( result , error ) {
+                handleResultSet( res, result , error );
+            })
+        });
+    
     /**
      * Get all categories
      */
@@ -406,6 +335,27 @@ ApiRoutes.createRoutes = function (self) {
             });
         });
 
+    self.app.post('/api/category', security.isAuthenticatedAdmin,
+        function (req, res) {
+            category.add(
+                sanitizer( req.body.name ),
+                sanitizer( req.body.description ),
+                function (result , error ) {
+                    if(result) {
+                        cache.refresh(self.app);
+                    }
+                    handleResultSet( res, result , error );
+            });
+        });
+
+    self.app.delete('/api/category', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id ;
+
+            category.delete( data , function( result , error ) {
+                handleResultSet( res, result , error );
+            })
+        });
 
 }
 

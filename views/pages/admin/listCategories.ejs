@@ -43,7 +43,7 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="javascript:alert('Not yet Implemenented');"  class="btn btn-success">
+                    <a href="/category/add"  class="btn btn-success">
                         <i class="glyphicon glyphicon-plus"></i>
                         Add
                     </a>
@@ -100,6 +100,38 @@
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
     });
+
+    $deleteBtn.click( function() {
+        var r = confirm("Are you sure you want to delete the selected Categories");
+        if (r == false) {
+            return;
+        }
+
+        var data={};
+        data.id = getIdSelections();
+
+        $.ajax({
+            type: "DELETE",
+            url: '/api/category',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            complete: function(result){
+                if (result.success) {
+                    $table.bootstrapTable('refresh' );
+                    $deleteBtn.prop('disabled', true );
+                } else {
+                    alert("There was an error deleting category");
+                }
+            }
+        });
+    });;
+
+
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
 
 </script>
 

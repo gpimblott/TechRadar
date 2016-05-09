@@ -96,6 +96,38 @@
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
     });
 
+    $deleteBtn.click( function() {
+        var r = confirm("Are you sure you want to delete the selected projects");
+        if (r == false) {
+            return;
+        }
+
+        var data={};
+        data.id = getIdSelections();
+
+        $.ajax({
+            type: "DELETE",
+            url: '/api/project',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            complete: function(result){
+                if (result.success) {
+                    $table.bootstrapTable('refresh' );
+                    $deleteBtn.prop('disabled', true );
+                } else {
+                    alert("There was an error deleting technology :(");
+                }
+            }
+        });
+    });;
+
+
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
+
 </script>
 
 </body>

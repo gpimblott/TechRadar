@@ -83,14 +83,16 @@ var statements = [
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
 
     "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Discuss') , (4, 'Avoid')",
-    "INSERT INTO categories (id , name, description) VALUES " +
-                "(1,'Development Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
-                "(2,'Languages and Frameworks','Languages and high-level libraries for developing application and systems')," +
-                "(3,'Platforms' , 'A platform is a group of technologies that are used as a base upon which other applications, processes or technologies are developed.')," +
-                "(4,'Infrastructure' , " +
+
+    "ALTER SEQUENCE categories_id_seq RESTART WITH 1",
+    "INSERT INTO categories (name, description) VALUES " +
+                "('Development Tools','A program that software developers use to create, debug, maintain, or otherwise support other programs and applications')," +
+                "('Languages and Frameworks','Languages and high-level libraries for developing application and systems')," +
+                "('Platforms' , 'A platform is a group of technologies that are used as a base upon which other applications, processes or technologies are developed.')," +
+                "('Infrastructure' , " +
                         "'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services'), " +
-                "(5, 'Testing Tools','Tools and libraries that support testing of systems and infrastructure'), " +
-                "(6, 'Security Tools' , 'Specialist tools and libraries to support the securing of infrastructure and applications ') "
+                "('Testing Tools','Tools and libraries that support testing of systems and infrastructure'), " +
+                "('Security Tools' , 'Specialist tools and libraries to support the securing of infrastructure and applications ') "
 
     ];
 

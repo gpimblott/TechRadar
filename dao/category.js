@@ -12,16 +12,35 @@ var Category = function () {
  * @param done function to call with the results
  */
 Category.getAll = function(done) {
-    var sql = "SELECT * FROM categories";
-    
-    dbhelper.query(sql, [],
-        function (results) {
-            done( results);
+    dbhelper.getAllFromTable("CATEGORIES" , done );
+}
+
+/**
+ * Add a new category
+ * @param name Name of the project to add
+ * @done function to call with the result
+ */
+Category.add = function ( name, description, done) {
+    var sql = "INSERT INTO categories ( name, description ) values ( $1 , $2  ) returning id";
+    var params = [ name , description ];
+
+    dbhelper.insert( sql, params ,
+        function( result ) {
+            done( result.rows[0].id );
         },
-        function (error) {
+        function(error) {
             console.log(error);
-            return done( null );
-        });
+            done(null , error );
+        } );
+}
+
+/**
+ * Delete a set of categories using their ID numbers
+ * @param ids
+ * @param done
+ */
+Category.delete = function (ids, done) {
+    dbhelper.deleteByIds("CATEGORIES" , ids , done );
 }
 
 

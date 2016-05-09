@@ -255,6 +255,13 @@ Routes.createRoutes = function (self) {
             res.render('pages/admin/listCategories', {user: req.user});
         });
 
+    /**
+     * Add new category page
+     */
+    self.app.get('/category/add', security.isAuthenticatedAdmin,
+        function (req, res) {
+            res.render('pages/admin/addCategory', {user: req.user});
+        });
 }
 
 module.exports = Routes;

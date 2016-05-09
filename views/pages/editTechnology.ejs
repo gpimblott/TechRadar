@@ -23,7 +23,7 @@
     <div class="col-md-10 col-md-offset-1">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
+            <li><a href="/radar/<%= technology.categoryname.toLowerCase() %>"><%= technology.categoryname %></a></li>
             <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
             <li class="active">Edit</li>
         </ol>
