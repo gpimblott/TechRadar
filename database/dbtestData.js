@@ -13,19 +13,8 @@ var async = require('async');
 var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
-// (1,'Adopt')
-// (2,'Trial')
-// (3,'Assess')
-// (4,'Hold')
-// (5,'Avoid')
-// (6, 'Hold')
 
-// (1,'Tools')
-// (2,'Languages and Frameworks')
-// (3,'Platforms')
-// (4,'Infrastructure')
-
-
+var hpassword = require('crypto').createHash('sha256').update('letmein').digest('base64');
 
 var statements = [
     "DELETE FROM comments",
@@ -54,10 +43,10 @@ var statements = [
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The big bad bits of java' , 3 )",
 
  
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('admin' , 'letmein' , 'The Admin', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , 'letmein' , 'User One', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , 'letmein' , 'User Two', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , 'letmein' , 'User Three', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('admin' , '" + hpassword + "' , 'The Admin', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , '" + hpassword + "' , 'User One', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , '" + hpassword + "' , 'User Two', 0) ",
+    "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , '" + hpassword + "' , 'User Three', 0) ",
 
 ];
 

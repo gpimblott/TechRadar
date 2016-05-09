@@ -1,5 +1,7 @@
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
+const crypto = require('crypto');
+const hash = crypto.createHash('sha256');
 
 var Users = function () {
 };
@@ -72,8 +74,11 @@ Users.findByUsername = function(username, done) {
  * @param done Function to call when complete
  */
 Users.add = function (username, displayName, password, admin, done) {
+    hash.update(password);
+    var hpassword = hash.digest('hex');
+
     var sql = "INSERT INTO users ( username, displayName, password, role) values ( $1 , $2 , $3 ,$4 ) returning id";
-    var params = [ username,displayName,password,admin ];
+    var params = [ username,displayName,hpassword,admin ];
 
     dbhelper.insert( sql, params ,
         function( result ) {

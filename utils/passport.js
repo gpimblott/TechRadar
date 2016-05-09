@@ -1,21 +1,25 @@
 /**
  * Configure passport for simple database authentication
  */
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
+const passport = require('passport');
+const Strategy = require('passport-local').Strategy;
+const users = require('../dao/users.js');
 
-var users = require('../dao/users.js');
 
 passport.use(new Strategy(
     function (username, password, cb) {
         users.findByUsername(username, function (err, user) {
+
             if (err) {
                 return cb(err);
             }
             if (!user) {
                 return cb(null, false);
             }
-            if (user.password != password) {
+
+            var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
+
+            if (user.password != userHash) {
                 return cb(null, false);
             }
             return cb(null, user);
