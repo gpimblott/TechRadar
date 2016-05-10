@@ -19,11 +19,13 @@ client.connect();
 var statements = [
     'DROP TABLE IF EXISTS project_tech_link',
     'DROP TABLE IF EXISTS tech_status_link',
+    'DROP TABLE IF EXISTS technology_stack_link',
     'DROP TABLE IF EXISTS history;',
     'DROP TABLE IF EXISTS projects',
     'DROP TABLE IF EXISTS comments',
     'DROP TABLE IF EXISTS votes',
     'DROP TABLE IF EXISTS technologies',
+    'DROP TABLE IF EXISTS stacks',
     'DROP TABLE IF EXISTS categories',
     'DROP TABLE IF EXISTS status',
     'DROP TABLE IF EXISTS users',
@@ -50,7 +52,8 @@ var statements = [
                 'id SERIAL PRIMARY KEY,' +
                 'technology integer references technologies(id) ON DELETE CASCADE )',
 
-    'CREATE TABLE IF NOT EXISTS projects(id SERIAL PRIMARY KEY, name VARCHAR(100) )',
+    'CREATE TABLE IF NOT EXISTS projects(id SERIAL PRIMARY KEY, name VARCHAR(100),' +
+                'description TEXT  )',
 
     'CREATE TABLE IF NOT EXISTS project_tech_link(' +
                 'project integer references projects(id) ON DELETE CASCADE,' +
@@ -78,6 +81,13 @@ var statements = [
             "userid INTEGER references users(id) ON DELETE CASCADE," +
             "technologyid INTEGER references technologies(id) ON DELETE CASCADE," +
             "date TIMESTAMP without time zone default (now() at time zone 'utc'))",
+
+    'CREATE TABLE IF NOT EXISTS stacks(' +
+        'id SERIAL PRIMARY KEY, name VARCHAR(40) not null, description TEXT )',
+
+    'CREATE TABLE IF NOT EXISTS technology_stack_link(' +
+        'stack INTEGER references stacks(id) ON DELETE CASCADE, ' +
+        'technology INTEGER references technologies(id) ON DELETE CASCADE )',
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",

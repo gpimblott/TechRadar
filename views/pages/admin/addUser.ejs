@@ -31,19 +31,19 @@
             <form action="javascript:void(0);" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="username">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password"  name="password" placeholder="Password">
+                    <input type="password" class="form-control" id="password"  name="password" placeholder="Password" required>
                 </div>
                 <div class="form-group">
                     <label for="password2">Confirm password</label>
-                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Password">
+                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Password" required>
                 </div>
                 <div class="form-group">
                     <label for="technologyWebsite">Full name</label>
-                    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Full name">
+                    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Full name" required>
                 </div>
                 <div class="form-group">
                     <label for="usertype">Account type:</label>
@@ -61,9 +61,31 @@
 
 <% include ../../partials/footer.ejs %>
 
+
+
 <script>
 
     $( "form" ).submit(function( event ) {
+
+        var usernameRegex = new RegExp('^[a-z0-9_-]{3,16}$');
+
+        var username = $("form [name=username]").val();
+        console.log(username);
+        console.log(usernameRegex.test($("form [name=username]").val()));
+
+        var password1 = $("form [name=password]").val();
+        var password2 = $("form [name=password2]").val();
+
+        if( password1 != password2 ){
+            alert("Passwords do not match");
+            return;
+        }
+
+        if( password1.length <8 ) {
+            alert("Passwords must be 8 charcaters");
+            return;
+        }
+
         var frm = $('form');
         var frmdata = serialiseForm(frm);
 
@@ -83,6 +105,14 @@
         });
     });
 
+
+    function nospaces(t){
+
+        if( t.value.match(/\s/g) || t.value.match(/\./g)  ){
+            t.value= (t.value.replace(/\s/g,'') .replace(/\./g,''));
+        }
+
+    }
 </script>
 </body>
 </html>

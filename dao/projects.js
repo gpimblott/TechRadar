@@ -18,9 +18,9 @@ Projects.getAll = function( done ) {
  * @param name Name of the project to add
  * @done function to call with the result
  */
-Projects.add = function ( name, done) {
-    var sql = "INSERT INTO projects ( name ) values ( $1  ) returning id";
-    var params = [ name ];
+Projects.add = function ( name, description, done) {
+    var sql = "INSERT INTO projects ( name, description ) values ( $1 , $2 ) returning id";
+    var params = [ name, description ];
 
     dbhelper.insert( sql, params ,
         function( result ) {

@@ -80,10 +80,14 @@ Routes.createRoutes = function (self) {
 
 
     /**
-     * Stack builder (hold page)
+     * Stack builder
      */
-    self.app.get('/stackbuilder', security.isAuthenticated, function (req, res) {
-        res.render('pages/stackbuilder', {user: req.user});
+    self.app.get('/stacks', security.isAuthenticated, function (req, res) {
+        res.render('pages/listStacks', {user: req.user});
+    });
+
+    self.app.get('/stack/add', security.isAuthenticated, function (req, res) {
+        res.render('pages/addStack', {user: req.user});
     });
 
     /**
