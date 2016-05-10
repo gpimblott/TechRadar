@@ -18,7 +18,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <% categories.forEach( function( category ) {
-                            var url = encodeURI('/radar/' + category.name ).toLowerCase(); %>
+                            var url = encodeURI('/category/' + category.name + '/technologies').toLowerCase(); %>
                             <li><a href="<%=url%>"><%=category.name%></a></li>
                         <% }); %>
 
@@ -35,9 +35,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stack Builder<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/stackbuilder">Search</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="/stackbuilder">Create new stack</a></li>
+                        <li><a href="/stacks">Manage stacks</a></li>
                     </ul>
                 </li>
 

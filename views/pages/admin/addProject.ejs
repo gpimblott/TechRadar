@@ -24,13 +24,25 @@
 </div>
 
 <div class="container bs-docs-container">
-
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Add Project</li>
+        </ol>
+    </div>
     <div class="row">
         <div class="col-md-6" style="padding-left: 15px; padding-top: 40px;">
             <form action="javascript:void(0);" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="projectname" name="projectname" placeholder="Project name">
+                    <input type="text" class="form-control" id="projectname" name="projectname"
+                           placeholder="Project name">
+                </div>
+                <div class="form-group">
+                    <label for="descriptioin">Description</label>
+                <textarea class="form-control" rows="3" id="description" name="description"
+                          placeholder="Description" required></textarea>
+
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>

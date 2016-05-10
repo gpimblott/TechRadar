@@ -8,8 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
-
+    <% include ../partials/head.ejs %>
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
@@ -17,14 +16,14 @@
 
 <body>
 
-<% include ../../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Users</h1>
-                <p>Manage system users</p>
+                <h1>Stacks</h1>
+                <p>Manage Stacks</p>
             </div>
         </row>
 
@@ -35,7 +34,7 @@
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li class="active">Manage users</li>
+            <li class="active">Manage stacks</li>
         </ol>
     </div>
 
@@ -43,14 +42,16 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/user/add"  class="btn btn-success">
+                    <a href="/stack/add"  class="btn btn-success">
                         <i class="glyphicon glyphicon-plus"></i>
-                        Add
+                        Create
                     </a>
+                    <% if( user.admin ) { %>
                     <button id="deleteBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
                         Delete
                     </button>
+                    <% } %>
                 </div>
             </div>
             <table id="results"></table>
@@ -59,7 +60,7 @@
 
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
@@ -67,12 +68,9 @@
     $table = $('#results');
     $deleteBtn = $('#deleteBtn')
 
-    // Disabled by default
-    $deleteBtn.prop('disabled', 1);
-
     $table.bootstrapTable( {
         method: 'get',
-        url: '/api/users',
+        url: '/api/stacks',
         cache: false,
         striped: true,
         escape: true,
@@ -90,35 +88,25 @@
             title: 'ID',
             visible: false
         }, {
-            field: 'username',
-            title: 'Username',
+            field: 'name',
+            title: 'Name',
             sortable: true,
         }, {
-            field: 'displayname',
-            title: 'Full Name',
-            align: 'center',
-            sortable: true
-        }, {
-            field: 'rolename',
-            title: 'Role',
-            align: 'center',
-            sortable: true
-        }, {
-            field: 'isadmin',
-            title: 'Admin',
-            align: 'center',
-            sortable: true,
-            formatter: adminFormatter
-        }]
+            field: 'description',
+            title: 'Description',
+            sortable: false,
+        }
+        ]
     });
 
+    <% if( user.admin ) { %>
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
     });
 
     $deleteBtn.click( function() {
-        var r = confirm("Are you sure you want to delete all of the selected users");
+        var r = confirm("Are you sure you want to delete the selected stacks");
         if (r == false) {
             return;
         }
@@ -128,7 +116,7 @@
 
         $.ajax({
             type: "DELETE",
-            url: '/api/user',
+            url: '/api/stack',
             contentType: "application/json",
             data: JSON.stringify(data),
             complete: function(result){
@@ -136,11 +124,12 @@
                     $table.bootstrapTable('refresh' );
                     $deleteBtn.prop('disabled', true );
                 } else {
-                    alert("There was an error deleting technology :(");
+                    alert("There was an error deleting stack :(");
                 }
             }
         });
-    });;
+    });
+    <% } %>
 
 
     function getIdSelections() {
@@ -148,27 +137,6 @@
             return row.id
         });
     }
-
-
-    function adminFormatter(value, row, index) {
-
-        var column = [];
-        if( row['isadmin']) {
-            column = [ "<span class='glyphicon glyphicon-ok' aria-hidden='true'/>"]
-        } else {
-            column = [ "<span class='glyphicon glyphicon-remove' aria-hidden='true'/>"]
-        }
-        return column;
-    }
-
-
-    function operateFormatter(value, row, index) {
-        return [
-            '<a href="/technology/view/' + row['id'] + '" target="_blank">' + value + '</a>'
-        ].join('');
-    }
-
-
 
 </script>
 

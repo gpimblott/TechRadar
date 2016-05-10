@@ -2,14 +2,15 @@
  *  These are the routes implement the REST API services
  */
 
-var cache = require('../dao/cache.js');
-var users = require('../dao/users');
-var technology = require('../dao/technology.js');
-var category = require('../dao/category.js');
-var comments = require('../dao/comments.js');
-var projects = require('../dao/projects.js');
-var votes = require('../dao/vote.js');
-var status = require('../dao/status.js');
+var cache = require('../../dao/cache.js');
+var users = require('../../dao/users');
+var technology = require('../../dao/technology.js');
+var category = require('../../dao/category.js');
+var comments = require('../../dao/comments.js');
+var projects = require('../../dao/projects.js');
+var votes = require('../../dao/vote.js');
+var status = require('../../dao/status.js');
+var stacks = require('../../dao/stacks.js');
 
 
 var bodyParser = require('body-parser');
@@ -17,7 +18,7 @@ var jsonParser = bodyParser.json();
 
 var passport = require('passport');
 
-var security = require('../utils/security.js');
+var security = require('../../utils/security.js');
 
 var sanitizer = require('sanitize-html');
 
@@ -212,10 +213,21 @@ ApiRoutes.createRoutes = function (self) {
     self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
 
+            var username =  sanitizer( req.body.username );
+            var password =  sanitizer( req.body.password );
+
+            if( password.length < 8) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                var data = {};
+                data.error = "Password too short";
+                data.success = false;
+                res.end( JSON.stringify(data) );
+            }
+
             users.add(
-                sanitizer( req.body.username ),
+                username,
                 sanitizer( req.body.displayName ),
-                sanitizer( req.body.password ),
+                password,
                 sanitizer( req.body.role ),
 
                 function (result , error ) {
@@ -306,6 +318,7 @@ ApiRoutes.createRoutes = function (self) {
 
             projects.add(
                 sanitizer( req.body.projectname ),
+                sanitizer( req.body.description ),
 
                 function ( result , error ) {
                     handleResultSet( res, result , error );
@@ -323,7 +336,46 @@ ApiRoutes.createRoutes = function (self) {
                 handleResultSet( res, result , error );
             })
         });
-    
+
+    /**
+     * Get all stacks
+     */
+    self.app.get('/api/stacks', security.isAuthenticated,
+        function (req, res) {
+            stacks.getAll(function (result) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(result));
+            });
+        });
+
+    /**
+     * Add a new stack
+     */
+    self.app.post('/api/stack', security.isAuthenticated, jsonParser,
+        function (req, res) {
+
+            stacks.add(
+                sanitizer( req.body.name ),
+                sanitizer( req.body.description ),
+
+                function ( result , error ) {
+                    handleResultSet( res, result , error );
+                });
+        });
+
+    /**
+     * Delete stack from the database
+     */
+    self.app.delete('/api/stack', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var data = req.body.id ;
+
+            stacks.delete( data , function( result , error ) {
+                handleResultSet( res, result , error );
+            })
+        });
+
+
     /**
      * Get all categories
      */
