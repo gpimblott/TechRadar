@@ -24,8 +24,15 @@ var passport = require('passport');
 require('./utils/passport.js');
 
 // Load the routes for the web Application and API REST services
-var routes = require('./routes/routes.js');
-var apiroutes = require('./routes/api-routes.js');
+var routes = require('./routes/web/routes.js');
+var technologyRoutes = require('./routes/web/technology-routes');
+var stackRoutes = require('./routes/web/stack-routes');
+var categoryRoutes = require('./routes/web/category-routes');
+var projectRoutes = require('./routes/web/project-routes');
+var userRoutes = require('./routes/web/user-routes');
+
+// Load the API routes
+var apiroutes = require('./routes/api/api-routes.js');
 
 
 /**
@@ -118,6 +125,13 @@ var TechRadar = function () {
 
         // Create all the routes and refresh the cache
         routes.createRoutes(self);
+        technologyRoutes.createRoutes(self);
+        stackRoutes.createRoutes(self);
+        categoryRoutes.createRoutes(self);
+        projectRoutes.createRoutes(self);
+        userRoutes.createRoutes(self);
+
+        // API routes
         apiroutes.createRoutes(self);
 
     };

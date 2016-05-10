@@ -46,11 +46,9 @@ var statements = [
 
     'CREATE TABLE IF NOT EXISTS technologies(id SERIAL PRIMARY KEY, ' +
                 'name VARCHAR(40) not null, website VARCHAR(100), description TEXT , ' +
-                'category integer references categories(id) )',
+                'category integer references categories(id),' +
+                'date TIMESTAMP without time zone default (now() at time zone \'utc\') )',
 
-    'CREATE TABLE IF NOT EXISTS history(' +
-                'id SERIAL PRIMARY KEY,' +
-                'technology integer references technologies(id) ON DELETE CASCADE )',
 
     'CREATE TABLE IF NOT EXISTS projects(id SERIAL PRIMARY KEY, name VARCHAR(100),' +
                 'description TEXT  )',

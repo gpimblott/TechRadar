@@ -17,7 +17,9 @@
                             <td>Category</td>
                              <td>-</td>
                             <td >
-                                <a class="banner-text-link" href="/radar/<%=technology.categoryname.toLowerCase()%>"><%= technology.categoryname %></a>
+                                <a class="banner-text-link"
+                                   href="/category/<%=encodeURI( technology.categoryname) .toLowerCase()%>/technologies"><%= technology.categoryname %>
+                                </a>
                             </td>
                         </tr>
                          <tr>
