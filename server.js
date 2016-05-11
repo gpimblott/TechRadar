@@ -32,7 +32,12 @@ var projectRoutes = require('./routes/web/project-routes');
 var userRoutes = require('./routes/web/user-routes');
 
 // Load the API routes
-var apiroutes = require('./routes/api/api-routes.js');
+var apiStack = require('./routes/api/api-stacks-routes.js');
+var apiTechnologies = require('./routes/api/api-technology-routes.js');
+var apiUsers = require('./routes/api/api-users-routes.js');
+var apiComments = require('./routes/api/api-comments-routes.js');
+var apiProjects = require('./routes/api/api-projects-routes.js');
+var apiCategories = require('./routes/api/api-categories-routes.js');
 
 
 /**
@@ -132,8 +137,12 @@ var TechRadar = function () {
         userRoutes.createRoutes(self);
 
         // API routes
-        apiroutes.createRoutes(self);
-
+        apiStack.createRoutes(self);
+        apiTechnologies.createRoutes(self);
+        apiUsers.createRoutes(self);
+        apiComments.createRoutes(self);
+        apiProjects.createRoutes(self);
+        apiCategories.createRoutes(self);
     };
 
     /**
