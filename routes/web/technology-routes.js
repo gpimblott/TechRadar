@@ -3,6 +3,7 @@ var users = require('../../dao/users');
 
 var technology = require('../../dao/technology.js');
 var comments = require('../../dao/comments.js');
+var project = require('../../dao/projects.js');
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
@@ -117,6 +118,31 @@ TechnologyRoutes.createRoutes = function (self) {
         });
     });
 
+    /**
+     * Add project to a technology
+     */
+    self.app.get('/technology/:id/projects', security.isAuthenticatedAdmin, function (req, res) {
+        var techid = req.params.id;
+
+        technology.getById(techid, function (technology) {
+            if (technology === null) {
+                res.render('pages/error', {user: req.user});
+            } else {
+                project.getAllForTechnology(techid, function (linkedProjects) {
+                    project.getAll(function (allProjects) {
+                        res.render('pages/admin/addProjectToTechnology',
+                            {
+                                technology: technology,
+                                user: req.user,
+                                unassignedProjects: allProjects.filter(function (e) {
+                                    return linkedProjects.map(function(linkedEl) {return linkedEl.id}).indexOf(e.id) === -1;
+                                })
+                            });
+                    });
+                });
+            }
+        });
+    });
 
 }
 

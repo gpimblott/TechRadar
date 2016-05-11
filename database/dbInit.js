@@ -20,6 +20,7 @@ var statements = [
     'DROP TABLE IF EXISTS project_tech_link',
     'DROP TABLE IF EXISTS tech_status_link',
     'DROP TABLE IF EXISTS technology_stack_link',
+    'DROP TABLE IF EXISTS technology_project_link',
     'DROP TABLE IF EXISTS history;',
     'DROP TABLE IF EXISTS projects',
     'DROP TABLE IF EXISTS comments',
@@ -86,6 +87,10 @@ var statements = [
     'CREATE TABLE IF NOT EXISTS technology_stack_link(' +
         'stack INTEGER references stacks(id) ON DELETE CASCADE, ' +
         'technology INTEGER references technologies(id) ON DELETE CASCADE )',
+
+    'CREATE TABLE IF NOT EXISTS technology_project_link(' +
+        'projectid INTEGER references projects(id) ON DELETE CASCADE, ' +
+        'technologyid INTEGER references technologies(id) ON DELETE CASCADE )',
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",

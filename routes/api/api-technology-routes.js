@@ -1,6 +1,7 @@
 var technology = require('../../dao/technology.js');
 var status = require('../../dao/status.js');
 var votes = require('../../dao/vote.js');
+var project = require('../../dao/projects.js');
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
@@ -172,6 +173,30 @@ ApiTechnologyRoutes.createRoutes = function (self) {
         technology.updateStatus(tech, status, reason, req.user.id, function (result, error) {
             apiutils.handleResultSet( res, result , error );
         })
+    });
+
+    /**
+     * Add a project to a technology
+     */
+    self.app.post('/api/technology/:technology/project', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+        var projectId = sanitizer(req.body.project);
+        var technologyId = sanitizer(req.params.technology);
+
+        technology.addProject(technologyId, projectId, function (result, error) {
+            apiutils.handleResultSet(res, result , error);
+        })
+    });
+
+    /**
+     * Get linked Projects
+     */
+    self.app.get('/api/technology/:technology/projects', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+        var technologyId = sanitizer(req.params.technology);
+
+        project.getAllForTechnology(technologyId, function (result, error) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        });
     });
 
 }

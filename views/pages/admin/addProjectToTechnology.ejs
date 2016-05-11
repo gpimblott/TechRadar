@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../../partials/head.ejs %>
+
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
+
+</head>
+
+<body>
+<%
+getBreadcrumb = function() {
+    return technology.categoryname.toLowerCase();
+}
+%>
+
+<% include ../../partials/menu.ejs %>
+
+<% include ../../partials/technology-head.ejs%>
+
+<div class="container bs-docs-container" style="padding-top: 10px;">
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-bottom: 5px;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
+            <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
+            <li class="active">Change usage in projects</li>
+        </ol>
+    </div>
+    <row>
+        <div class="col-md-12" style="margin-top: 10px">
+            <row>
+                <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
+                    <% if( user.admin ) { %>
+                    <form  action="javascript:void(0);">
+                        <fieldset class="form-group">
+                            <label for="newProject">Add project which uses <%=technology.name%></label>
+                            <select class="form-control" id="newProject" value=''>
+                                <% unassignedProjects.forEach( function(project) { %>
+                                    <option value='<%= project.id %>'><%= project.name %></option>
+                                <% }); %>
+                            </select>
+                        </fieldset>
+                        <button type="submit" id="projectAddBtn" class="btn btn-default">Add</button>
+                    </form>
+                    <% } %>
+                </div>
+            </row>
+        </div>
+    </row>
+    <row>
+        <div class="col-md-10 col-md-offset-1">
+            <hr>
+            <table id="linkedProjects"></table>
+        </div>
+    </row>
+
+
+</div>
+
+<% include ../../partials/footer.ejs %>
+
+
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script>
+
+    $('#linkedProjects').bootstrapTable( {
+        method: 'get',
+        url: '/api/technology/<%=technology.id%>/projects',
+        cache: false,
+        striped: true,
+        escape: true,
+        idField: 'id',
+        search: false,
+        showColumns: true,
+        showRefresh: true,
+        showPaginationSwitch: true,
+        pagination: true,
+        columns: [ {
+            field: 'id',
+            title: 'ID',
+            sortable: true,
+            visible: false
+        }, {
+            field: 'name',
+            title: 'Name',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'description',
+            title: 'Description',
+            align: 'center',
+            sortable: true
+        }]
+    });
+
+
+    <% if (user.admin ) { %>
+
+    var addProject = function () {
+        var data = {project: $('#newProject').val(), technology:<%= technology.id %>};
+        $.post('/api/technology/<%= technology.id %>/project', data, function (result) {
+            if(result.success) {
+                location.href = "/technology/<%=technology.id%>/projects";
+            } else {
+                alert("An error occurred while adding a project");
+            }
+        });
+    };
+
+    $(function () {
+        $('select[value]').each(function () {
+            $(this).val(this.getAttribute("value"));
+        });
+    });
+
+
+    $('#projectAddBtn').click(addProject);
+
+    <% } %>
+
+</script>
+
+</body>
+</html>

@@ -205,4 +205,25 @@ Technology.search = function (value, done) {
         } );
 }
 
+/**
+ * Add a project to a technology
+ *
+ * @param technologyId Technology ID
+ * @param projectId Project ID
+ * @param callback Function to call when the update is finished
+ */
+Technology.addProject = function (technologyId, projectId, callback) {
+    var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ($1, $2)";
+    var params = [technologyId, projectId];
+
+    dbhelper.insert(sql, params,
+        function(result) {
+            callback(result);
+        },
+        function(error) {
+            console.log(error);
+            callback(null, error);
+        });
+};
+
 module.exports = Technology;
