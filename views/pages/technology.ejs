@@ -72,7 +72,6 @@ getBreadcrumb = function () {
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
                                         status</a></li>
-                                <li><a class="dropdown-item" href="/technology/<%= technology.id %>/projects">Change usage in projects</a></li>
                             </ul>
                         </div>
 
@@ -179,6 +178,29 @@ getBreadcrumb = function () {
                     </tbody>
                 </table>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Use in projects
+                    <span class="pull-right">
+                        <a href="/technology/<%= technology.id %>/projects">[Update]</a>
+                    </span>
+                    </div>
+
+                </div>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody id="project-use">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </row>
 </div>
@@ -244,6 +266,20 @@ getBreadcrumb = function () {
 
     };
 
+    var refreshProjectUse = function () {
+        $.get('/api/technology/<%= technology.id %>/projects', function (result) {
+            var output = "";
+            result.forEach(function (project) {
+                output += "<tr><td>" + project.name + "</td>";
+                output += "<td>" + project.description + "</td>";
+            });
+
+            $('#project-use').empty();
+            $('#project-use').append(output);
+        })
+
+    };
+
 
     var voteClickedBtn = function () {
         var data = {statusvalue: this.getAttribute("value")};
@@ -276,6 +312,7 @@ getBreadcrumb = function () {
 
     refreshVotes();
     refreshStatusHistory();
+    refreshProjectUse();
 </script>
 
 </body>

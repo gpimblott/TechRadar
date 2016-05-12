@@ -121,7 +121,7 @@ TechnologyRoutes.createRoutes = function (self) {
     /**
      * Add project to a technology
      */
-    self.app.get('/technology/:id/projects', security.isAuthenticatedAdmin, function (req, res) {
+    self.app.get('/technology/:id/projects', security.isAuthenticated, function (req, res) {
         var techid = req.params.id;
 
         technology.getById(techid, function (technology) {

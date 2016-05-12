@@ -38,7 +38,6 @@ getBreadcrumb = function() {
         <div class="col-md-12" style="margin-top: 10px">
             <row>
                 <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
                     <form  action="javascript:void(0);">
                         <fieldset class="form-group">
                             <label for="newProject">Add project which uses <%=technology.name%></label>
@@ -50,7 +49,6 @@ getBreadcrumb = function() {
                         </fieldset>
                         <button type="submit" id="projectAddBtn" class="btn btn-default">Add</button>
                     </form>
-                    <% } %>
                 </div>
             </row>
         </div>
@@ -102,8 +100,6 @@ getBreadcrumb = function() {
     });
 
 
-    <% if (user.admin ) { %>
-
     var addProject = function () {
         var data = {project: $('#newProject').val(), technology:<%= technology.id %>};
         $.post('/api/technology/<%= technology.id %>/project', data, function (result) {
@@ -123,8 +119,6 @@ getBreadcrumb = function() {
 
 
     $('#projectAddBtn').click(addProject);
-
-    <% } %>
 
 </script>
 

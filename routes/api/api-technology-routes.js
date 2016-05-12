@@ -178,7 +178,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a project to a technology
      */
-    self.app.post('/api/technology/:technology/project', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+    self.app.post('/api/technology/:technology/project', security.isAuthenticated, jsonParser, function (req, res) {
         var projectId = sanitizer(req.body.project);
         var technologyId = sanitizer(req.params.technology);
 
@@ -190,7 +190,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Get linked Projects
      */
-    self.app.get('/api/technology/:technology/projects', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+    self.app.get('/api/technology/:technology/projects', security.isAuthenticated, jsonParser, function (req, res) {
         var technologyId = sanitizer(req.params.technology);
 
         project.getAllForTechnology(technologyId, function (result, error) {
