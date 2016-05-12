@@ -38,7 +38,6 @@ getBreadcrumb = function() {
         <div class="col-md-12" style="margin-top: 10px">
             <row>
                 <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
                     <form  action="javascript:void(0);">
                         <fieldset class="form-group">
                             <label for="newProject">Add project which uses <%=technology.name%></label>
@@ -50,7 +49,6 @@ getBreadcrumb = function() {
                         </fieldset>
                         <button type="submit" id="projectAddBtn" class="btn btn-default">Add</button>
                     </form>
-                    <% } %>
                 </div>
             </row>
         </div>
@@ -58,6 +56,14 @@ getBreadcrumb = function() {
     <row>
         <div class="col-md-10 col-md-offset-1">
             <hr>
+            <div id="custom-toolbar">
+                <div class="form-inline" role="form">
+                    <button id="deleteBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
             <table id="linkedProjects"></table>
         </div>
     </row>
@@ -70,8 +76,10 @@ getBreadcrumb = function() {
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
+    $table = $('#linkedProjects');
+    $deleteBtn = $('#deleteBtn');
 
-    $('#linkedProjects').bootstrapTable( {
+    $table.bootstrapTable( {
         method: 'get',
         url: '/api/technology/<%=technology.id%>/projects',
         cache: false,
@@ -83,7 +91,10 @@ getBreadcrumb = function() {
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
-        columns: [ {
+        columns: [{
+            field:'state',
+            checkbox:'true'
+        }, {
             field: 'id',
             title: 'ID',
             sortable: true,
@@ -101,8 +112,33 @@ getBreadcrumb = function() {
         }]
     });
 
+    $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+    });
 
-    <% if (user.admin ) { %>
+    $deleteBtn.click( function() {
+        var r = confirm("Are you sure you want to remove selected projects from this technology?");
+        if (r == false) {
+            return;
+        }
+
+        var data = {};
+        data.projects = getIdSelections();
+
+        $.ajax({
+            type: "DELETE",
+            url: '/api/technology/<%= technology.id %>/projects',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            complete: function(result){
+                if (result.success) {
+                    location.href = "/technology/<%=technology.id%>/projects";
+                } else {
+                    alert("There was an error deleting project links");
+                }
+            }
+        });
+    });
 
     var addProject = function () {
         var data = {project: $('#newProject').val(), technology:<%= technology.id %>};
@@ -121,10 +157,13 @@ getBreadcrumb = function() {
         });
     });
 
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
 
     $('#projectAddBtn').click(addProject);
-
-    <% } %>
 
 </script>
 
