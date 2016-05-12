@@ -136,7 +136,7 @@ getBreadcrumb = function () {
                 <!-- Default panel contents -->
                 <div class="panel-heading">
                     <div>Total votes cast<span class="pull-right">
-                            <a href="/technology/<%= technology.id %>/votehistory">[History]</a></span>
+                            <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/votehistory">History</a></span>
                     </div>
 
                 </div>
@@ -148,7 +148,6 @@ getBreadcrumb = function () {
                     </tr>
                     </thead>
                     <tbody id="votes">
-
                     </tbody>
                 </table>
             </div>
@@ -157,33 +156,9 @@ getBreadcrumb = function () {
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div>Latest status changes
+                    <div>Used in projects
                     <span class="pull-right">
-                        <a href="/technology/<%= technology.id %>/statushistory">[History]</a>
-                    </span>
-                    </div>
-
-                </div>
-
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Username</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                    <tbody id="history">
-
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div>Use in projects
-                    <span class="pull-right">
-                        <a href="/technology/<%= technology.id %>/projects">[Update]</a>
+                        <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/projects">Update</a>
                     </span>
                     </div>
 
@@ -193,7 +168,6 @@ getBreadcrumb = function () {
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Description</th>
                     </tr>
                     </thead>
                     <tbody id="project-use">
@@ -244,34 +218,17 @@ getBreadcrumb = function () {
             });
 
             $('#votes').empty();
-            $('#votes').append(output)
+            $('#votes').append(output);
         });
     };
 
-    var refreshStatusHistory = function () {
-        var data = {limit: 5};
 
-        $.get('/api/technology/<%= technology.id %>/status/history', data, function (result) {
-            var output = "";
-            result.forEach(function (status) {
-                output += "<tr><td>" + status.name + "</td>";
-                output += "<td>" + status.username + "</td>";
-                output += "<td>" + status.date + "</td></tr>";
-
-            });
-
-            $('#history').empty();
-            $('#history').append(output);
-        })
-
-    };
 
     var refreshProjectUse = function () {
         $.get('/api/technology/<%= technology.id %>/projects', function (result) {
             var output = "";
             result.forEach(function (project) {
                 output += "<tr><td>" + project.name + "</td>";
-                output += "<td>" + project.description + "</td>";
             });
 
             $('#project-use').empty();
@@ -311,7 +268,6 @@ getBreadcrumb = function () {
     <% } %>
 
     refreshVotes();
-    refreshStatusHistory();
     refreshProjectUse();
 </script>
 

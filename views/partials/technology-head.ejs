@@ -11,7 +11,10 @@
                          <tr>
                              <td>Status</td>
                              <td>-</td>
-                             <td class="banner-text"><%= technology.statusname %></td>
+                             <td class="banner-text">
+                                 <a class="banner-text-link" href="/technology/<%= technology.id %>/statushistory"><%= technology.statusname %></a>
+                             </td>
+                             <td> </td>
                          </tr>
                         <tr>
                             <td>Category</td>
