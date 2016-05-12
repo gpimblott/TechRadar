@@ -17,14 +17,14 @@ var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
 var statements = [
-    'DROP TABLE IF EXISTS project_tech_link',
     'DROP TABLE IF EXISTS tech_status_link',
     'DROP TABLE IF EXISTS technology_stack_link',
+    'DROP TABLE IF EXISTS technology_project_link',
     'DROP TABLE IF EXISTS history;',
-    'DROP TABLE IF EXISTS projects',
+    'DROP TABLE IF EXISTS projects CASCADE',
     'DROP TABLE IF EXISTS comments',
     'DROP TABLE IF EXISTS votes',
-    'DROP TABLE IF EXISTS technologies',
+    'DROP TABLE IF EXISTS technologies CASCADE',
     'DROP TABLE IF EXISTS stacks',
     'DROP TABLE IF EXISTS categories',
     'DROP TABLE IF EXISTS status',
@@ -52,10 +52,6 @@ var statements = [
 
     'CREATE TABLE IF NOT EXISTS projects(id SERIAL PRIMARY KEY, name VARCHAR(100),' +
                 'description TEXT  )',
-
-    'CREATE TABLE IF NOT EXISTS project_tech_link(' +
-                'project integer references projects(id) ON DELETE CASCADE,' +
-                'technology integer references technologies(id) ON DELETE CASCADE )',
 
 
     "CREATE TABLE IF NOT EXISTS comments(" +
@@ -86,6 +82,10 @@ var statements = [
     'CREATE TABLE IF NOT EXISTS technology_stack_link(' +
         'stack INTEGER references stacks(id) ON DELETE CASCADE, ' +
         'technology INTEGER references technologies(id) ON DELETE CASCADE )',
+
+    'CREATE TABLE IF NOT EXISTS technology_project_link(' +
+        'projectid INTEGER references projects(id) ON DELETE CASCADE, ' +
+        'technologyid INTEGER references technologies(id) ON DELETE CASCADE )',
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
     "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",

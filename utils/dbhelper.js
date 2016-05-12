@@ -14,7 +14,7 @@ var DBHelper = function () {
  * @param error Function to call on error
  */
 DBHelper.query = function (sql, parameters, done, error) {
-    if (process.env.USE_SSL) {
+    if (process.env.USE_SSL && process.env.USE_SSL.toLowerCase() !== 'false') {
         pg.defaults.ssl = true;
     }
 
@@ -23,7 +23,9 @@ DBHelper.query = function (sql, parameters, done, error) {
 
         // Handle connection errors
         if (err) {
-            client.end();
+            if (client) {
+                client.end();
+            }
             error(err);
             return;
         }
@@ -51,15 +53,17 @@ DBHelper.query = function (sql, parameters, done, error) {
  * @param error Error function to call on error
  */
 DBHelper.insert = function (sql, parameters, done, error) {
-    if (process.env.USE_SSL) {
+    if (process.env.USE_SSL && process.env.USE_SSL.toLowerCase() !== 'false') {
         pg.defaults.ssl = true;
     }
 
     pg.connect(process.env.DATABASE_URL, function (err, client) {
         // Handle connection errors
         if (err) {
+            if (client) {
+                client.end();
+            }
             error(err);
-            client.end();
             return;
         }
 
@@ -73,7 +77,7 @@ DBHelper.insert = function (sql, parameters, done, error) {
                 }
             });
     });
-}
+};
 
 /**
  * Wrapper around delete function to delete by a set of ids

@@ -19,6 +19,6 @@ ApiUtils.handleResultSet = function( res , result  , error ) {
         data.success = false;
     }
     res.end(JSON.stringify(data));
-}
+};
 
 module.exports = ApiUtils;

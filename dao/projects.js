@@ -12,6 +12,25 @@ Projects.getAll = function( done ) {
     dbhelper.getAllFromTable("PROJECTS" , done );
 }
 
+/**
+ * Get all projects linked to a given technology
+ *
+ * @technologyId
+ * @param done function to call with the results
+ */
+Projects.getAllForTechnology = function(technologyId, done) {
+    var sql = "SELECT p.* from projects p" +
+        " INNER JOIN technology_project_link tpl on p.id = tpl.projectid" +
+        " where tpl.technologyid = $1";
+    var params = [technologyId];
+
+    dbhelper.query(sql, params, done,
+        function (error) {
+            console.log(error);
+            return done(null, error);
+        });
+};
+
 
 /**
  * Add a new project
