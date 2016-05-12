@@ -226,4 +226,34 @@ Technology.addProject = function (technologyId, projectId, callback) {
         });
 };
 
+/**
+ * Remove projects from a technology
+ *
+ * @param technologyId Technology ID
+ * @param projectIds Project IDs
+ * @param callback Function to call when the deletion is finished
+ */
+Technology.removeProjects = function (technologyId, projectIds, callback) {
+    var idPlaceholders = [];
+    for(var i = 2; i <= projectIds.length + 1; i++) {
+        idPlaceholders.push('$' + i);
+    }
+
+    var sql = "DELETE FROM technology_project_link" +
+        " WHERE technologyid = $1 " +
+        " and projectid IN (" +  idPlaceholders.join(',') + ")";
+
+    var params = [technologyId];
+    params = params.concat(projectIds);
+
+    dbhelper.query(sql, params,
+        function(result) {
+            callback(true);
+        },
+        function(error) {
+            console.log(error);
+            callback(false, error);
+        });
+};
+
 module.exports = Technology;

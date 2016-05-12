@@ -199,6 +199,19 @@ ApiTechnologyRoutes.createRoutes = function (self) {
         });
     });
 
+    /**
+     * Remove links to Projects
+     */
+    self.app.delete('/api/technology/:technology/projects', security.isAuthenticated, jsonParser, function (req, res) {
+        var technologyId = sanitizer(req.params.technology);
+        var projectIds = req.body.projects;
+
+        technology.removeProjects(technologyId, projectIds, function (result, error) {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+        });
+    });
+
 }
 
 module.exports = ApiTechnologyRoutes;
