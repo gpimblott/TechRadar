@@ -9,6 +9,7 @@ var security = require('../../utils/security.js');
 var apiutils = require('./apiUtils.js');
 
 var sanitizer = require('sanitize-html');
+var crypto = require('crypto');
 
 
 var ApiUserRoutes = function () {
@@ -46,6 +47,55 @@ ApiUserRoutes.createRoutes = function (self) {
         });
 
     /**
+     * Update profile
+     */
+    self.app.put('/api/user', security.isAuthenticated, jsonParser,
+        function (req, res) {
+            var oldPasswordHash =  crypto.createHash('sha256').update(sanitizer(req.body.oldPassword)).digest('base64');
+            var password =  sanitizer(req.body.password);
+            var confirmPassword =  sanitizer(req.body.confirmPassword);
+            var displayName =  sanitizer(req.body.displayname);
+
+            var error = validateNewPassword(password, confirmPassword);
+            if(error) {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                var data = {};
+                data.error = error;
+                data.success = false;
+                res.end(JSON.stringify(data));
+            }
+
+            users.findById(req.user.id, function (error, userFromDb) {
+                if(error) {
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    var data = {};
+                    data.error = error;
+                    data.success = false;
+                    res.end(JSON.stringify(data));
+                } else {
+                    if(password && userFromDb.password !== oldPasswordHash) {
+                        // user wants to change the password but the old one is incorrect
+                        res.writeHead(200, {"Content-Type": "application/json"});
+                        var data = {};
+                        data.error = "Old password is incorrect";
+                        data.success = false;
+                        res.end(JSON.stringify(data));
+                    } else {
+                        var passwordHash = userFromDb.password;
+                        if(password) {
+                            passwordHash = crypto.createHash('sha256')
+                                .update(password).digest('base64')
+                        }
+
+                        users.update(req.user.id, displayName, passwordHash, function (result, error) {
+                            apiutils.handleResultSet(res, result , error);
+                        });
+                    }
+                }
+            });
+        });
+
+    /**
      * Get all users
      */
     self.app.get('/api/users', security.isAuthenticatedAdmin,
@@ -69,6 +119,17 @@ ApiUserRoutes.createRoutes = function (self) {
         });
 
 
+    var validateNewPassword = function (password, confirmPassword) {
+        if(password && password.length < 8) {
+            return "Password too short";
+        }
+
+        if(password !== confirmPassword){
+            return "Passwords do not match";
+        }
+
+        return null;
+    }
 }
 
 module.exports = ApiUserRoutes;

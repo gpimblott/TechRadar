@@ -23,6 +23,14 @@ UserRoutes.createRoutes = function (self) {
         function (req, res) {
             res.render('pages/admin/addUser', {user: req.user});
         });
+
+    /**
+     * Edit profile page
+     */
+    self.app.get('/profile', security.isAuthenticated,
+        function (req, res) {
+            res.render('pages/editProfile', {user: req.user});
+        });
     
 }
 
