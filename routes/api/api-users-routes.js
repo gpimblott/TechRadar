@@ -10,6 +10,25 @@ var apiutils = require('./apiUtils.js');
 
 var sanitizer = require('sanitize-html');
 var crypto = require('crypto');
+var userValidator  = require('../../shared/validators/userValidator.js');
+var multer  = require('multer');
+
+var storage = multer.diskStorage({
+    destination: "./uploads",
+    filename: function (req, file, cb) {
+        var nameSplit = file.originalname.split('.');
+        var fileNameBase = file.fieldname + '-' + req.user.id + "-" + Date.now() + "-" +
+            crypto.createHash('sha256').update(req.sessionID).digest('hex').slice(0,8);
+
+        if(nameSplit.length > 1) {
+            var extension = nameSplit[nameSplit.length - 1];
+            cb(null, fileNameBase + '.' + extension);
+        } else {
+            cb(null, fileNameBase);
+        }
+    }
+});
+var upload = multer({ storage: storage });
 
 
 var ApiUserRoutes = function () {
@@ -26,13 +45,16 @@ ApiUserRoutes.createRoutes = function (self) {
 
             var username =  sanitizer( req.body.username );
             var password =  sanitizer( req.body.password );
+            var password2 =  sanitizer( req.body.password2 );
 
-            if( password.length < 8) {
+            var validationResult = userValidator.validateNewPassword(password, password2);
+
+            if(!validationResult.valid) {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 var data = {};
-                data.error = "Password too short";
+                data.error = validationResult.message;
                 data.success = false;
-                res.end( JSON.stringify(data) );
+                res.end(JSON.stringify(data));
             }
 
             users.add(
@@ -49,18 +71,29 @@ ApiUserRoutes.createRoutes = function (self) {
     /**
      * Update profile
      */
-    self.app.put('/api/user', security.isAuthenticated, jsonParser,
+    self.app.put('/api/user', security.isAuthenticated, upload.single('avatar'),
         function (req, res) {
-            var oldPasswordHash =  crypto.createHash('sha256').update(sanitizer(req.body.oldPassword)).digest('base64');
-            var password =  sanitizer(req.body.password);
-            var confirmPassword =  sanitizer(req.body.confirmPassword);
-            var displayName =  sanitizer(req.body.displayname);
+            var oldPassword = sanitizer(req.body.oldPassword);
+            var oldPasswordHash = crypto.createHash('sha256').update(oldPassword).digest('base64');
+            var password = sanitizer(req.body.password);
+            var confirmPassword = sanitizer(req.body.confirmPassword);
+            var displayName = sanitizer(req.body.displayname);
+            var avatarPath = "";
 
-            var error = validateNewPassword(password, confirmPassword);
-            if(error) {
+            if(req.file) {
+                avatarPath = req.file.path;
+                console.log(req.file.originalname);
+                console.log(req.file.size);
+                console.log(req.file.path);
+                // add file size validation, avatars should be small
+            }
+
+            var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+
+            if(!validationResult.valid) {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 var data = {};
-                data.error = error;
+                data.error = validationResult.message;
                 data.success = false;
                 res.end(JSON.stringify(data));
             }
@@ -86,8 +119,9 @@ ApiUserRoutes.createRoutes = function (self) {
                             passwordHash = crypto.createHash('sha256')
                                 .update(password).digest('base64')
                         }
+                        var newAvatarPath = avatarPath ? avatarPath : userFromDb.avatar;
 
-                        users.update(req.user.id, displayName, passwordHash, function (result, error) {
+                        users.update(req.user.id, displayName, passwordHash, newAvatarPath, function (result, error) {
                             apiutils.handleResultSet(res, result , error);
                         });
                     }
@@ -117,19 +151,6 @@ ApiUserRoutes.createRoutes = function (self) {
                 apiutils.handleResultSet( res, result , error );
             })
         });
-
-
-    var validateNewPassword = function (password, confirmPassword) {
-        if(password && password.length < 8) {
-            return "Password too short";
-        }
-
-        if(password !== confirmPassword){
-            return "Passwords do not match";
-        }
-
-        return null;
-    }
 }
 
 module.exports = ApiUserRoutes;

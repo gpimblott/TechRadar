@@ -34,6 +34,19 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1" style="padding-left: 15px; padding-top: 40px;">
             <form action="javascript:void(0);" method="POST">
+                <div class="form-group row">
+                    <div class="col-md-3 col-sm-3 hidden-xs">
+                        <figure class="thumbnail">
+                            <img id="avatarPreview" class="img-responsive"
+                                 src="<%=user.avatar ? user.avatar : '/default-avatar.jpg'%>"/>
+                            <figcaption class="text-center">
+                                <label for="avatar">Avatar</label>
+                                <input type="file" id="avatar" class="form-control" name="avatar" >
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="displayname">Full name</label>
                     <input type="text" class="form-control" id="displayname"
@@ -60,47 +73,53 @@
 </div><!-- /.container -->
 
 <% include ../partials/footer.ejs %>
-
-
+<script src="/shared/validators/userValidator.js"></script>
 
 <script>
+    $(function() {
+        var preview = $("#avatarPreview");
 
-    $("form").submit(function(event) {
-        var oldPassword = $("#oldPassword").val();
-        var password = $("#password").val();
-        var confirmPassword = $("#confirmPassword").val();
+        $("#avatar").change(function(event){
+            var input = $(event.currentTarget);
+            var file = input[0].files[0];
+            var reader = new FileReader();
+            reader.onload = function(e){
+                image_base64 = e.target.result;
+                preview.attr("src", image_base64);
+            };
+            reader.readAsDataURL(file);
+        });
 
-        if(password !== confirmPassword){
-            alert("Passwords do not match");
-            return;
-        }
+        $("form").submit(function(event) {
+            var oldPassword = $("#oldPassword").val();
+            var password = $("#password").val();
+            var confirmPassword = $("#confirmPassword").val();
 
-        if(password && password.length < 8) {
-            alert("New password must be 8 characters or more");
-            return;
-        }
-
-        if(password && !oldPassword) {
-            alert("You must enter your old password in order to change it");
-            return;
-        }
-
-        var frm = $('form');
-        var formData = serialiseForm(frm);
-
-        $.ajax({
-            type: "PUT",
-            url: '/api/user',
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: function(result) {
-                if(result.success) {
-                    alert("Update successful");
-                } else {
-                    alert("There was an error while updating your profile - " + result.error);
-                }
-
+            var validationResult = UserValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+            if(!validationResult.valid) {
+                alert(validationResult.message);
+                return;
             }
+
+            var frm = $('form');
+            var formData = serialiseForm(frm);
+            var data = new FormData(this);
+
+            $.ajax({
+                type: "PUT",
+                url: '/api/user',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function(result) {
+                    if(result.success) {
+                        alert("Update successful");
+                    } else {
+                        alert("There was an error while updating your profile - " + result.error);
+                    }
+
+                }
+            });
         });
     });
 </script>

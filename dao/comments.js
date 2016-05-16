@@ -13,7 +13,7 @@ var Comments = function () {
  * @param done function to call with the results
  */
 Comments.getForTechnology = function (technology, done) {
-    var sql = "SELECT comments.*, users.displayName, users.username FROM comments " +
+    var sql = "SELECT comments.*, users.displayName, users.username, users.avatar FROM comments " +
         " inner join users on comments.userid=users.id" +
         " where technology=$1 order by date desc";
 

@@ -33,7 +33,8 @@
     "passport-local" : "latest",
     "dotenv" : "latest",
     "sanitize-html" : "latest",
-    "crypto": "latest"
+    "crypto": "latest",
+    "multer": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

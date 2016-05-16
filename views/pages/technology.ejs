@@ -98,7 +98,7 @@ getBreadcrumb = function () {
                     <div class="col-md-2 col-sm-2 hidden-xs">
                         <figure class="thumbnail">
                             <img class="img-responsive"
-                                 src="/default-avatar.jpg"/>
+                                 src="/<%= comment.avatar ? comment.avatar : 'default-avatar.jpg' %>"/>
                             <figcaption class="text-center"><%= comment.username %></figcaption>
                         </figure>
                     </div>

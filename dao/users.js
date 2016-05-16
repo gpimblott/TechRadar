@@ -120,9 +120,9 @@ Users.delete = function (ids, done) {
  * @param password New password
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, done) {
-    var sql = "UPDATE users SET displayName=$1, password=$2 where id=$3";
-    var params = [displayName, passwordHash, id];
+Users.update = function (id, displayName, passwordHash, avatarPath, done) {
+    var sql = "UPDATE users SET displayName=$1, password=$2, avatar=$3 where id=$4";
+    var params = [displayName, passwordHash, avatarPath, id];
 
     dbhelper.query(sql, params,
         function(result) {
