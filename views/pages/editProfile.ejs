@@ -95,15 +95,16 @@
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
 
+            var data = new FormData(this);
+
             var validationResult = UserValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+            if(data.get('avatar') && validationResult.valid) {
+                validationResult = UserValidator.validateAvatar(data.get('avatar'));
+            }
             if(!validationResult.valid) {
                 alert(validationResult.message);
                 return;
             }
-
-            var frm = $('form');
-            var formData = serialiseForm(frm);
-            var data = new FormData(this);
 
             $.ajax({
                 type: "PUT",

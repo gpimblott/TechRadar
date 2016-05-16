@@ -18,6 +18,14 @@
         }
 
         return exports.validateNewPassword(password, confirmPassword);
-    }
+    };
+
+    exports.validateAvatar = function (file) {
+        if(file.size > 1024 * 1024) {
+            return { valid: false, message: "Avatar size must be below 1 MB" };
+        }
+
+        return { valid: true };
+    };
 
 })(typeof exports === 'undefined'? this['UserValidator']={}: exports);

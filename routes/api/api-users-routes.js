@@ -55,6 +55,7 @@ ApiUserRoutes.createRoutes = function (self) {
                 data.error = validationResult.message;
                 data.success = false;
                 res.end(JSON.stringify(data));
+                return;
             }
 
             users.add(
@@ -89,13 +90,16 @@ ApiUserRoutes.createRoutes = function (self) {
             }
 
             var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
-
+            if(req.file && validationResult.valid) {
+                validationResult = userValidator.validateAvatar(req.file);
+            }
             if(!validationResult.valid) {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 var data = {};
                 data.error = validationResult.message;
                 data.success = false;
                 res.end(JSON.stringify(data));
+                return;
             }
 
             users.findById(req.user.id, function (error, userFromDb) {
