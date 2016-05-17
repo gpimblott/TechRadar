@@ -70,6 +70,8 @@
 <script>
 
     $("form").submit(function(event) {
+        $(":submit").attr("disabled", true);
+
         var userId = $("form [name=userId]").val();
         var username = $("form [name=username]").val();
         var password = $("form [name=password]").val();
@@ -95,6 +97,8 @@
                 } else {
                     alert("There was an error while saving new user data");
                 }
+
+                $(":submit").attr("disabled", false);
             }
         });
     });

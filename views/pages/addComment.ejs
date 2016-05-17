@@ -55,6 +55,8 @@ getBreadcrumb = function () {
 <script>
 
     $("form").submit(function (event) {
+        $(":submit").attr("disabled", true);
+
         var frm = $('form');
         var data = serialiseForm(frm);
 
@@ -64,7 +66,7 @@ getBreadcrumb = function () {
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (result) {
-
+                $(":submit").attr("disabled", false);
                 if (result.success) {
                     location.href = "/technology/<%= technology.id %>";
                 } else {

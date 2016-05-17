@@ -124,6 +124,8 @@
             return;
         }
 
+        $deleteBtn.addClass("disabled");
+
         var data={};
         data.id = getIdSelections();
 
@@ -139,6 +141,8 @@
                 } else {
                     alert("There was an error deleting technology :(");
                 }
+
+                $deleteBtn.removeClass("disabled");
             }
         });
     });

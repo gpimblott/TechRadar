@@ -77,6 +77,8 @@
 <script>
 
     $("form").submit(function (event) {
+        $(":submit").attr("disabled", true);
+
         var frm = $('form');
         var frmdata = serialiseForm(frm);
 
@@ -92,6 +94,7 @@
                     alert("There was an error adding the technology :)");
                 }
 
+                $(":submit").attr("disabled", false);
             }
         });
     });

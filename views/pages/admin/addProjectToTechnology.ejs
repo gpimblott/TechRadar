@@ -121,6 +121,7 @@ getBreadcrumb = function() {
         if (r == false) {
             return;
         }
+        $deleteBtn.addClass("disabled");
 
         var data = {};
         data.projects = getIdSelections();
@@ -136,11 +137,14 @@ getBreadcrumb = function() {
                 } else {
                     alert("There was an error deleting project links");
                 }
+                $deleteBtn.removeClass("disabled");
             }
         });
     });
 
     var addProject = function () {
+        $(":submit").attr("disabled", true);
+
         var data = {project: $('#newProject').val(), technology:<%= technology.id %>};
         $.post('/api/technology/<%= technology.id %>/project', data, function (result) {
             if(result.success) {
@@ -148,6 +152,8 @@ getBreadcrumb = function() {
             } else {
                 alert("An error occurred while adding a project");
             }
+
+            $(":submit").attr("disabled", false);
         });
     };
 

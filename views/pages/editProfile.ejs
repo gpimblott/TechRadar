@@ -98,6 +98,8 @@
         });
 
         $("form").submit(function (event) {
+            $(":submit").attr("disabled", true);
+
             var oldPassword = $("#oldPassword").val();
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
@@ -126,6 +128,7 @@
                         alert("There was an error while updating your profile - " + result.error);
                     }
 
+                    $(":submit").attr("disabled", false);
                 }
             });
         });

@@ -55,6 +55,8 @@
 <script>
 
     $("form").submit(function (event) {
+        $(":submit").attr("disabled", true);
+
         var frm = $('form');
         var frmdata = serialiseForm(frm);
 
@@ -71,6 +73,7 @@
                     alert("There was an error adding the category");
                 }
 
+                $(":submit").attr("disabled", false);
             }
         });
     });
