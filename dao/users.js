@@ -118,6 +118,7 @@ Users.delete = function (ids, done) {
  * @param id Target users ID
  * @param displayName New display name
  * @param password New password
+ * @param avatarPath Path to the avatar image
  * @param done Callback
  */
 Users.update = function (id, displayName, passwordHash, avatarPath, done) {

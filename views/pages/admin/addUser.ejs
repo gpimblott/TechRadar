@@ -71,17 +71,12 @@
 <script>
 
     $( "form" ).submit(function( event ) {
-
-        var usernameRegex = new RegExp('^[a-z0-9_-]{3,16}$');
-
         var username = $("form [name=username]").val();
-        console.log(username);
-        console.log(usernameRegex.test($("form [name=username]").val()));
-
         var password1 = $("form [name=password]").val();
         var password2 = $("form [name=password2]").val();
 
         var validationResult = UserValidator.validateNewPassword(password1, password2);
+        validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
         if(!validationResult.valid) {
             alert(validationResult.message);
             return;

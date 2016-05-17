@@ -48,6 +48,7 @@ ApiUserRoutes.createRoutes = function (self) {
             var password2 =  sanitizer( req.body.password2 );
 
             var validationResult = userValidator.validateNewPassword(password, password2);
+            validationResult = validationResult.valid ? userValidator.validateUsername(username) : validationResult;
 
             if(!validationResult.valid) {
                 res.writeHead(200, {"Content-Type": "application/json"});
