@@ -37,7 +37,8 @@ var statements = [
     'CREATE TABLE IF NOT EXISTS users(' +
                 'id SERIAL PRIMARY KEY, username VARCHAR(15) not null, ' +
                 'password VARCHAR(100) not null, displayName VARCHAR(40), ' +
-                'role integer references roles(id) )',
+                'role integer references roles(id), ' +
+                'avatar VARCHAR(200) )',
 
     'CREATE TABLE IF NOT EXISTS categories(' +
                 'id SERIAL PRIMARY KEY, name VARCHAR(40) not null, description TEXT )',

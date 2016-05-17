@@ -22,7 +22,7 @@ Users.getAll = function(done) {
             console.log(error);
             return done( null );
         });
-}
+};
 
 /**
  * Get a user by ID
@@ -41,9 +41,9 @@ Users.findById = function(id, done) {
         },
         function (error) {
             console.log(error);
-            return done( null , null );
+            return done(error, null);
         });
-}
+};
 
 /**
  * Get a user by username
@@ -61,7 +61,7 @@ Users.findByUsername = function(username, done) {
             console.log(error);
             return done( null , null );
         });
-}
+};
 
 /**
  * Add a new user
@@ -86,7 +86,7 @@ Users.add = function (username, displayName, password, admin, done) {
             console.log(error);
             done(null , error );
         } );
-}
+};
 
 /**
  * Delete a set of users using their ID numbers
@@ -110,7 +110,29 @@ Users.delete = function (ids, done) {
             console.log(error);
             done( false , error );
         } );
-}
+};
+
+/**
+ * Update user data
+ *
+ * @param id Target users ID
+ * @param displayName New display name
+ * @param password New password
+ * @param done Callback
+ */
+Users.update = function (id, displayName, passwordHash, avatarPath, done) {
+    var sql = "UPDATE users SET displayName=$1, password=$2, avatar=$3 where id=$4";
+    var params = [displayName, passwordHash, avatarPath, id];
+
+    dbhelper.query(sql, params,
+        function(result) {
+            done(true);
+        },
+        function(error) {
+            console.log(error);
+            done(false, error);
+        });
+};
 
 
 module.exports = Users;

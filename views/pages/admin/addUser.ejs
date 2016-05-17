@@ -65,7 +65,7 @@
 </div><!-- /.container -->
 
 <% include ../../partials/footer.ejs %>
-
+<script src="/shared/validators/userValidator.js"></script>
 
 
 <script>
@@ -81,13 +81,9 @@
         var password1 = $("form [name=password]").val();
         var password2 = $("form [name=password2]").val();
 
-        if( password1 != password2 ){
-            alert("Passwords do not match");
-            return;
-        }
-
-        if( password1.length <8 ) {
-            alert("Passwords must be 8 charcaters");
+        var validationResult = UserValidator.validateNewPassword(password1, password2);
+        if(!validationResult.valid) {
+            alert(validationResult.message);
             return;
         }
 
@@ -109,15 +105,6 @@
             }
         });
     });
-
-
-    function nospaces(t){
-
-        if( t.value.match(/\s/g) || t.value.match(/\./g)  ){
-            t.value= (t.value.replace(/\s/g,'') .replace(/\./g,''));
-        }
-
-    }
 </script>
 </body>
 </html>
