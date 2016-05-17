@@ -20,7 +20,7 @@
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
         <h1>Edit profile</h1>
-        <p><%=user.username %></p>
+        <p><%= user.username %></p>
     </div>
 </div>
 
@@ -32,40 +32,47 @@
         </ol>
     </div>
     <div class="row">
-        <div class="col-md-10 col-md-offset-1" style="padding-left: 15px; padding-top: 40px;">
+        <div class="col-md-10 col-md-offset-1">
             <form action="javascript:void(0);" method="POST">
-                <div class="form-group row">
-                    <div class="col-md-3 col-sm-3 hidden-xs">
-                        <figure class="thumbnail">
-                            <img id="avatarPreview" class="img-responsive"
-                                 src="<%=user.avatar ? user.avatar : '/default-avatar.jpg'%>"/>
+                <div class="form-group row well">
+
+                    <div class="col-md-5 col-sm-5">
+                        <div class="form-group">
+                            <label for="displayname">Full name</label>
+                            <input type="text" class="form-control" id="displayname"
+                                   name="displayname" placeholder="Full name" value="<%= user.displayname %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="oldPassword">Old password</label>
+                            <input type="password" class="form-control" id="oldPassword" name="oldPassword"
+                                   placeholder="Old password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">New password</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="New password">
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm password</label>
+                                <input type="password" class="form-control" id="confirmPassword"
+                                       name="confirmPassword" placeholder="Confirm password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-5 hidden-xs">
+                        <figure class="thumbnail" style="padding-top: 20px;">
+                            <img id="avatarPreview" class="img-responsive"  style="max-height: 200px; max-width: 250px"
+                                 src="<%= user.avatar ? user.avatar : '/default-avatar.jpg' %>"/>
                             <figcaption class="text-center">
                                 <label for="avatar">Avatar</label>
-                                <input type="file" id="avatar" class="form-control" name="avatar" >
+                                <input type="file" id="avatar" class="form-control" name="avatar"
+                                       style="padding-bottom: 10px; min-height: 50px">
                             </figcaption>
                         </figure>
                     </div>
+                    <div class="col-md-12 col-sm-12">
+                        <button type="submit" class="btn btn-default">Update</button>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="displayname">Full name</label>
-                    <input type="text" class="form-control" id="displayname"
-                           name="displayname" value="<%=user.displayname %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="oldPassword">Old password</label>
-                    <input type="password" class="form-control" id="oldPassword"  name="oldPassword" placeholder="Old password">
-                </div>
-                <div class="form-group">
-                    <label for="password">New password</label>
-                    <input type="password" class="form-control" id="password"  name="password" placeholder="New password">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm password</label>
-                    <input type="password" class="form-control" id="confirmPassword"
-                           name="confirmPassword" placeholder="Confirm password">
-                </div>
-                <button type="submit" class="btn btn-default">Update</button>
             </form>
         </div>
     </div>
@@ -76,21 +83,21 @@
 <script src="/shared/validators/userValidator.js"></script>
 
 <script>
-    $(function() {
+    $(function () {
         var preview = $("#avatarPreview");
 
-        $("#avatar").change(function(event){
+        $("#avatar").change(function (event) {
             var input = $(event.currentTarget);
             var file = input[0].files[0];
             var reader = new FileReader();
-            reader.onload = function(e){
+            reader.onload = function (e) {
                 image_base64 = e.target.result;
                 preview.attr("src", image_base64);
             };
             reader.readAsDataURL(file);
         });
 
-        $("form").submit(function(event) {
+        $("form").submit(function (event) {
             var oldPassword = $("#oldPassword").val();
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
@@ -98,10 +105,10 @@
             var data = new FormData(this);
 
             var validationResult = UserValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
-            if(data.get('avatar') && validationResult.valid) {
+            if (data.get('avatar') && validationResult.valid) {
                 validationResult = UserValidator.validateAvatar(data.get('avatar'));
             }
-            if(!validationResult.valid) {
+            if (!validationResult.valid) {
                 alert(validationResult.message);
                 return;
             }
@@ -112,8 +119,8 @@
                 contentType: false,
                 processData: false,
                 data: data,
-                success: function(result) {
-                    if(result.success) {
+                success: function (result) {
+                    if (result.success) {
                         alert("Update successful");
                     } else {
                         alert("There was an error while updating your profile - " + result.error);
