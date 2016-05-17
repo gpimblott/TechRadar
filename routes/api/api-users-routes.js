@@ -82,42 +82,22 @@ ApiUserRoutes.createRoutes = function (self) {
             var displayName = sanitizer(req.body.displayname);
             var avatarPath = "";
 
-            if(req.file) {
-                avatarPath = req.file.path;
-                console.log(req.file.originalname);
-                console.log(req.file.size);
-                console.log(req.file.path);
-                // add file size validation, avatars should be small
-            }
-
             var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
             if(req.file && validationResult.valid) {
                 validationResult = userValidator.validateAvatar(req.file);
             }
             if(!validationResult.valid) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                var data = {};
-                data.error = validationResult.message;
-                data.success = false;
-                res.end(JSON.stringify(data));
+                apiutils.handleResultSet(res, null, validationResult.message);
                 return;
             }
 
             users.findById(req.user.id, function (error, userFromDb) {
                 if(error) {
-                    res.writeHead(200, {"Content-Type": "application/json"});
-                    var data = {};
-                    data.error = error;
-                    data.success = false;
-                    res.end(JSON.stringify(data));
+                    apiutils.handleResultSet(res, null, error);
                 } else {
                     if(password && userFromDb.password !== oldPasswordHash) {
                         // user wants to change the password but the old one is incorrect
-                        res.writeHead(200, {"Content-Type": "application/json"});
-                        var data = {};
-                        data.error = "Old password is incorrect";
-                        data.success = false;
-                        res.end(JSON.stringify(data));
+                        apiutils.handleResultSet(res, null, "Old password is incorrect");
                     } else {
                         var passwordHash = userFromDb.password;
                         if(password) {
@@ -126,10 +106,44 @@ ApiUserRoutes.createRoutes = function (self) {
                         }
                         var newAvatarPath = avatarPath ? avatarPath : userFromDb.avatar;
 
-                        users.update(req.user.id, displayName, passwordHash, newAvatarPath, function (result, error) {
+                        users.update(req.user.id, displayName, passwordHash, newAvatarPath, userFromDb.role, function (result, error) {
                             apiutils.handleResultSet(res, result , error);
                         });
                     }
+                }
+            });
+        });
+
+    /**
+     * Update an user
+     */
+    self.app.put('/api/user/:userId', security.isAuthenticatedAdmin, jsonParser,
+        function (req, res) {
+            var userId = sanitizer(req.params.userId);
+            var password = sanitizer(req.body.password);
+            var confirmPassword = sanitizer(req.body.confirmPassword);
+            var displayName = sanitizer(req.body.displayname);
+            var role = sanitizer(req.body.role);
+
+            var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+            if(!validationResult.valid) {
+                apiutils.handleResultSet(res, null, validationResult.message);
+                return;
+            }
+
+            users.findById(userId, function (error, userFromDb) {
+                if(error) {
+                    apiutils.handleResultSet(res, null, error);
+                } else {
+                    var passwordHash = userFromDb.password;
+                    if(password) {
+                        passwordHash = crypto.createHash('sha256')
+                            .update(password).digest('base64')
+                    }
+
+                    users.update(userId, displayName, passwordHash, userFromDb.avatar, role, function (result, error) {
+                        apiutils.handleResultSet(res, result, error);
+                    });
                 }
             });
         });

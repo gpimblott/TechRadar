@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../../../partials/head.ejs %>
+
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+<% include ../../../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <h1>Edit User</h1>
+        <p>Edit <%=user.username %></p>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Edit User</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1" style="padding-left: 15px; padding-top: 40px;">
+            <form action="javascript:void(0);" method="POST">
+                <h2>Edit <%=user.username %></h2>
+                <div class="form-group">
+                    <label for="displayname">Full name</label>
+                    <input type="text" class="form-control" id="displayname" name="displayname" value="<%=user.displayname %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password"  name="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Account type:</label>
+                    <select class="form-control" id="role" name="role">
+                        <option value="0" <%=user.role === 0 ? 'selected' : ''%>>Admin</option>
+                        <option value="1" <%=user.role === 1 ? 'selected' : ''%>>User</option>
+                    </select>
+                </div>
+                <input type="hidden" id="userId" name="userId" value="<%=user.id %>">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div><!-- /.container -->
+
+<% include ../../../partials/footer.ejs %>
+<script src="/shared/validators/userValidator.js"></script>
+
+
+<script>
+
+    $("form").submit(function(event) {
+        var userId = $("form [name=userId]").val();
+        var username = $("form [name=username]").val();
+        var password = $("form [name=password]").val();
+        var confirmPassword = $("form [name=confirmPassword]").val();
+
+        var validationResult = UserValidator.validateNewPassword(password, confirmPassword);
+        if(!validationResult.valid) {
+            alert(validationResult.message);
+            return;
+        }
+
+        var frm = $('form');
+        var frmdata = serialiseForm(frm);
+
+        $.ajax({
+            type: "PUT",
+            url: '/api/user/' + userId,
+            contentType: "application/json",
+            data: JSON.stringify(frmdata),
+            success: function(result) {
+                if(result.success) {
+                    location.href = "/users";
+                } else {
+                    alert("There was an error while saving new user data");
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
