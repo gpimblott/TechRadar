@@ -8,14 +8,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../../../partials/head.ejs %>
 
     <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
 
-<% include ../../partials/menu.ejs %>
+<% include ../../../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
@@ -64,24 +64,19 @@
 
 </div><!-- /.container -->
 
-<% include ../../partials/footer.ejs %>
+<% include ../../../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
 
 
 <script>
 
     $( "form" ).submit(function( event ) {
-
-        var usernameRegex = new RegExp('^[a-z0-9_-]{3,16}$');
-
         var username = $("form [name=username]").val();
-        console.log(username);
-        console.log(usernameRegex.test($("form [name=username]").val()));
-
         var password1 = $("form [name=password]").val();
         var password2 = $("form [name=password2]").val();
 
         var validationResult = UserValidator.validateNewPassword(password1, password2);
+        validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
         if(!validationResult.valid) {
             alert(validationResult.message);
             return;

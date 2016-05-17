@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../../../partials/head.ejs %>
 
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
@@ -17,7 +17,7 @@
 
 <body>
 
-<% include ../../partials/menu.ejs %>
+<% include ../../../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
@@ -59,7 +59,7 @@
 
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../../../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
@@ -93,6 +93,7 @@
             field: 'username',
             title: 'Username',
             sortable: true,
+            formatter: operateFormatter
         }, {
             field: 'displayname',
             title: 'Full Name',
@@ -140,15 +141,13 @@
                 }
             }
         });
-    });;
-
+    });
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.id
         });
     }
-
 
     function adminFormatter(value, row, index) {
 
@@ -161,15 +160,11 @@
         return column;
     }
 
-
     function operateFormatter(value, row, index) {
         return [
-            '<a href="/technology/view/' + row['id'] + '" target="_blank">' + value + '</a>'
+            '<a href="/user/' + row['id'] + '/edit">' + value + '</a>'
         ].join('');
     }
-
-
-
 </script>
 
 </body>

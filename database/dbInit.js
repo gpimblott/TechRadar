@@ -89,7 +89,7 @@ var statements = [
         'technologyid INTEGER references technologies(id) ON DELETE CASCADE )',
 
     "INSERT INTO roles ( id, name , admin  ) VALUES ( 0 , 'admin' , true ) ",
-    "INSERT INTO roles ( name , admin  ) VALUES ('user' , false ) ",
+    "INSERT INTO roles ( id, name , admin  ) VALUES ( 1 , 'user' , false ) ",
 
     "INSERT INTO status (id , name) VALUES  (0, 'TBD'), (1,'Adopt'),(2,'Trial'),(3,'Discuss') , (4, 'Avoid')",
 

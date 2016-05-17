@@ -118,11 +118,13 @@ Users.delete = function (ids, done) {
  * @param id Target users ID
  * @param displayName New display name
  * @param password New password
+ * @param avatarPath Path to the avatar image
+ * @param role User role
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, avatarPath, done) {
-    var sql = "UPDATE users SET displayName=$1, password=$2, avatar=$3 where id=$4";
-    var params = [displayName, passwordHash, avatarPath, id];
+Users.update = function (id, displayName, passwordHash, avatarPath, role, done) {
+    var sql = "UPDATE users SET displayName=$1, password=$2, avatar=$3, role=$4 where id=$5";
+    var params = [displayName, passwordHash, avatarPath, role, id];
 
     dbhelper.query(sql, params,
         function(result) {
