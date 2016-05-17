@@ -12,7 +12,7 @@ UserRoutes.createRoutes = function (self) {
      */
     self.app.get('/users', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/admin/listUsers', {user: req.user});
+            res.render('pages/admin/user/listUsers', {user: req.user});
         });
 
 
@@ -21,7 +21,7 @@ UserRoutes.createRoutes = function (self) {
      */
     self.app.get('/user/add', security.isAuthenticatedAdmin,
         function (req, res) {
-            res.render('pages/admin/addUser', {user: req.user});
+            res.render('pages/admin/user/addUser', {user: req.user});
         });
 
     /**
@@ -30,6 +30,21 @@ UserRoutes.createRoutes = function (self) {
     self.app.get('/profile', security.isAuthenticated,
         function (req, res) {
             res.render('pages/editProfile', {user: req.user});
+        });
+
+    /**
+     * Edit user page
+     */
+    self.app.get('/user/:userId/edit', security.isAuthenticatedAdmin,
+        function (req, res) {
+            users.findById(req.params.userId, function (error, user) {
+                if(error) {
+                    res.render('pages/error', {user: req.user});
+                } else {
+                    res.render('pages/admin/user/editUser', {user: user});
+                }
+            });
+
         });
     
 }
