@@ -82,6 +82,10 @@ ApiUserRoutes.createRoutes = function (self) {
             var displayName = sanitizer(req.body.displayname);
             var avatarPath = "";
 
+            if(req.file) {
+                avatarPath = req.file.path;
+            }
+            
             var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
             if(req.file && validationResult.valid) {
                 validationResult = userValidator.validateAvatar(req.file);
