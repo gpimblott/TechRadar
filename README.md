@@ -9,13 +9,6 @@ Web Application to enable community technology management within your organisati
 * Vote on whether they think they should be adopted, trialed or avoided.  
 * Users with the correct permissions can then set the 'offical' status with a rationale for each technology
 
-The application is still very much in development both in terms of the standard and planned features.
-
-## Not yet implemented
-
-* Update things (technologies, comments, users, projects)
-* Assign technology to project
-
 ## Planned future features
 
 * Stack builder
@@ -36,11 +29,12 @@ The application is still very much in development both in terms of the standard 
 ## Design
 
 TechRadar is a Web Application devleoped using NodeJS, Passport, Bootstrap and PostgreSQL.  
-It consists of two components:
+It consists of two layers:
 
 1. Web Layers 
 2. API REST Services
 
+The web application calls the API REST services using ajax.
 
 ## Pre-requisites
 
