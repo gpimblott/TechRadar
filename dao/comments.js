@@ -1,6 +1,8 @@
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 
+var DEFAULT_PAGE_SIZE = 10;
+
 /**
  * Database routines for 'Comments'
  */
@@ -8,16 +10,24 @@ var Comments = function () {
 };
 
 /**
- * Get all the comments for the given technology
- * @param technology ID of the technology to gtet comments for
+ * Get a pge of comments for the given technology
+ *
+ * @param technology ID of the technology to get comments for
+ * @param pageNum Page number
+ * @param pageSize Max amount of comments to be returned
  * @param done function to call with the results
  */
-Comments.getForTechnology = function (technology, done) {
+Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
     var sql = "SELECT comments.*, users.displayName, users.username, users.avatar FROM comments " +
         " inner join users on comments.userid=users.id" +
-        " where technology=$1 order by date desc";
+        " where technology=$1" +
+        " order by date desc" +
+        " LIMIT $2 OFFSET $3";
 
-    dbhelper.query(sql, [technology],
+    var limit = pageSize || DEFAULT_PAGE_SIZE;
+    var offset = pageNum ? pageNum * limit : 0;
+
+    dbhelper.query(sql, [technology, limit, offset],
         function (results) {
             done(results);
         },
@@ -27,8 +37,26 @@ Comments.getForTechnology = function (technology, done) {
 };
 
 /**
+ * Get comment count for the given technology
+ *
+ * @param technology ID of the technology to get comment count for
+ * @param done function to call with the results
+ */
+Comments.getCountForTechnology = function (technology, done) {
+    var sql = "SELECT count(*) FROM comments where technology=$1";
+
+    dbhelper.query(sql, [technology],
+        function (results) {
+            done(results[0]);
+        },
+        function (error) {
+            console.log(error);
+        });
+};
+
+/**
  * Add a new comment
- * @param technology Technology ID that the commment should be added to
+ * @param technology Technology ID that the comment should be added to
  * @param text Comment text to add
  * @param userid User ID adding the comment
  * @param done function to call with the results

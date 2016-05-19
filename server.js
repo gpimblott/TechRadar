@@ -30,6 +30,7 @@ var stackRoutes = require('./routes/web/stack-routes');
 var categoryRoutes = require('./routes/web/category-routes');
 var projectRoutes = require('./routes/web/project-routes');
 var userRoutes = require('./routes/web/user-routes');
+var commentRoutes = require('./routes/web/comment-routes');
 
 // Load the API routes
 var apiStack = require('./routes/api/api-stacks-routes.js');
@@ -137,6 +138,7 @@ var TechRadar = function () {
         categoryRoutes.createRoutes(self);
         projectRoutes.createRoutes(self);
         userRoutes.createRoutes(self);
+        commentRoutes.createRoutes(self);
 
         // API routes
         apiStack.createRoutes(self);

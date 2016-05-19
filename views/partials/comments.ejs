@@ -1,0 +1,45 @@
+<%
+var pageCount = Math.ceil(count / pageSize);
+var prevPage = currentPage > 0 ? 'TechRadar.getComments('+technologyId+', ' + (parseInt(currentPage) - 1) +')' : '';
+var nextPage = currentPage < pageCount - 1 ? 'TechRadar.getComments('+technologyId+', ' + (parseInt(currentPage) + 1) +')' : '';
+%>
+
+<section class="comment-list" style="margin-top: 40px">
+    <nav>
+        <ul class="pagination">
+            <%if(count > 0) { %>
+            <li role="button">
+                <span aria-label="Previous" onclick="<%= prevPage %>">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            </li>
+
+            <%
+            for (var i = 1; i <= pageCount; i++) {
+                var comment = comments[i];
+            %>
+            <li class="<%= parseInt(currentPage) === (i-1) ? 'active' : ''%>" role="button">
+                <span onclick="javascript:TechRadar.getComments(<%= technologyId %>, <%= i-1 %>);"><%=i%>
+                </span>
+            </li>
+            <% } %>
+
+            <li role="button">
+                <span aria-label="Next" onclick="<%= nextPage %>">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            </li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <%
+    for (var i = 0, len = comments.length; i < len; i++) {
+        var comment = comments[i];
+    %>
+
+    <% include ../partials/comment.ejs %>
+
+    <% } %>
+
+</section>
