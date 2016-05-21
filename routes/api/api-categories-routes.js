@@ -1,4 +1,6 @@
+var cache = require('../../dao/cache.js');
 var category = require('../../dao/category.js');
+
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
