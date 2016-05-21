@@ -57,16 +57,13 @@ TechnologyRoutes.createRoutes = function (self) {
             if (value.length == 0 || value.length > 1) {
                 res.render('pages/error', {user: req.user});
             } else {
-                comments.getForTechnology(num, function (comments) {
-                    var statuses = cache.getStatuses();
-                    res.render('pages/technology',
-                        {
-                            technology: value,
-                            comments: comments,
-                            user: req.user,
-                            statuses: statuses
-                        });
-                })
+                var statuses = cache.getStatuses();
+                res.render('pages/technology',
+                    {
+                        technology: value,
+                        user: req.user,
+                        statuses: statuses
+                    });
             }
         });
     });

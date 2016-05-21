@@ -16,19 +16,6 @@ var ApiCommentRoutes = function () {
 
 ApiCommentRoutes.createRoutes = function (self) {
 
-
-    /**
-     * Get comments for a technology
-     */
-    self.app.get('/api/comments', security.isAuthenticated,
-        function (req, res) {
-            var techid = sanitizer( req.query.technologyid );
-            comments.getForTechnology(techid, function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            });
-        });
-
     /**
      * Add a new comment for a technology
      */
@@ -58,7 +45,6 @@ ApiCommentRoutes.createRoutes = function (self) {
         });
 
 
-
-}
+};
 
 module.exports = ApiCommentRoutes;

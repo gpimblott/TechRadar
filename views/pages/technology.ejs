@@ -89,48 +89,8 @@ getBreadcrumb = function () {
     </row>
 
     <row>
-        <div class="col-md-8">
-            <section class="comment-list" style="margin-top: 40px">
+        <div class="col-md-8" id="commentContainer">
 
-                <%
-                for (var i = 0, len = comments.length; i < len; i++) {
-                    var comment = comments[i];
-                %>
-
-                <article class="row">
-                    <div class="col-md-2 col-sm-2 hidden-xs">
-                        <figure class="thumbnail">
-                            <img class="img-responsive"
-                                 src="/<%= comment.avatar ? comment.avatar : 'default-avatar.jpg' %>"/>
-                            <figcaption class="text-center"><%= comment.username %></figcaption>
-                        </figure>
-                    </div>
-                    <div class="col-md-10 col-sm-10">
-                        <div class="panel panel-default arrow left">
-                            <div class="panel-body">
-                                <header class="text-left">
-                                    <div class="comment-user"><i class="fa fa-user"></i> <%= comment.displayname %>
-                                        <% if ( user.admin ) { %>
-                                        <span onclick="javascript:deleteComment(<%= comment.id %>);"
-                                              class="pull-right glyphicon glyphicon-trash selectable"></span>
-                                        <% } %>
-                                    </div>
-                                    <time class="comment-date" datetime="16-12-2014 01:05"><i
-                                                class="fa fa-clock-o"></i> <%= comment.date %>
-                                    </time>
-                                </header>
-                                <div class="comment-post">
-                                    <p>
-                                        <%= comment.text %>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <% } %>
-
-            </section>
         </div>
         <div class="col-md-4">
 
@@ -184,8 +144,12 @@ getBreadcrumb = function () {
 
 <% include ../partials/footer.ejs %>
 
+<script src="/comments.js"></script>
 <script>
 
+    $(function () {
+        TechRadar.getComments(<%= technology.id %>, 0);
+    });
 
     var deleteComment = function (commentId) {
         var r = confirm("Are you sure you want to delete this comment ?");
@@ -206,7 +170,7 @@ getBreadcrumb = function () {
                 }
             }
         });
-    }
+    };
 
     var refreshVotes = function () {
         var data = {limit: 5};
