@@ -54,6 +54,22 @@ ApiProjectRoutes.createRoutes = function (self) {
             })
         });
 
+    /**
+     * Update project
+     */
+    self.app.put('/api/project', security.isAuthenticated,
+        function (req, res) {
+
+            projects.update(
+                req.body.projectId ,
+                sanitizer( req.body.projectname ),
+                sanitizer( req.body.description ) , function (result, error) {
+                    apiutils.handleResultSet(res, result , error);
+                });
+            
+        }
+    );
+
 }
 
 module.exports = ApiProjectRoutes;

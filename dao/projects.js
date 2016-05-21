@@ -13,6 +13,26 @@ Projects.getAll = function( done ) {
 }
 
 /**
+ * Get a project by ID
+ * @param id ID of the project to get
+ * @param done Function to call with the result
+ */
+Projects.findById = function(id, done) {
+    var sql = "SELECT *" +
+        " FROM projects " +
+        " where projects.id=$1 ";
+
+    dbhelper.query( sql, [id],
+        function (results) {
+            done(null , results[0]);
+        },
+        function (error) {
+            console.log(error);
+            return done(error, null);
+        });
+};
+
+/**
  * Get all projects linked to a given technology
  *
  * @technologyId
@@ -59,5 +79,22 @@ Projects.add = function ( name, description, done) {
 Projects.delete = function (ids, done) {
     dbhelper.deleteByIds( "PROJECTS" , ids , done );
 }
+
+/**
+ * Update project data
+ */
+Projects.update = function (id, name, description, done) {
+    var sql = "UPDATE projects SET name=$1, description=$2 where id=$3";
+    var params = [name, description, id];
+
+    dbhelper.query(sql, params,
+        function(result) {
+            done(true);
+        },
+        function(error) {
+            console.log(error);
+            done(false, error);
+        });
+};
 
 module.exports = Projects;

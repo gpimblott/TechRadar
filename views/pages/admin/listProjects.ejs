@@ -74,6 +74,7 @@
         escape: true,
         idField: 'id',
         search: true,
+        sortName:'name',
         showColumns: true,
         showRefresh: true,
         showPaginationSwitch: true,
@@ -89,6 +90,7 @@
             field: 'name',
             title: 'Name',
             sortable: true,
+            formatter: operateFormatter
         },{
             field: 'description',
             title: 'Description',
@@ -132,6 +134,11 @@
         });
     }
 
+    function operateFormatter(value, row, index) {
+        return [
+            '<a href="/project/' + row['id'] + '/edit">' + value + '</a>'
+        ].join('');
+    }
 </script>
 
 </body>
