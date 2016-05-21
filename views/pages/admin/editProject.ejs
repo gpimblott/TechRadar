@@ -18,8 +18,8 @@
 
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
-        <h1>Add Project</h1>
-        <p>Create a new project</p>
+        <h1>Edit Project</h1>
+        <p>Edit an existing project</p>
     </div>
 </div>
 
@@ -28,7 +28,7 @@
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
             <li><a href="/projects">Manage projects</a></li>
-            <li class="active">Add Project</li>
+            <li class="active">Edit Project</li>
         </ol>
     </div>
     <div class="row">
@@ -37,14 +37,15 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="projectname" name="projectname"
-                           placeholder="Project name">
+                           placeholder="Project name" value="<%=project.name %>">
                 </div>
                 <div class="form-group">
                     <label for="descriptioin">Description</label>
                 <textarea class="form-control" rows="3" id="description" name="description"
-                          placeholder="Description" required></textarea>
+                          placeholder="Description" required><%=project.description %></textarea>
 
                 </div>
+                <input type="hidden" id="projectId" name="projectId" value="<%=project.id %>">
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>
@@ -63,7 +64,7 @@
         var data = serialiseForm(frm);
 
         $.ajax({
-            type: "POST",
+            type: "PUT",
             url: '/api/project',
             contentType: "application/json",
             data: JSON.stringify(data),
