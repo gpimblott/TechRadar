@@ -41,7 +41,8 @@ Projects.findById = function(id, done) {
 Projects.getAllForTechnology = function(technologyId, done) {
     var sql = "SELECT p.* from projects p" +
         " INNER JOIN technology_project_link tpl on p.id = tpl.projectid" +
-        " where tpl.technologyid = $1";
+        " where tpl.technologyid = $1" +
+        " ORDER BY p.name ASC";
     var params = [technologyId];
 
     dbhelper.query(sql, params, done,
