@@ -167,7 +167,9 @@ Technology.getAllForCategory = function (cname, done) {
         " LEFT OUTER JOIN tech_status_link tsl2 ON (t.id = tsl2.technologyid AND " +
         "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
         " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
-        " WHERE tsl2.id IS NULL AND LOWER(c.name)=$1";
+        " WHERE tsl2.id IS NULL AND LOWER(c.name)=$1" +
+        " ORDER BY status, t.name ASC";
+
 
     dbhelper.query( sql, [cname] ,
         function( results ) {

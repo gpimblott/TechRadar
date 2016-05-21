@@ -12,7 +12,7 @@ var Category = function () {
  * @param done function to call with the results
  */
 Category.getAll = function(done) {
-    dbhelper.getAllFromTable("CATEGORIES" , done );
+    dbhelper.getAllFromTable("CATEGORIES", done, "name"  );
 }
 
 /**

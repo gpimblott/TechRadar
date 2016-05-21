@@ -106,14 +106,16 @@ DBHelper.deleteByIds = function (tableName, ids, done) {
 }
 
 DBHelper.getAllFromTable = function( tableName , done , order ) {
-    var sql = "SELECT * FROM " + tableName ;
-    
-    // if( order != null) {
-    //     sql = sql + " ";
-    //     sql = sql + order;
-    // }
+    var sql = "SELECT * FROM " + tableName;
+    var params = [];
 
-    DBHelper.query(sql, [],
+    if( order != null) {
+        sql = sql + " ORDER BY $1";
+        params.push(order);
+    }
+
+
+    DBHelper.query(sql, params,
         function (results) {
             done( results);
         },
