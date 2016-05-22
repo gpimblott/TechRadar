@@ -194,7 +194,7 @@ getBreadcrumb = function () {
         $.get('/api/technology/<%= technology.id %>/projects', function (result) {
             var output = "";
             result.forEach(function (project) {
-                output += "<tr><td>" + project.name + "</td>";
+                output += "<tr><td><a href='/project/" + project.id + "'>" + project.name + "</a></td>";
             });
 
             $('#project-use').empty();

@@ -17,15 +17,15 @@ var Technology = function () {
  */
 Technology.add = function (name, website, category, description, done) {
     var sql = "INSERT INTO technologies ( name , website, category , description ) values ($1, $2, $3, $4 ) returning id";
-    var params = [ name , website , category , description  ];
+    var params = [name, website, category, description];
 
-    dbhelper.insert( sql, params ,
-        function( result ) {
-            done( result.rows[0].id );
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(result.rows[0].id);
         },
-        function(error) {
-            done( null, error );
-        } );
+        function (error) {
+            done(null, error);
+        });
 }
 
 /**
@@ -40,17 +40,17 @@ Technology.add = function (name, website, category, description, done) {
  */
 Technology.update = function (id, name, website, category, description, done) {
     var sql = "UPDATE technologies SET name=$1 , website=$2, category=$3 , description=$4 where id=$5";
-    var params = [ name , website , category , description , id ];
+    var params = [name, website, category, description, id];
 
 
-    dbhelper.insert( sql, params ,
-        function( result ) {
-            done( true );
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(true);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
-            done( false , error );
-        } );
+            done(false, error);
+        });
 }
 
 /**
@@ -61,21 +61,21 @@ Technology.update = function (id, name, website, category, description, done) {
 Technology.delete = function (ids, done) {
 
     var params = [];
-    for(var i = 1; i <= ids.length; i++) {
+    for (var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM TECHNOLOGIES WHERE id IN (" +  params.join(',') + "  )";
+    var sql = "DELETE FROM TECHNOLOGIES WHERE id IN (" + params.join(',') + "  )";
 
 
-    dbhelper.query( sql, ids ,
-        function( result ) {
-            done( true );
+    dbhelper.query(sql, ids,
+        function (result) {
+            done(true);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
-            done( false , error );
-        } );
+            done(false, error);
+        });
 }
 
 /**
@@ -88,16 +88,16 @@ Technology.delete = function (ids, done) {
  */
 Technology.updateStatus = function (technology, status, reason, userid, done) {
     var sql = "INSERT INTO tech_status_link ( technologyid ,statusid , userid , reason ) VALUES ( $1 , $2 , $3 , $4) returning id";
-    var params = [ technology, status , userid, reason ];
+    var params = [technology, status, userid, reason];
 
-    dbhelper.insert( sql, params ,
-        function( result ) {
-            done( result.rows[0].id );
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(result.rows[0].id);
         },
-        function(error) {
+        function (error) {
             console.log(error);
-            done(null , error );
-        } );
+            done(null, error);
+        });
 }
 
 /**
@@ -114,41 +114,41 @@ Technology.getById = function (id, done) {
         " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
         " where t.id=$1 AND tsl2.id IS NULL";
 
-    dbhelper.query( sql, [id] ,
-        function( results ) {
+    dbhelper.query(sql, [id],
+        function (results) {
             if (results.length != 1) {
                 done(null);
             } else {
                 done(results[0]);
             }
         },
-        function( error ) {
+        function (error) {
             console.log(error);
             done(null);
-        } );
+        });
 }
 
 /**
  * Get all technologies
  * @param done Function to call with the results
  */
-Technology.getAll = function( done) {
+Technology.getAll = function (done) {
     var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
         " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid " +
         " LEFT OUTER JOIN tech_status_link tsl2 ON (t.id = tsl2.technologyid AND " +
-            "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
+        "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
         " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
         " WHERE tsl2.id IS NULL;";
 
     dbhelper.query(sql, [],
         function (results) {
-            done( results);
+            done(results);
         },
         function (error) {
             console.log(error);
-            return done( null , error );
+            return done(null, error);
         });
 }
 
@@ -171,14 +171,42 @@ Technology.getAllForCategory = function (cname, done) {
         " ORDER BY status, t.name ASC";
 
 
-    dbhelper.query( sql, [cname] ,
-        function( results ) {
+    dbhelper.query(sql, [cname],
+        function (results) {
             done(results);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
             done(null);
-        } );
+        });
+}
+
+/**
+ * Get all of the technologies for a given project
+ * @param id ID of the project
+ * @param done Function to call with the results
+ */
+Technology.getAllForProject = function (id, done) {
+
+    var sql = "SELECT row_number() over (order by s) AS num,t.*, s.name as status" +
+        " FROM technologies t" +
+        " INNER JOIN technology_project_link tpl on t.id=tpl.technologyid" +
+        " INNER JOIN projects p on p.id=tpl.projectid" +
+        " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid" +
+        " LEFT OUTER JOIN tech_status_link tsl2 ON " +
+        "(t.id = tsl2.technologyid AND (tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id))" +
+        " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
+        " WHERE tsl2.id IS NULL AND p.id=$1" +
+        " ORDER BY status, t.name ASC;";
+
+    dbhelper.query(sql, [id],
+        function (results) {
+            done(null, results);
+        },
+        function (error) {
+            console.log(error);
+            done(error, null);
+        });
 }
 
 /**
@@ -187,7 +215,7 @@ Technology.getAllForCategory = function (cname, done) {
  * @param done Function to call with the results
  */
 Technology.search = function (value, done) {
-    
+
     var sql = "SELECT technologies.id, technologies.name,status.name as Status,categories.name as Category" +
         " FROM technologies" +
         " INNER JOIN categories on technologies.category=categories.id " +
@@ -196,15 +224,15 @@ Technology.search = function (value, done) {
         "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
         " INNER JOIN STATUS on COALESCE(tsl.statusid, 0)=status.id" +
         " WHERE technologies.name ILIKE $1 AND tsl2.id IS NULL";
-    
-    dbhelper.query( sql, ['%'+value+'%'] ,
-        function( results ) {
+
+    dbhelper.query(sql, ['%' + value + '%'],
+        function (results) {
             done(results);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
             done(null);
-        } );
+        });
 }
 
 /**
@@ -219,10 +247,10 @@ Technology.addProject = function (technologyId, projectId, callback) {
     var params = [technologyId, projectId];
 
     dbhelper.insert(sql, params,
-        function(result) {
+        function (result) {
             callback(result);
         },
-        function(error) {
+        function (error) {
             console.log(error);
             callback(null, error);
         });
@@ -237,22 +265,22 @@ Technology.addProject = function (technologyId, projectId, callback) {
  */
 Technology.removeProjects = function (technologyId, projectIds, callback) {
     var idPlaceholders = [];
-    for(var i = 2; i <= projectIds.length + 1; i++) {
+    for (var i = 2; i <= projectIds.length + 1; i++) {
         idPlaceholders.push('$' + i);
     }
 
     var sql = "DELETE FROM technology_project_link" +
         " WHERE technologyid = $1 " +
-        " and projectid IN (" +  idPlaceholders.join(',') + ")";
+        " and projectid IN (" + idPlaceholders.join(',') + ")";
 
     var params = [technologyId];
     params = params.concat(projectIds);
 
     dbhelper.query(sql, params,
-        function(result) {
+        function (result) {
             callback(true);
         },
-        function(error) {
+        function (error) {
             console.log(error);
             callback(false, error);
         });
