@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../partials/head.ejs %>
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
@@ -16,7 +16,7 @@
 
 <body>
 
-<% include ../../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
@@ -38,35 +38,45 @@
         </ol>
     </div>
 
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
+
+            <% if (user.admin) { %>
+
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/project/add"  class="btn btn-success">
+                    <a href="/project/add" class="btn btn-success">
                         <i class="glyphicon glyphicon-plus"></i>
                         Add
                     </a>
+                    <button id="editBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Edit
+                    </button>
                     <button id="deleteBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
                         Delete
                     </button>
                 </div>
             </div>
+
+            <% } %>
             <table id="results"></table>
         </div>
     </div>
 
+
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
     $table = $('#results');
-    $deleteBtn = $('#deleteBtn')
 
-    $table.bootstrapTable( {
+    $table.bootstrapTable({
         method: 'get',
         url: '/api/projects',
         cache: false,
@@ -74,15 +84,15 @@
         escape: true,
         idField: 'id',
         search: true,
-        sortName:'name',
+        sortName: 'name',
         showColumns: true,
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
         columns: [{
-            field:'state',
-            checkbox:'true'
-        },   {
+            field: 'state',
+            checkbox: 'true'
+        }, {
             field: 'id',
             title: 'ID',
             visible: false
@@ -91,24 +101,29 @@
             title: 'Name',
             sortable: true,
             formatter: operateFormatter
-        },{
+        }, {
             field: 'description',
             title: 'Description',
             sortable: false,
         }]
     });
 
+    <% if (user.admin) { %>
+    $deleteBtn = $('#deleteBtn');
+    $editBtn = $('#editBtn');
+
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        $editBtn.prop('disabled', $table.bootstrapTable('getSelections').length != 1);
     });
 
-    $deleteBtn.click( function() {
+    $deleteBtn.click(function () {
         var r = confirm("Are you sure you want to delete the selected projects");
         if (r == false) {
             return;
         }
 
-        var data={};
+        var data = {};
         data.id = getIdSelections();
 
         $.ajax({
@@ -116,17 +131,24 @@
             url: '/api/project',
             contentType: "application/json",
             data: JSON.stringify(data),
-            complete: function(result){
+            complete: function (result) {
                 if (result.success) {
-                    $table.bootstrapTable('refresh' );
-                    $deleteBtn.prop('disabled', true );
+                    $table.bootstrapTable('refresh');
+                    $deleteBtn.prop('disabled', true);
                 } else {
                     alert("There was an error deleting technology :(");
                 }
             }
         });
-    });;
+    });
 
+    $editBtn.click(function () {
+        var data = {};
+        data.id = getIdSelections();
+        location.href = '/project/' + data.id[0] + '/edit';
+    });
+
+    <% } %>
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
@@ -134,9 +156,10 @@
         });
     }
 
+
     function operateFormatter(value, row, index) {
         return [
-            '<a href="/project/' + row['id'] + '/edit">' + value + '</a>'
+            '<a href="/project/' + row['id'] + '">' + value + '</a>'
         ].join('');
     }
 </script>
