@@ -1,4 +1,5 @@
 var comments = require('../../dao/comments');
+var technology = require('../../dao/technology');
 var security = require('../../utils/security.js');
 var sanitizer = require('sanitize-html');
 
