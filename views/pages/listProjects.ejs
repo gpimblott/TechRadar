@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../partials/head.ejs %>
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
@@ -16,7 +16,7 @@
 
 <body>
 
-<% include ../../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
@@ -38,8 +38,12 @@
         </ol>
     </div>
 
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
+
+            <% if (user.admin) { %>
+
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
                     <a href="/project/add" class="btn btn-success">
@@ -56,20 +60,21 @@
                     </button>
                 </div>
             </div>
+
+            <% } %>
             <table id="results"></table>
         </div>
     </div>
 
+
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
     $table = $('#results');
-    $deleteBtn = $('#deleteBtn');
-    $editBtn = $('#editBtn');
 
     $table.bootstrapTable({
         method: 'get',
@@ -102,6 +107,10 @@
             sortable: false,
         }]
     });
+
+    <% if (user.admin) { %>
+    $deleteBtn = $('#deleteBtn');
+    $editBtn = $('#editBtn');
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
@@ -139,6 +148,7 @@
         location.href = '/project/' + data.id[0] + '/edit';
     });
 
+    <% } %>
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {

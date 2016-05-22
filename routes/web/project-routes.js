@@ -61,9 +61,9 @@ ProjectRoutes.createRoutes = function (self) {
     /**
      * List projects page
      */
-    self.app.get('/projects', security.isAuthenticatedAdmin,
+    self.app.get('/projects', security.isAuthenticated,
         function (req, res) {
-            res.render('pages/admin/listProjects', {user: req.user});
+            res.render('pages/listProjects', {user: req.user});
         });
 
 
