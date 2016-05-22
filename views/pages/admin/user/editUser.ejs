@@ -8,14 +8,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../partials/head.ejs %>
+    <% include ../../../partials/head.ejs %>
 
     <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
 
-<% include ../partials/menu.ejs %>
+<% include ../../../partials/menu.ejs %>
 
 <div tabindex="-1" id="content" class="site-header">
     <div class="container">
@@ -45,13 +45,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="oldPassword">Old password</label>
-                            <input type="password" class="form-control" id="oldPassword" name="oldPassword"
-                                   placeholder="Old password">
-                        </div>
 
+                            <div class="form-group">
+                                <label for="role">Account type:</label>
+                                <select class="form-control" id="role" name="role">
+                                    <option value="0" <%= editUser.role === 0 ? 'selected' : '' %>>Admin</option>
+                                    <option value="1" <%= editUser.role === 1 ? 'selected' : '' %>>User</option>
+                                </select>
+                            </div>
+                            <input type="hidden" id="userId" name="userId" value="<%= editUser.id %>">
 
-                        <div class="form-group">
                             <label for="password">New password</label>
                             <input type="password" class="form-control" id="password" name="password"
                                    placeholder="New password">
@@ -83,7 +86,7 @@
 
 </div><!-- /.container -->
 
-<% include ../partials/footer.ejs %>
+<% include ../../../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
 
 <script>
@@ -104,40 +107,38 @@
         $("form").submit(function (event) {
             $(":submit").attr("disabled", true);
 
-            var oldPassword = $("#oldPassword").val();
-            var password = $("#password").val();
-            var confirmPassword = $("#confirmPassword").val();
+            var userId = $("form [name=userId]").val();
+            var username = $("form [name=username]").val();
+            var password = $("form [name=password]").val();
+            var confirmPassword = $("form [name=confirmPassword]").val();
 
-            var data = new FormData(this);
-
-            var validationResult = UserValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
-
-            if (data.get('avatar') && validationResult.valid) {
-                validationResult = UserValidator.validateAvatar(data.get('avatar'));
-            }
+            var validationResult = UserValidator.validateNewPassword(password, confirmPassword);
             if (!validationResult.valid) {
                 alert(validationResult.message);
                 return;
             }
 
+            var frm = $('form');
+            var frmdata = serialiseForm(frm);
+
             $.ajax({
                 type: "PUT",
-                url: '/api/user',
-                contentType: false,
-                processData: false,
-                data: data,
+                url: '/api/user/' + userId,
+                contentType: "application/json",
+                data: JSON.stringify(frmdata),
                 success: function (result) {
                     if (result.success) {
-                        alert("Update successful");
+                        location.href = "/users";
                     } else {
-                        alert("There was an error while updating your profile - " + result.error);
+                        alert("There was an error while saving new user data");
                     }
-
                     $(":submit").attr("disabled", false);
                 }
             });
         });
+
     });
+
 </script>
 </body>
 </html>

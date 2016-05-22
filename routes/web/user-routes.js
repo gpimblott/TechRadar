@@ -29,7 +29,7 @@ UserRoutes.createRoutes = function (self) {
      */
     self.app.get('/profile', security.isAuthenticated,
         function (req, res) {
-            res.render('pages/editProfile', {user: req.user , editUser: req.user});
+            res.render('pages/editProfile', {user: req.user, editUser: req.user});
         });
 
     /**
@@ -38,15 +38,15 @@ UserRoutes.createRoutes = function (self) {
     self.app.get('/user/:userId/edit', security.isAuthenticatedAdmin,
         function (req, res) {
             users.findById(req.params.userId, function (error, editUser) {
-                if(error) {
+                if (error) {
                     res.render('pages/error', {user: req.user});
                 } else {
-                    res.render('pages/editProfile', {user: req.user, editUser: editUser});
+                    res.render('pages/admin/user/editUser', {user: req.user, editUser: editUser});
                 }
             });
 
         });
-    
+
 }
 
 
