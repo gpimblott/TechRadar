@@ -36,7 +36,7 @@ CategoryRoutes.createRoutes = function (self) {
 
             var category = cache.getCategory(cname);
 
-            res.render('pages/radar', {category: category, technologies: values, user: req.user});
+            res.render('pages/categoryRadar', {category: category, technologies: values, user: req.user});
         });
     });
 }

@@ -16,19 +16,17 @@
 
 </head>
 <script>
-    var data=<%-JSON.stringify(technologies, null, 4)%>;
+    var data =<%- JSON.stringify(technologies, null, 4) %>;
 </script>
 
 <body onload="init(400,400,data);">
 
-
 <% include ../partials/menu.ejs %>
-
 
 <div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
     <div class="container">
-        <h1><%=category.name %></h1>
-        <p><%=category.description%></p>
+        <h1><%= category.name %></h1>
+        <p><%= category.description %></p>
     </div>
 </div>
 
@@ -37,17 +35,17 @@
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li class="active"><%=category.name%></li>
+            <li class="active"><%= category.name %></li>
         </ol>
     </div>
 
     <div class="row" style="padding-top: 20px;">
-        <div class="col-sm-6" >
+        <div class="col-sm-6">
             <ul class="list-group">
                 <%
-                var heading="";
+                var heading = "";
 
-                if( technologies.length==0) {
+                if( technologies.length == 0) {
                 %>
 
                 <li class="list-group-item active">No technologies found</li>
@@ -58,36 +56,33 @@
                 for (var i = 0, len = technologies.length; i < len; i++) {
                     var technology = technologies[i];
 
-                    if( technology.status != heading) {
-                        heading = technology.status;
-                 %>
-                        <li class="list-group-item active"><%= heading %></li>
+                if( technology.status != heading) {
+                    heading = technology.status;
+                %>
+                <li class="list-group-item active"><%= heading %></li>
 
-                 <% } %>
+                <% } %>
 
-                    <li class="list-group-item">
-                        <span class="badge"><%=technology.num%></span>
-                        <a href="/technology/<%=technology.id%>"><%= technology.name %></a>
-                    </li>
+                <li class="list-group-item">
+                    <span class="badge"><%= technology.num %></span>
+                    <a href="/technology/<%= technology.id %>"><%= technology.name %></a>
+                </li>
 
-            <% } %>
+                <% } %>
 
             </ul>
 
 
         </div>
         <div class="col-sm-6">
-                <div id="radar"></div>
+            <div id="radar"></div>
         </div>
     </div>
 
 
-
 </div>
 
-
 <% include ../partials/footer.ejs %>
-
 
 </body>
 </html>
