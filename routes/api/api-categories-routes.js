@@ -47,11 +47,13 @@ ApiCategoryRoutes.createRoutes = function (self) {
             var data = req.body.id ;
 
             category.delete( data , function( result , error ) {
+                if(result) {
+                    cache.refresh(self.app);
+                }
                 apiutils.handleResultSet( res, result , error );
             })
         });
 
-
-}
+};
 
 module.exports = ApiCategoryRoutes;
