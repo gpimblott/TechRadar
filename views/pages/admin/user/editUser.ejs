@@ -89,6 +89,7 @@
 <% include ../../../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
 
+
 <script>
     $(function () {
         var preview = $("#avatarPreview");
@@ -112,6 +113,8 @@
             var password = $("form [name=password]").val();
             var confirmPassword = $("form [name=confirmPassword]").val();
 
+            var data = new FormData(this);
+
             var validationResult = UserValidator.validateNewPassword(password, confirmPassword);
 
             if (data.get('avatar') && validationResult.valid) {
@@ -123,14 +126,15 @@
                 return;
             }
 
-            var frm = $('form');
-            var frmdata = serialiseForm(frm);
+//            var frm = $('form');
+//            var frmdata = serialiseForm(frm);
 
             $.ajax({
                 type: "PUT",
                 url: '/api/user/' + userId,
-                contentType: "application/json",
-                data: JSON.stringify(frmdata),
+                contentType: false,
+                processData: false,
+                data: data,
                 success: function (result) {
                     if (result.success) {
                         location.href = "/users";

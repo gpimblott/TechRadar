@@ -40,8 +40,7 @@
                         <div class="form-group">
                             <label for="displayname">Full name</label>
                             <input type="text" class="form-control" id="displayname"
-                                   name="displayname" placeholder="Full name" value="<%= editUser.displayname %>"
-                                   required>
+                                   name="displayname" placeholder="Full name" value="<%= editUser.displayname %>" required>
                         </div>
 
                         <div class="form-group">
@@ -64,7 +63,7 @@
                     </div>
                     <div class="col-md-5 col-sm-5 hidden-xs">
                         <figure class="thumbnail" style="padding-top: 20px;">
-                            <img id="avatarPreview" class="img-responsive" style="max-height: 200px; max-width: 250px"
+                            <img id="avatarPreview" class="img-responsive"  style="max-height: 200px; max-width: 250px"
                                  src="<%= editUser.avatar ? editUser.avatar : '/default-avatar.jpg' %>"/>
                             <figcaption class="text-center">
                                 <label for="avatar">Avatar</label>
@@ -119,6 +118,7 @@
                 alert(validationResult.message);
                 return;
             }
+
 
             $.ajax({
                 type: "PUT",

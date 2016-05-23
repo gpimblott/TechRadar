@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <row>
+            <div class="col-md-8">
+                <h1>Technology Search</h1>
+            </div>
+        </row>
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Search</li>
+        </ol>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <table id="chart"></table>
+        </div>
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>
+
+
+
+</script>
+
+</body>
+</html>

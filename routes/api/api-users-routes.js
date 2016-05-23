@@ -121,15 +121,23 @@ ApiUserRoutes.createRoutes = function (self) {
     /**
      * Update an user
      */
-    self.app.put('/api/user/:userId', security.isAuthenticatedAdmin, jsonParser,
+    self.app.put('/api/user/:userId', security.isAuthenticatedAdmin, upload.single('avatar'),
         function (req, res) {
             var userId = sanitizer(req.params.userId);
             var password = sanitizer(req.body.password);
             var confirmPassword = sanitizer(req.body.confirmPassword);
             var displayName = sanitizer(req.body.displayname);
             var role = sanitizer(req.body.role);
+            var avatarPath = "";
 
-            var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+            if(req.file) {
+                avatarPath = req.file.path;
+            }
+
+            var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword);
+            if(req.file && validationResult.valid) {
+                validationResult = userValidator.validateAvatar(req.file);
+            }
             if(!validationResult.valid) {
                 apiutils.handleResultSet(res, null, validationResult.message);
                 return;
@@ -144,8 +152,9 @@ ApiUserRoutes.createRoutes = function (self) {
                         passwordHash = crypto.createHash('sha256')
                             .update(password).digest('base64')
                     }
+                    var newAvatarPath = avatarPath ? avatarPath : userFromDb.avatar;
 
-                    users.update(userId, displayName, passwordHash, userFromDb.avatar, role, function (result, error) {
+                    users.update(userId, displayName, passwordHash, newAvatarPath, role, function (result, error) {
                         apiutils.handleResultSet(res, result, error);
                     });
                 }
