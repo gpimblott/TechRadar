@@ -9,7 +9,7 @@ var apiutils = require('../../../handlers/api/apiUtils.js');
 var apiCategories = require('../../../handlers/api/categoriesApiHandler.js');
 
 
-describe("Categories handler", function() {
+describe("Categories api handler", function() {
     var req, res;
 
     beforeEach(function() {
@@ -42,7 +42,7 @@ describe("Categories handler", function() {
 
             sinon.assert.calledOnce(res.end);
             sinon.assert.calledOnce(res.writeHead);
-            expect(res.end.getCalls()[0].args[0]).that.is.an('string').to.equal(JSON.stringify(testData));
+            expect(res.end.getCalls()[0].args[0]).that.is.a('string').to.equal(JSON.stringify(testData));
         });
     });
 
@@ -76,15 +76,15 @@ describe("Categories handler", function() {
             apiCategories.addCategory(app)(req, res);
 
             sinon.assert.calledOnce(category.add);
-            expect(addCategorySpy.getCalls()[0].args[0]).that.is.an('string').to.equal(req.body.name);
-            expect(addCategorySpy.getCalls()[0].args[1]).that.is.an('string').to.equal(req.body.description);
+            expect(addCategorySpy.getCalls()[0].args[0]).that.is.a('string').to.equal(req.body.name);
+            expect(addCategorySpy.getCalls()[0].args[1]).that.is.a('string').to.equal(req.body.description);
         });
 
         it("should generate response based on dao results", function() {
             apiCategories.addCategory(app)(req, res);
 
             sinon.assert.calledOnce(apiutils.handleResultSet);
-            expect(apiUtilsSpy.getCalls()[0].args[1]).that.is.an('boolean').to.equal(testData);
+            expect(apiUtilsSpy.getCalls()[0].args[1]).that.is.a('boolean').to.equal(testData);
         });
 
         it("should refresh cache on success", function() {
@@ -131,7 +131,7 @@ describe("Categories handler", function() {
             apiCategories.deleteCategories(app)(req, res);
 
             sinon.assert.calledOnce(category.delete);
-            expect(deleteCategorySpy.getCalls()[0].args[0]).that.is.an('number').to.equal(req.body.id);
+            expect(deleteCategorySpy.getCalls()[0].args[0]).that.is.a('number').to.equal(req.body.id);
         });
 
         it("should generate response based on dao results", function() {
