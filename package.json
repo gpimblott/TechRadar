@@ -40,7 +40,9 @@
     "multer": "latest",
     "mocha": "latest",
     "sinon": "latest",
-    "chai": "latest"
+    "chai": "latest",
+    "db-migrate": "latest",
+    "db-migrate-pg": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
