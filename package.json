@@ -17,30 +17,29 @@
     "type": "git",
     "url": "https://git.heroku.com/techradar-demo.git"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
-    "console-stamp" : "latest",
-    "express": "latest",
-    "express-session":"latest",
-    "body-parser":"latest",
-    "ejs": "^1.0.0",
-    "cookie-parser":"latest",
-    "pg" : "latest",
     "async": "latest",
-    "passport" : "latest",
-    "passport-local" : "latest",
-    "dotenv" : "latest",
-    "sanitize-html" : "latest",
+    "body-parser": "latest",
+    "chart.js": "^2.1.3",
+    "console-stamp": "latest",
+    "cookie-parser": "latest",
     "crypto": "latest",
+    "dotenv": "latest",
+    "ejs": "^1.0.0",
+    "express": "latest",
+    "express-session": "latest",
     "multer": "latest",
     "mocha": "latest",
     "sinon": "latest",
     "chai": "latest"
+    "passport": "latest",
+    "passport-local": "latest",
+    "pg": "latest",
+    "sanitize-html": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

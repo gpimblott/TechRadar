@@ -1,5 +1,5 @@
 <div tabindex="-1" id="content" class="site-header">
-    <div class="container" >
+    <div class="container">
         <row>
             <div class="col-md-8">
                 <h1><%= technology.name %></h1>
@@ -12,24 +12,26 @@
                              <td>Status</td>
                              <td>-</td>
                              <td class="banner-text">
-                                 <a class="banner-text-link" href="/technology/<%= technology.id %>/statushistory"><%= technology.statusname %></a>
+                                 <a class="banner-text-link"
+                                    href="/technology/<%= technology.id %>/statushistory"><%= technology.statusname %></a>
                              </td>
-                             <td> </td>
                          </tr>
                         <tr>
                             <td>Category</td>
-                             <td>-</td>
-                            <td >
+                            <td>-</td>
+                            <td>
                                 <a class="banner-text-link"
-                                   href="/category/<%=encodeURI( technology.categoryname) .toLowerCase()%>/technologies"><%= technology.categoryname %>
+                                   href="/category/<%= encodeURI(technology.categoryname) .toLowerCase() %>/technologies"><%= technology.categoryname %>
                                 </a>
                             </td>
                         </tr>
                          <tr>
                              <td>Website</td>
-                              <td>-</td>
+                             <td>-</td>
                              <td>
-                                 <a class="banner-text-link" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
+                                 <a class="banner-text-link"
+                                    href="<%= (technology.website == null ? "#" : technology.website) %>"
+                                    target="_blank">
                                      <%= (technology.website == null ? "" : technology.website) %>
                                  </a>
                              </td>

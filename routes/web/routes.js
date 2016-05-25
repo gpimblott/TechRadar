@@ -52,6 +52,10 @@ Routes.createRoutes = function (self) {
         }
     });
 
+    self.app.get('/dashboard', security.isAuthenticated, function (req, res) {
+        res.render('pages/dashboard' , {user: req.user});
+    });
+
     /**
      * POST login credentials
      */
