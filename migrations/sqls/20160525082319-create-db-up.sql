@@ -1,33 +1,33 @@
-CREATE TABLE IF NOT EXISTS roles(
+CREATE TABLE roles(
                 id SERIAL PRIMARY KEY, name VARCHAR(15) not null, admin boolean default false);
 
-CREATE TABLE IF NOT EXISTS users(
+CREATE TABLE users(
                 id SERIAL PRIMARY KEY, username VARCHAR(15) not null,
                 password VARCHAR(100) not null, displayName VARCHAR(40),
                 role integer references roles(id),
                 avatar VARCHAR(200));
 
-CREATE TABLE IF NOT EXISTS categories(
+CREATE TABLE categories(
                 id SERIAL PRIMARY KEY, name VARCHAR(40) not null, description TEXT);
 
-CREATE TABLE IF NOT EXISTS status(id SERIAL PRIMARY KEY, name VARCHAR(10));
+CREATE TABLE status(id SERIAL PRIMARY KEY, name VARCHAR(10));
 
-CREATE TABLE IF NOT EXISTS technologies(id SERIAL PRIMARY KEY,
+CREATE TABLE technologies(id SERIAL PRIMARY KEY,
                 name VARCHAR(40) not null, website VARCHAR(100), description TEXT,
                 category integer references categories(id),
                 date TIMESTAMP without time zone default (now() at time zone 'utc'));
 
 
-CREATE TABLE IF NOT EXISTS projects(id SERIAL PRIMARY KEY, name VARCHAR(100),
+CREATE TABLE projects(id SERIAL PRIMARY KEY, name VARCHAR(100),
                 description TEXT);
 
-CREATE TABLE IF NOT EXISTS comments(
+CREATE TABLE comments(
             id SERIAL PRIMARY KEY,
             technology integer references technologies(id) ON DELETE CASCADE,
             userid integer references users(id) ON DELETE CASCADE,
             text TEXT, date TIMESTAMP without time zone default (now() at time zone 'utc'));
 
-CREATE TABLE IF NOT EXISTS votes(
+CREATE TABLE votes(
             id SERIAL PRIMARY KEY,
             technology integer references technologies(id) ON DELETE CASCADE,
             status INTEGER references status(id) ON DELETE CASCADE,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS votes(
             UNIQUE(technology, status, userid),
             date TIMESTAMP without time zone default (now() at time zone 'utc'));
 
-CREATE TABLE IF NOT EXISTS tech_status_link(
+CREATE TABLE tech_status_link(
             id SERIAL PRIMARY KEY,
             reason TEXT,
             statusid INTEGER references status(id) ON DELETE CASCADE,
@@ -43,14 +43,14 @@ CREATE TABLE IF NOT EXISTS tech_status_link(
             technologyid INTEGER references technologies(id) ON DELETE CASCADE,
             date TIMESTAMP without time zone default (now() at time zone 'utc'));
 
-CREATE TABLE IF NOT EXISTS stacks(
+CREATE TABLE stacks(
             id SERIAL PRIMARY KEY, name VARCHAR(40) not null, description TEXT);
 
-CREATE TABLE IF NOT EXISTS technology_stack_link(
+CREATE TABLE technology_stack_link(
             stack INTEGER references stacks(id) ON DELETE CASCADE,
             technology INTEGER references technologies(id) ON DELETE CASCADE);
 
-CREATE TABLE IF NOT EXISTS technology_project_link(
+CREATE TABLE technology_project_link(
             projectid INTEGER references projects(id) ON DELETE CASCADE,
             technologyid INTEGER references technologies(id) ON DELETE CASCADE);
 
@@ -68,4 +68,3 @@ INSERT INTO categories (name, description) VALUES
                         'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services'),
                 ('Testing Tools', 'Tools and libraries that support testing of systems and infrastructure'),
                 ('Security Tools', 'Specialist tools and libraries to support the securing of infrastructure and applications');
-commit;
