@@ -7,12 +7,12 @@ Web Application to enable community technology management within your organisati
 * Add technologies that you are interested in and associate with categories and projects
 * Get your users to comment on the technologies they have experience in
 * Vote on whether they think they should be adopted, trialed or avoided.  
-* Users with the correct permissions can then set the 'offical' status with a rationale for each technology
+* Users with the correct permissions can then set the 'official' status with a rationale for each technology
 
 ## Planned future features
 
 * Stack builder
-  * Associate a number of trechnologies into a 'stack' 
+  * Associate a number of technologies into a 'stack' 
   * View reports/comments for each technology in one place
   * Add comments on the 'stack' as a whole
 
@@ -28,7 +28,7 @@ Web Application to enable community technology management within your organisati
 
 ## Design
 
-TechRadar is a Web Application devleoped using NodeJS, Passport, Bootstrap and PostgreSQL.  
+TechRadar is a Web Application developed using NodeJS, Passport, Bootstrap and PostgreSQL.  
 It consists of two layers:
 
 1. Web Layers 
@@ -51,7 +51,8 @@ Installation is as follows:
 3. Deploy code to target environment
 4. Run 'database/dninit.js' to create all the required tables
 5. Run 'database/dbtestdata.js' to create some test data if required
-6. Run 'server.js' :)
+6. Use `npm test` to run unit tests.
+7. Run 'server.js' :)
 
 Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)
 

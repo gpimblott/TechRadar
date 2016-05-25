@@ -2,6 +2,9 @@
   "name": "TechRadar",
   "version": "1.0.0",
   "description": "Prototype Tech Radar",
+  "scripts": {
+    "test": "mocha"
+  },
   "keywords": [
     "Node.js",
     "application"
@@ -34,7 +37,10 @@
     "dotenv" : "latest",
     "sanitize-html" : "latest",
     "crypto": "latest",
-    "multer": "latest"
+    "multer": "latest",
+    "mocha": "latest",
+    "sinon": "latest",
+    "chai": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
