@@ -6,9 +6,6 @@ var seed;
 var fs = require('fs');
 var path = require('path');
 var Promise;
-var dotenv = require('dotenv');
-dotenv.config({path: '/Users/ryszardm/work/TechRadar/process.env'});
-dotenv.load();
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
