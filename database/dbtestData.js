@@ -23,6 +23,19 @@ var statements = [
     "DELETE FROM users",
     "DELETE FROM projects",
 
+    "INSERT INTO categories (name, description) VALUES"+
+            " ('Development Tools', 'A program that software developers use to create, debug, maintain, or otherwise support other programs and applications'),"+
+            " ('Languages and Frameworks', 'Languages and high-level libraries for developing application and systems'),"+
+            " ('Platforms', 'A platform is a group of technologies that are used as a base upon which other applications, processes or technologies are developed.'),"+
+            " ('Infrastructure',"+
+                " 'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services'),"+
+            " ('Testing Tools', 'Tools and libraries that support testing of systems and infrastructure'),"+
+            " ('Security Tools', 'Specialist tools and libraries to support the securing of infrastructure and applications')",
+
+    "INSERT INTO roles (id, name, admin) VALUES (0, 'admin', true)",
+    "INSERT INTO roles (id, name, admin) VALUES (1, 'user', false)",
+
+    "INSERT INTO status (id, name) VALUES  (0, 'TBD'), (1, 'Adopt'), (2, 'Trial'), (3, 'Discuss'), (4, 'Avoid')",
 
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Drop Wizard' , 'REST Services ok' , 2 )",

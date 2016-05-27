@@ -49,10 +49,10 @@ Installation is as follows:
 2. Define the following environment variables; either by creating a process.env in the root directory or defining standard environment variables
    * DATABASE_URL
 3. Deploy code to target environment
-4. Run 'database/dninit.js' to create all the required tables
-5. Run 'database/dbtestdata.js' to create some test data if required
+4. Run `database/runMigrations.js up` to create all the required tables
+5. Run `database/dbtestdata.js` to create some test data if required
 6. Use `npm test` to run unit tests.
-7. Run 'server.js' :)
+7. Run `server.js` :)
 
 Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)
 
