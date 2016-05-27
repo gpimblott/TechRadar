@@ -103,7 +103,8 @@ getBreadcrumb = function() {
             field: 'name',
             title: 'Name',
             align: 'center',
-            sortable: true
+            sortable: true,
+            formatter: operateFormatter
         }, {
             field: 'description',
             title: 'Description',
@@ -167,6 +168,12 @@ getBreadcrumb = function() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.id
         });
+    }
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a href="/project/' + row['id'] + '">' + value + '</a>'
+        ].join('');
     }
 
     $('#projectAddBtn').click(addProject);
