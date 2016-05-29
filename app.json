@@ -2,7 +2,7 @@
   "name": "TechRadar",
   "description": "Community Technology decision making",
   "scripts": {
-    "postdeploy": "run node node_modules/db-migrate/bin/db-migrate up all"
+    "postdeploy": "run node node_modules/db-migrate/bin/db-migrate up"
   },
   "env": {
   },

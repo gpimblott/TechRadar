@@ -1,51 +1,26 @@
-'use strict';
-
-var dbm;
-var type;
-var seed;
+dbm = dbm || require('db-migrate');
+var type = dbm.dataType;
 var fs = require('fs');
 var path = require('path');
-var Promise;
 
-/**
-  * We receive the dbmigrate dependency from dbmigrate initially.
-  * This enables us to not have to rely on NODE_PATH.
-  */
-exports.setup = function(options, seedLink) {
-  dbm = options.dbmigrate;
-  type = dbm.dataType;
-  seed = seedLink;
-  Promise = options.Promise;
-};
-
-exports.up = function(db) {
+exports.up = function(db, callback) {
   var filePath = path.join(__dirname + '/sqls/20160525082319-create-db-up.sql');
-  return new Promise( function( resolve, reject ) {
-    fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
-      if (err) return reject(err);
-      console.log('received data: ' + data);
-
-      resolve(data);
+  fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
+    if (err) return console.log(err);
+    db.runSql(data, function(err) {
+      if (err) return console.log(err);
+      callback();
     });
-  })
-  .then(function(data) {
-          console.log(db.connection);
-          console.log(db.schema);
-    return db.runSql(data);
   });
 };
 
-exports.down = function(db) {
+exports.down = function(db, callback) {
   var filePath = path.join(__dirname + '/sqls/20160525082319-create-db-down.sql');
-  return new Promise( function( resolve, reject ) {
-    fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
-      if (err) return reject(err);
-      console.log('received data: ' + data);
-
-      resolve(data);
+  fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
+    if (err) return console.log(err);
+    db.runSql(data, function(err) {
+      if (err) return console.log(err);
+      callback();
     });
-  })
-  .then(function(data) {
-    return db.runSql(data);
   });
 };
