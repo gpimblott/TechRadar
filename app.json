@@ -1,7 +1,8 @@
 {
   "name": "TechRadar",
-  "description": "",
+  "description": "Community Technology decision making",
   "scripts": {
+    "postdeploy": "node database/runMigrations.js up"
   },
   "env": {
   },
