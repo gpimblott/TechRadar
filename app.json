@@ -2,7 +2,7 @@
   "name": "TechRadar",
   "description": "Community Technology decision making",
   "scripts": {
-    "postdeploy": "node database/runMigrations.js up"
+    "postdeploy": "db-migrations up all"
   },
   "env": {
   },
