@@ -2,12 +2,13 @@
  *  These are the routes for the Web Application
  */
 
-var comments = require('../../dao/comments.js');
-var technology = require('../../dao/technology.js');
+var comments = require('../../dao/comments');
+var technology = require('../../dao/technology');
+var projects = require('../../dao/projects');
 
 var passport = require('passport');
 
-var security = require('../../utils/security.js');
+var security = require('../../utils/security');
 
 
 var Routes = function () {
@@ -53,7 +54,21 @@ Routes.createRoutes = function (self) {
     });
 
     self.app.get('/dashboard', security.isAuthenticated, function (req, res) {
-        res.render('pages/dashboard' , {user: req.user});
+        res.render('pages/dashboards/dashboard', {user: req.user});
+    });
+
+    self.app.get('/mindmap/project/:project', security.isAuthenticated, function (req, res) {
+        var pid = req.params.project;
+
+        technology.getAllForProject(pid, function (error, result) {
+            if (error) {
+                console.log(error);
+                res.render('pages/error');
+            } else {
+                res.render('pages/dashboards/mindmap', {user: req.user, data: result});
+            }
+        });
+        
     });
 
     /**
@@ -73,10 +88,6 @@ Routes.createRoutes = function (self) {
         res.redirect('/login');
     });
 
-    
-
-  
-  
 
 }
 

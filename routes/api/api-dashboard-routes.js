@@ -5,13 +5,16 @@ var security = require('../../utils/security.js');
 
 var handler = require('../../handlers/api/dashboardApiHandler.js');
 
-var ApiCategoryRoutes = function () {
+var ApiDashboardRoutes = function () {
 };
 
-ApiCategoryRoutes.createRoutes = function (self) {
-    
-    self.app.get('/api/votes', security.isAuthenticated, handler.getCategories);
+ApiDashboardRoutes.createRoutes = function (self) {
+
+    /**
+     * Get all technology for all projects
+     */
+    self.app.get('/api/projects/technologies', security.isAuthenticated, handler.getAllTechnologyForAllProjects );
    
 };
 
-module.exports = ApiCategoryRoutes;
+module.exports = ApiDashboardRoutes;
