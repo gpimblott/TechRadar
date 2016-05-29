@@ -1,20 +1,19 @@
-# Tech Radar
+# [Tech Radar](http://gpimblott.github.io/TechRadar/)
 
-Status : WIP
+Main documentation is located here -> http://gpimblott.github.io/TechRadar/
 
 Web Application to enable community technology management within your organisation.
 
 * Add technologies that you are interested in and associate with categories and projects
-* Get your users to comment on the technologies they have experience in
+* Get your users to comment on the technologies
 * Vote on whether they think they should be adopted, trialed or avoided.  
 * Users with the correct permissions can then set the 'official' status with a rationale for each technology
 
-## Planned future features
+The implementation is extremely flexible with all values (e.g. status values) changable in the data and via the user interface.
 
-* Stack builder
-  * Associate a number of technologies into a 'stack' 
-  * View reports/comments for each technology in one place
-  * Add comments on the 'stack' as a whole
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+## Planned future features
 
 * Trending
   * Show the status of technologies over time
@@ -24,7 +23,6 @@ Web Application to enable community technology management within your organisati
 
 * Supplier index
  * Which suppliers have we used and our verdict
-
 
 ## Design
 
