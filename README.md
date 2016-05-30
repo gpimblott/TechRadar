@@ -11,7 +11,7 @@ Web Application to enable community technology management within your organisati
 
 The implementation is extremely flexible with all values (e.g. status values) changable in the data and via the user interface.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy) (Default credentials - username:admin password:letmein)
 
 ## Planned future features
 
