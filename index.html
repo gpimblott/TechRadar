@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -14,127 +14,145 @@
     <![endif]-->
 
     <title>Tech Radar by gpimblott</title>
-  </head>
+</head>
 
-  <body>
-    <header>
-      <div class="inner">
+<body>
+<header>
+    <div class="inner">
         <h1>Tech Radar</h1>
-        <h2>Community technology management tool for your organisation</h2>
-        <a href="https://github.com/gpimblott/TechRadar" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+        <h2>Community technology management and visualisation tool</h2>
+        <a href="https://github.com/gpimblott/TechRadar" class="button">
+            <small>View project on</small>
+            GitHub</a>
+    </div>
+</header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
+<div id="content-wrapper">
+    <div class="inner clearfix">
         <section id="main-content">
-          <h1>
-<a id="tech-radar" class="anchor" href="#tech-radar" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tech Radar</h1>
+            <h1>
+                <a id="tech-radar" class="anchor" href="#tech-radar" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>Tech Radar
+            </h1>
 
-<p>Status : WIP</p>
 
-<p>Web Application to enable community technology management within your organisation.</p>
+            <p>Web Application to enable community technology management within your organisation.</p>
 
-<ul>
-<li>Add technologies that you are interested in and associate with categories and projects</li>
-<li>Get your users to comment on the technologies they have experience in</li>
-<li>Vote on whether they think they should be adopted, trialed or avoided.<br>
-</li>
-<li>Users with the correct permissions can then set the 'offical' status with a rationale for each technology</li>
-</ul>
 
-<h2>
-<a id="planned-future-features" class="anchor" href="#planned-future-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Planned future features</h2>
+            <ul>
+                <li>Add technologies that you are interested in and associate with categories and projects</li>
+                <li>Get your users to comment on the technologies they have experience in</li>
+                <li>Vote on whether they think they should be adopted, trialed or avoided.<br>
+                </li>
+                <li>Users with the correct permissions can then set the 'offical' status with a rationale for each
+                    technology
+                </li>
+            </ul>
 
-<ul>
-<li>
-<p>Stack builder</p>
+            <a href="https://heroku.com/deploy">
+                <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+            </a>
 
-<ul>
-<li>Associate a number of trechnologies into a 'stack' </li>
-<li>View reports/comments for each technology in one place</li>
-<li>Add comments on the 'stack' as a whole</li>
-</ul>
-</li>
-<li>
-<p>Trending</p>
+            <h2>
+                <a id="planned-future-features" class="anchor" href="#planned-future-features" aria-hidden="true"><span
+                        aria-hidden="true" class="octicon octicon-link"></span></a>Planned future features</h2>
 
-<ul>
-<li>Show the status of technologies over time</li>
-<li>Status changes</li>
-<li>When did users vote and the status</li>
-<li>When did projects adopt</li>
-</ul>
-</li>
-<li>
-<p>Supplier index</p>
+            <ul>
+                <li>
+                    <p>Stack builder</p>
 
-<ul>
-<li>Which suppliers have we used and our verdict</li>
-</ul>
-</li>
-</ul>
+                    <ul>
+                        <li>Associate a number of trechnologies into a 'stack'</li>
+                        <li>View reports/comments for each technology in one place</li>
+                        <li>Add comments on the 'stack' as a whole</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Trending</p>
 
-<h2>
-<a id="design" class="anchor" href="#design" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Design</h2>
+                    <ul>
+                        <li>Show the status of technologies over time</li>
+                        <li>Status changes</li>
+                        <li>When did users vote and the status</li>
+                        <li>When did projects adopt</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Supplier index</p>
 
-<p>TechRadar is a Web Application devleoped using NodeJS, Passport, Bootstrap and PostgreSQL.<br>
-It consists of two layers:</p>
+                    <ul>
+                        <li>Which suppliers have we used and our verdict</li>
+                    </ul>
+                </li>
+            </ul>
 
-<ol>
-<li>Web Layers </li>
-<li>API REST Services</li>
-</ol>
+            <h2>
+                <a id="design" class="anchor" href="#design" aria-hidden="true"><span aria-hidden="true"
+                                                                                      class="octicon octicon-link"></span></a>Design
+            </h2>
 
-<p>The web application calls the API REST services using ajax.</p>
+            <p>TechRadar is a Web Application devleoped using NodeJS, Passport, Bootstrap and PostgreSQL.<br>
+                It consists of two layers:</p>
 
-<h2>
-<a id="pre-requisites" class="anchor" href="#pre-requisites" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pre-requisites</h2>
+            <ol>
+                <li>Web Layers</li>
+                <li>API REST Services</li>
+            </ol>
 
-<ul>
-<li>NodeJS</li>
-<li>PostgreSQL database (other databases are available and will probably work with small changes to the schema)</li>
-</ul>
+            <p>The web application calls the API REST services using ajax.</p>
 
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+            <h2>
+                <a id="pre-requisites" class="anchor" href="#pre-requisites" aria-hidden="true"><span aria-hidden="true"
+                                                                                                      class="octicon octicon-link"></span></a>Pre-requisites
+            </h2>
 
-<p>Installation is as follows:</p>
+            <ul>
+                <li>NodeJS</li>
+                <li>PostgreSQL database (other databases are available and will probably work with small changes to the
+                    schema)
+                </li>
+            </ul>
 
-<ol>
-<li>Provision a node environment and PostgreSQL database</li>
-<li>Define the following environment variables; either by creating a process.env in the root directory or defining standard environment variables
+            <h2>
+                <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true"
+                                                                                                  class="octicon octicon-link"></span></a>Installation
+            </h2>
 
-<ul>
-<li>DATABASE_URL</li>
-</ul>
-</li>
-<li>Deploy code to target environment</li>
-<li>Run 'database/dninit.js' to create all the required tables</li>
-<li>Run 'database/dbtestdata.js' to create some test data if required</li>
-<li>Run 'server.js' :)</li>
-</ol>
+            <p>Installation is as follows:</p>
 
-<p>Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)</p>
+            <ol>
+                <li>Provision a node environment and PostgreSQL database</li>
+                <li>Define the following environment variables; either by creating a process.env in the root directory
+                    or defining standard environment variables
+
+                    <ul>
+                        <li>DATABASE_URL</li>
+                    </ul>
+                </li>
+                <li>Deploy code to target environment</li>
+                <li>Run 'database/dninit.js' to create all the required tables</li>
+                <li>Run 'database/dbtestdata.js' to create some test data if required</li>
+                <li>Run 'server.js' :)</li>
+            </ol>
+
+            <p>Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)</p>
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/gpimblott/TechRadar/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/gpimblott/TechRadar/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/gpimblott/TechRadar"></a> is maintained by <a href="https://github.com/gpimblott">gpimblott</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+            <a href="https://github.com/gpimblott/TechRadar/zipball/master" class="button">
+                <small>Download</small>
+                .zip file
+            </a>
+            <a href="https://github.com/gpimblott/TechRadar/tarball/master" class="button">
+                <small>Download</small>
+                .tar.gz file
+            </a>
+            
         </aside>
-      </div>
     </div>
+</div>
 
-  
-  </body>
+
+</body>
 </html>
