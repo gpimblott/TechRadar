@@ -2,7 +2,7 @@
   "name": "TechRadar",
   "description": "Community Technology decision making",
   "scripts": {
-    "postdeploy": "heroku_post_deploy.sh"
+    "postdeploy": "./heroku_post_deploy.sh"
   },
   "env": {
   },
