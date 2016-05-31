@@ -31,6 +31,7 @@
     "ejs": "^1.0.0",
     "cookie-parser":"latest",
     "pg" : "latest",
+    "pg-large-object": "latest",
     "async": "latest",
     "passport" : "latest",
     "passport-local" : "latest",

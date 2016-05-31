@@ -7,7 +7,7 @@ var nextPage = currentPage < pageCount - 1 ? 'TechRadar.getComments('+technology
 <section class="comment-list" style="margin-top: 40px">
     <nav>
         <ul class="pagination">
-            <%if(count > 0) { %>
+            <%if(count > 10) { %>
             <li role="button">
                 <span aria-label="Previous" onclick="<%= prevPage %>">
                     <span aria-hidden="true">&laquo;</span>

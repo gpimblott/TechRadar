@@ -51,7 +51,7 @@ Users.findById = function(id, done) {
  * @param done Function to call with the result
  */
 Users.findByUsername = function(username, done) {
-    var sql = "SELECT * FROM users where username=$1 ";
+    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role FROM users u where u.username=$1";
     
     dbhelper.query(sql, [username],
         function (results) {
@@ -118,13 +118,19 @@ Users.delete = function (ids, done) {
  * @param id Target users ID
  * @param displayName New display name
  * @param password New password
- * @param avatarPath Path to the avatar image
+ * @param avatarData Avatar image buffer, empty - no avatar update
  * @param role User role
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, avatarPath, role, done) {
-    var sql = "UPDATE users SET displayName=$1, password=$2, avatar=$3, role=$4 where id=$5";
-    var params = [displayName, passwordHash, avatarPath, role, id];
+Users.update = function (id, displayName, passwordHash, avatarData, role, done) {
+    var params = [displayName, passwordHash, role, id];
+
+    var avatarUpdate = '';
+    if(avatarData) {
+        avatarUpdate = ', avatar=$5';
+        params.push('\\x' + avatarData.toString('hex'));
+    }
+    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3 where id=$4";
 
     dbhelper.query(sql, params,
         function(result) {
@@ -136,5 +142,27 @@ Users.update = function (id, displayName, passwordHash, avatarPath, role, done) 
         });
 };
 
+/**
+ * Retrieve users avatar
+ *
+ * @param username
+ * @param done Callback
+ */
+Users.getAvatar = function (username, done) {
+    var sql = "SELECT u.avatar FROM users u where u.username=$1";
+
+    dbhelper.query(sql, [username],
+        function (results) {
+            if(results[0].avatar) {
+                done(new Buffer(results[0].avatar));
+            } else {
+                done(new Buffer(""));
+            }
+        },
+        function (error) {
+            console.log(error);
+            done(null, error);
+        });
+};
 
 module.exports = Users;
