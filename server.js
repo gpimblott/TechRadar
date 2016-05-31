@@ -119,7 +119,6 @@ var TechRadar = function () {
         // Browser Cache
         var oneDay = 86400000;
         self.app.use('/', express.static('public', {maxAge: oneDay}));
-        self.app.use('/uploads', express.static('uploads', {maxAge: oneDay}));
         self.app.use('/shared', express.static('shared', {maxAge: oneDay}));
 
         // Initialize Passport and restore authentication state, if any, from the
