@@ -42,7 +42,7 @@
     "mocha": "latest",
     "sinon": "latest",
     "chai": "latest",
-    "db-migrate": "latest",
+    "db-migrate": "0.10.0-beta.12",
     "db-migrate-pg": "latest"
   },
   "devDependencies": {},
