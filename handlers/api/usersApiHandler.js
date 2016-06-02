@@ -98,7 +98,7 @@ UsersApiHandler.updateUser = function (req, res) {
         avatarData = req.file.buffer;
     }
 
-    var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword);
+    var validationResult = userValidator.validateNewPassword(password, confirmPassword);
     if(req.file && validationResult.valid) {
         validationResult = userValidator.validateAvatar(req.file);
     }

@@ -124,11 +124,10 @@
 
             if (!validationResult.valid) {
                 alert(validationResult.message);
+                $(":submit").attr("disabled", false);
                 return;
             }
 
-//            var frm = $('form');
-//            var frmdata = serialiseForm(frm);
 
             $.ajax({
                 type: "PUT",
@@ -140,6 +139,7 @@
                     if (result.success) {
                         location.href = "/users";
                     } else {
+                        console.log(result.error);
                         alert("There was an error while saving new user data");
                     }
                     $(":submit").attr("disabled", false);

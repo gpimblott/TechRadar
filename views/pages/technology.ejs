@@ -64,20 +64,7 @@ getBreadcrumb = function () {
                         <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/edit">Edit</a>
 
                         <% if( user.admin ) { %>
-
-                        <div class="dropdown btn-group">
-                            <a href="#" class="btn btn-default btn-sm dropdown-toggle"
-                               data-toggle="dropdown"
-                               role="button"
-                               aria-haspopup="true"
-                               aria-expanded="false">Admin<span
-                                        class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/technology/<%= technology.id %>/updatestatus">Change
-                                        status</a></li>
-                            </ul>
-                        </div>
-
+                        <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/updatestatus">Change status</a>
                         <% } %>
 
                     </div>

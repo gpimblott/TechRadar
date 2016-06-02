@@ -20,15 +20,16 @@ ApiUserRoutes.createRoutes = function (self) {
      */
     self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser, handler.addUser);
 
-    /**
-     * Update profile
-     */
-    self.app.put('/api/user', security.isAuthenticated, upload.single('avatar'), handler.updateProfile);
 
     /**
      * Update an user
      */
     self.app.put('/api/user/:userId', security.isAuthenticatedAdmin, upload.single('avatar'), handler.updateUser);
+
+    /**
+     * Update profile
+     */
+    self.app.put('/api/user', security.isAuthenticated, upload.single('avatar'), handler.updateProfile);
 
     /**
      * Get all users
