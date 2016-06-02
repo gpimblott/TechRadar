@@ -62,6 +62,34 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
         });
 }
 
+
+/**
+ * Get the number of votes for all technologies.  This is used by the dashboard
+ * @param done Function to call with the results
+ */
+Vote.getVotesForAllTechnologies = function (done) {
+    var sql =   "SELECT count(v.id), s.name as status, t.name as technology" +
+                " FROM votes v" +
+                " LEFT JOIN technologies t on t.id=v.technology" + 
+                " LEFT JOIN status s on s.id=v.status" +
+                " GROUP BY t.id, s.id" + 
+                " ORDER BY t.name,s.name;";
+
+
+    var params = [];
+
+    dbhelper.query(sql, params,
+        function (results) {
+            console.log(results);
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+
+}
+
 /**
  * Add a vote for a technology
  * @param technology ID of technology
