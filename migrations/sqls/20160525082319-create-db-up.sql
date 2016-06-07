@@ -55,3 +55,4 @@ CREATE TABLE technology_project_link(
             technologyid INTEGER references technologies(id) ON DELETE CASCADE);
 
 ALTER SEQUENCE categories_id_seq RESTART WITH 1;
+
