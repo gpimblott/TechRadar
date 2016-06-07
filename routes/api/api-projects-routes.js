@@ -30,7 +30,7 @@ ApiProjectRoutes.createRoutes = function (self) {
     /**
      * Add a new project
      */
-    self.app.post('/api/project', security.isAuthenticatedAdmin, jsonParser,
+    self.app.post('/api/project', security.canEdit, jsonParser,
         function (req, res) {
 
             projects.add(
@@ -57,7 +57,7 @@ ApiProjectRoutes.createRoutes = function (self) {
     /**
      * Update project
      */
-    self.app.put('/api/project', security.isAuthenticatedAdmin,
+    self.app.put('/api/project', security.canEdit,
         function (req, res) {
 
             projects.update(
