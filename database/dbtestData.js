@@ -20,7 +20,6 @@ var statements = [
     "DELETE FROM comments",
     "DELETE FROM votes",
     "DELETE FROM technologies",
-    "DELETE FROM users",
     "DELETE FROM projects",
 
     "INSERT INTO categories (name, description) VALUES"+
@@ -31,11 +30,6 @@ var statements = [
                 " 'The set of hardware, software, networks, facilities, etc., in order to develop, test, deliver, monitor, control or support IT services'),"+
             " ('Testing Tools', 'Tools and libraries that support testing of systems and infrastructure'),"+
             " ('Security Tools', 'Specialist tools and libraries to support the securing of infrastructure and applications')",
-
-    "INSERT INTO roles (id, name, admin) VALUES (0, 'admin', true)",
-    "INSERT INTO roles (id, name, admin) VALUES (1, 'user', false)",
-
-    "INSERT INTO status (id, name) VALUES  (0, 'TBD'), (1, 'Adopt'), (2, 'Trial'), (3, 'Discuss'), (4, 'Avoid')",
 
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java Core' , 'Its java ok we all know about it' , 2 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Drop Wizard' , 'REST Services' , 2 )",
@@ -54,8 +48,6 @@ var statements = [
     "INSERT INTO technologies ( name , description , category ) VALUES ('AWS' , 'Infrastructure as a Service' , 3 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The enterprise java' , 3 )",
 
-
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('admin' , '" + hpassword + "' , 'The Admin', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , '" + hpassword + "' , 'User One', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , '" + hpassword + "' , 'User Two', 0) ",
     "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , '" + hpassword + "' , 'User Three', 0) ",
