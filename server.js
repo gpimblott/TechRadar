@@ -23,6 +23,7 @@ var users = require('./dao/users');
 var passport = require('passport');
 require('./utils/passport.js');
 
+
 // Load the routes for the web Application and API REST services
 var routes = require('./routes/web/routes.js');
 var technologyRoutes = require('./routes/web/technology-routes');
@@ -125,7 +126,8 @@ var TechRadar = function () {
         // session.
         self.app.use(passport.initialize());
         self.app.use(passport.session());
-
+        
+        
         // update the cache of static information from the DB
         cache.refresh(self.app);
 

@@ -19,7 +19,7 @@ ApiCommentRoutes.createRoutes = function (self) {
     /**
      * Add a new comment for a technology
      */
-    self.app.post('/api/comments', security.isAuthenticated, jsonParser,
+    self.app.post('/api/comments', security.canAddComments, jsonParser,
         function (req, res) {
 
             comments.add(

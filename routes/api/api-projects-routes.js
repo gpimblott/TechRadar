@@ -57,7 +57,7 @@ ApiProjectRoutes.createRoutes = function (self) {
     /**
      * Update project
      */
-    self.app.put('/api/project', security.isAuthenticated,
+    self.app.put('/api/project', security.isAuthenticatedAdmin,
         function (req, res) {
 
             projects.update(

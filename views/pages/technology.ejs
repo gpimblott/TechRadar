@@ -38,6 +38,7 @@ getBreadcrumb = function () {
                 <div class="col-md-8" style="margin-top: 10px">
                     <div class="btn-group btn-block">
                         <div class="dropdown btn-group">
+                            <% if(user.canComment) { %>
                             <button class="btn btn-default btn-sm dropdown-toggle"
                                     id="votePulldown"
                                     data-toggle="dropdown">Vote<span class="caret"></span></button>
@@ -57,13 +58,17 @@ getBreadcrumb = function () {
 
                                 <% }); %>
                             </ul>
+                            <% } %>
                         </div>
 
 
+                        <% if(user.canComment) { %>
                         <a class="btn btn-default btn-sm" href="/comments/add/<%= technology.id %>">Comment</a>
+                        <% } %>
+                        <% if(user.canEdit) { %>
                         <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/edit">Edit</a>
-
-                        <% if( user.admin ) { %>
+                        <% } %>
+                        <% if(user.canEdit) { %>
                         <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/updatestatus">Change status</a>
                         <% } %>
 
@@ -80,7 +85,6 @@ getBreadcrumb = function () {
 
         </div>
         <div class="col-md-4">
-
 
             <div class="panel panel-default">
                 <!-- Default panel contents -->
@@ -107,9 +111,11 @@ getBreadcrumb = function () {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div>Used in projects
+                        <% if (user.canEdit) { %>
                     <span class="pull-right">
                         <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/projects">Update</a>
                     </span>
+                        <% } %>
                     </div>
 
                 </div>

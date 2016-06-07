@@ -78,7 +78,7 @@ TechnologiesWebHandler.getVotes = function (req, res) {
     });
 };
 
-TechnologiesWebHandler.updateHistory = function (req, res) {
+TechnologiesWebHandler.updateStatus = function (req, res) {
     var techid = req.params.id;
 
     technology.getById(techid, function (value) {
