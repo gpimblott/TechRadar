@@ -10,7 +10,7 @@ ProjectRoutes.createRoutes = function (self) {
     /**
      * Add new project page
      */
-    self.app.get('/project/add', security.isAuthenticatedAdmin, handler.add);
+    self.app.get('/project/add', security.canEdit, handler.add);
     
     /**
      * Edit project page
