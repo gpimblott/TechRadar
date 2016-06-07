@@ -43,7 +43,7 @@
     "sinon": "latest",
     "chai": "latest",
     "db-migrate": "0.10.0-beta.12",
-    "db-migrate-pg": "latest",
+    "db-migrate-pg": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
