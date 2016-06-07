@@ -9,9 +9,11 @@
  */
 var categoryDao = require('./category.js');
 var statusDao = require('./status.js');
+var roleDao = require('./role.js');
 
 var categories = null;
 var statuses = null;
+var roles = null;
 
 
 var Cache = function () {
@@ -27,6 +29,11 @@ Cache.refresh = function ( app ) {
     statusDao.getAll( function (results ) {
         statuses = results;
         app.locals.statuses = results;
+    })
+
+    roleDao.getAll( function (results ) {
+        roles = results;
+        app.locals.roles = results;
     })
 }
 

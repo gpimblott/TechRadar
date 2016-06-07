@@ -30,8 +30,10 @@
                        aria-expanded="false">Technology<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/technology/search">Search</a></li>
+                        <% if (user.canEdit) { %>
                         <li role="separator" class="divider"></li>
                         <li><a href="/technology/add">Add Technology</a></li>
+                        <% } %>
 
                     </ul>
                 </li>

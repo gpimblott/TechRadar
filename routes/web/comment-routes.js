@@ -11,7 +11,7 @@ CommentRoutes.createRoutes = function (self) {
     /**
      * Add a new comment for technology
      */
-    self.app.get('/comments/add/:id', security.isAuthenticated, handler.add );
+    self.app.get('/comments/add/:id', security.canAddComments, handler.add );
 
     /**
      * Get Comments for a technology 

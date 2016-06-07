@@ -25,12 +25,12 @@ TechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a new technology
      */
-    self.app.get('/technology/add', security.isAuthenticated, handler.add );
+    self.app.get('/technology/add', security.canEdit, handler.add );
 
     /**
      * Edit a technology
      */
-    self.app.get('/technology/:id/edit', security.isAuthenticated, handler.edit );
+    self.app.get('/technology/:id/edit', security.canEdit, handler.edit );
 
     /**
      * Show a specific technology by id
@@ -50,7 +50,7 @@ TechnologyRoutes.createRoutes = function (self) {
     /**
      * Show all of the status updates for a technology
      */
-    self.app.get('/technology/:id/updatestatus', security.isAuthenticatedAdmin, handler.updateHistory );
+    self.app.get('/technology/:id/updatestatus', security.canEdit, handler.updateStatus );
 
     /**
      * Show the projects for a specified technology

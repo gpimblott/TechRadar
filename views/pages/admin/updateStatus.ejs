@@ -38,7 +38,7 @@
         <div class="col-md-12" style="margin-top: 10px">
             <row>
                 <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
+                    <% if( user.canEdit ) { %>
                     <form  action="javascript:void(0);">
                         <fieldset class="form-group">
                             <label for="newStatusLabel">New status for <%=technology.name%></label>
@@ -114,7 +114,7 @@
 
 
 
-    <% if (user.admin ) { %>
+    <% if (user.canEdit ) { %>
 
     var statusBtn = function () {
         var data = {statusvalue: $('#statusPulldown').val(), reason: $('#reasonTextArea').val(), technology:<%= technology.id %>};

@@ -49,8 +49,9 @@
                             <div class="form-group">
                                 <label for="role">Account type:</label>
                                 <select class="form-control" id="role" name="role">
-                                    <option value="0" <%= editUser.role === 0 ? 'selected' : '' %>>Admin</option>
-                                    <option value="1" <%= editUser.role === 1 ? 'selected' : '' %>>User</option>
+                                    <% roles.forEach( function(role) { %>
+                                    <option value="<%=role.id%>" <%= editUser.role === role.id ? 'selected' : '' %>><%=role.name%></option>
+                                    <% }); %>
                                 </select>
                             </div>
                             <input type="hidden" id="userId" name="userId" value="<%= editUser.id %>">
