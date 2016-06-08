@@ -87,6 +87,22 @@ getBreadcrumb = function () {
         <div class="col-md-4">
 
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Status
+                        <span class="pull-right">
+                            <a class="btn btn-default btn-xs"
+                               href="/technology/<%= technology.id %>/statushistory">History</a>
+                        </span>
+                    </div>
+                </div>
+                <table class="table">
+                    <tbody id="status">
+                    <tr><td><%= technology.statusname %></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
                     <div>Total votes cast<span class="pull-right">
@@ -121,11 +137,6 @@ getBreadcrumb = function () {
                 </div>
 
                 <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                    </thead>
                     <tbody id="project-use">
 
                     </tbody>
