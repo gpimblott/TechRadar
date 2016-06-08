@@ -76,6 +76,10 @@
                 $(":submit").attr("disabled", false);
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Category', 'add', frm.find('input[name="name"]').val() );
+        <% } %>
     });
 
 </script>

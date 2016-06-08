@@ -77,6 +77,10 @@
                 $(":submit").attr("disabled", false);
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Project', 'add', frm.find('input[name="projectname"]').val() );
+        <% } %>
     });
 
 </script>

@@ -176,6 +176,10 @@ getBreadcrumb = function () {
                 }
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Comment', 'delete', '<%=technology.name%>');
+        <% } %>
     };
 
     var refreshVotes = function () {
@@ -222,6 +226,9 @@ getBreadcrumb = function () {
                     };
                     $("#votePulldown" ).removeClass("disabled");
                 });
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Technology', 'vote', '<%=technology.name%> - ' + $(this).text());
+        <% } %>
     };
 
 
