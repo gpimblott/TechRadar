@@ -39,6 +39,12 @@ The web application calls the API REST services using ajax.
 * NodeJS
 * PostgreSQL database (other databases are available and will probably work with small changes to the schema)
 
+## Configuration
+
+The following environment variables can be set
+COOKIE_KEY = The secret key to use for cookie encryption - uses an insecure value if not defined
+GOOGLE_ID = Google Analytics tracking code. GA is turned off if not defined
+
 ## Installation
 
 Installation is as follows:

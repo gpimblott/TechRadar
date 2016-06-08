@@ -114,9 +114,16 @@ var TechRadar = function () {
         }));
 
 
-        self.app.use(session({secret: 'myothersecretkeyforthiscookie'}));
+        // Setup the secret cookie key
+        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
+        self.app.use(session({secret: cookie_key }));
 
+        // Setup the Google Analytics ID if defined
+        self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
 
+        console.log("GA ID:" + self.app.locals.google_id);
+        console.log("Cookie key:" + cookie_key);
+        
         // Browser Cache
         var oneDay = 86400000;
         self.app.use('/', express.static('public', {maxAge: oneDay}));
