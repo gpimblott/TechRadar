@@ -125,7 +125,6 @@
         var parameters = {search: $('#search-field').val()};
         $.get('/api/technology', parameters, function (data) {
             $('#results').bootstrapTable('load', data);
-
         });
     };
 

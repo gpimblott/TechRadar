@@ -146,6 +146,11 @@
                     $(":submit").attr("disabled", false);
                 }
             });
+
+
+            <% if (google_id!=undefined) { %>
+            ga('send', 'event', 'User', 'edit', '<%=editUser.username%>');
+            <% } %>
         });
 
     });

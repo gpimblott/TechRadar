@@ -126,6 +126,10 @@
             }
 
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Technology', 'status', '<%=technology.name%> - ' + $('#statusPulldown option:selected').text());
+        <% } %>
     };
 
     $(function () {

@@ -101,6 +101,10 @@
                 $(":submit").attr("disabled", false);
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'User', 'add', frm.find('input[name="username"]').val() );
+        <% } %>
     });
 </script>
 </body>

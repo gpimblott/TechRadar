@@ -55,7 +55,9 @@ getBreadcrumb = function () {
 <script>
 
     $("form").submit(function (event) {
+
         $(":submit").attr("disabled", true);
+
 
         var frm = $('form');
         var data = serialiseForm(frm);
@@ -74,6 +76,10 @@ getBreadcrumb = function () {
                 }
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Comment', 'add', '<%=technology.name%>');
+        <% } %>
     });
 
 </script>

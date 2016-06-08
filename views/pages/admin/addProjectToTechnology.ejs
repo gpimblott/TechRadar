@@ -156,6 +156,10 @@ getBreadcrumb = function() {
 
             $(":submit").attr("disabled", false);
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Technology', 'add project',  '<%=technology.name%> - ' + $('#newProject option:selected').text() );
+        <% } %>
     };
 
     $(function () {

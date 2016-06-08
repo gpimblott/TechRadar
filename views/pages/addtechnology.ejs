@@ -79,6 +79,7 @@
     $("form").submit(function (event) {
         $(":submit").attr("disabled", true);
 
+
         var frm = $('form');
         var frmdata = serialiseForm(frm);
 
@@ -97,6 +98,10 @@
                 $(":submit").attr("disabled", false);
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Technology', 'add', frm.find('input[name="technologyName"]').val() );
+        <% } %>
     });
 
 </script>
