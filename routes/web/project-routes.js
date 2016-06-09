@@ -11,7 +11,18 @@ ProjectRoutes.createRoutes = function (self) {
      * Add new project page
      */
     self.app.get('/project/add', security.canEdit, handler.add);
-    
+
+    /**
+     * Add new Technology to the project
+     */
+    self.app.get('/project/:projectId/technology/add', security.canEdit, handler.addTechnology);
+
+    /**
+     * Add new Technology to the project
+     */
+    self.app.get('/project/:projectId/technology/remove', security.canEdit, handler.removeTechnology);
+
+
     /**
      * Edit project page
      */

@@ -18,6 +18,26 @@ ProjectsWebHandler.edit = function (req, res) {
     });
 };
 
+ProjectsWebHandler.addTechnology = function (req, res) {
+    projects.findById(req.params.projectId, function (error, project) {
+        if (error) {
+            res.render('pages/error', {user: req.user});
+        } else {
+            res.render('pages/addTechnologyToProject', {user: req.user, project: project});
+        }
+    });
+};
+
+ProjectsWebHandler.removeTechnology = function (req, res) {
+    projects.findById(req.params.projectId, function (error, project) {
+        if (error) {
+            res.render('pages/error', {user: req.user});
+        } else {
+            res.render('pages/removeTechnologyFromProject', {user: req.user, project: project});
+        }
+    });
+};
+
 ProjectsWebHandler.showRadar = function (req, res) {
     projects.findById(req.params.projectId, function (error, project) {
 

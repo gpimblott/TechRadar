@@ -23,6 +23,54 @@ getBreadcrumb = function () {
 %>
 
 <% include ../partials/technology-head.ejs %>
+<% if(user.canEdit) { %>
+<div class="navbar navbar-custom navbar-inverse navbar-static-top" id="nav">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav white-text nav-justified">
+                <% if(user.canComment) { %>
+                <li class="dropdown">
+                    <a id="votePulldown" href="#" class="dropdown-toggle" data-toggle="dropdown">Vote <b
+                                class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <% statuses.forEach( function(status) {
+
+                            if (status.id == 0) {
+                                return;
+                            }
+                        %>
+                        <li><a class="dropdown-item"
+                               id="voteBtn_<%= status.id %>"
+                               href="javascript:void(0);"
+                               value="<%= status.id %>"><%= status.name %></a>
+                        </li>
+
+                        <% }); %>
+                    </ul>
+                </li>
+                <% } %>
+
+                <% if(user.canComment) { %>
+                <li><a href="/comments/add/<%= technology.id %>">Comment</a></li>
+                <% } %>
+                <% if(user.canEdit) { %>
+                <li><a href="/technology/<%= technology.id %>/edit">Edit</a></li>
+                <% } %>
+                <% if(user.canEdit) { %>
+                <li><a href="/technology/<%= technology.id %>/updatestatus">Change status</a></li>
+                <% } %>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container -->
+</div><!--/.navbar -->
+<% } %>
 
 <div class="container bs-docs-container" style="padding-top: 10px;">
     <div class="col-md-12">
@@ -32,53 +80,6 @@ getBreadcrumb = function () {
             <li class="active"><%= technology.name %></li>
         </ol>
     </div>
-    <row>
-        <div class="col-md-12" style="margin-top: 10px">
-            <row>
-                <div class="col-md-8" style="margin-top: 10px">
-                    <div class="btn-group btn-block">
-                        <div class="dropdown btn-group">
-                            <% if(user.canComment) { %>
-                            <button class="btn btn-default btn-sm dropdown-toggle"
-                                    id="votePulldown"
-                                    data-toggle="dropdown">Vote<span class="caret"></span></button>
-
-                            <ul class="dropdown-menu">
-                                <% statuses.forEach( function(status) {
-
-                                    if (status.id == 0) {
-                                        return;
-                                    }
-                                %>
-                                <li><a class="dropdown-item"
-                                       id="voteBtn_<%= status.id %>"
-                                       href="javascript:void(0);"
-                                       value="<%= status.id %>"><%= status.name %></a>
-                                </li>
-
-                                <% }); %>
-                            </ul>
-                            <% } %>
-                        </div>
-
-
-                        <% if(user.canComment) { %>
-                        <a class="btn btn-default btn-sm" href="/comments/add/<%= technology.id %>">Comment</a>
-                        <% } %>
-                        <% if(user.canEdit) { %>
-                        <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/edit">Edit</a>
-                        <% } %>
-                        <% if(user.canEdit) { %>
-                        <a class="btn btn-default btn-sm" href="/technology/<%= technology.id %>/updatestatus">Change status</a>
-                        <% } %>
-
-                    </div>
-
-                </div>
-
-            </row>
-        </div>
-    </row>
 
     <row>
         <div class="col-md-8" id="commentContainer">
@@ -97,7 +98,9 @@ getBreadcrumb = function () {
                 </div>
                 <table class="table">
                     <tbody id="status">
-                    <tr><td><%= technology.statusname %></td></tr>
+                    <tr>
+                        <td><%= technology.statusname %></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -128,7 +131,7 @@ getBreadcrumb = function () {
                 <div class="panel-heading">
                     <div>Used in projects
                         <% if (user.canEdit) { %>
-                    <span class="pull-right">
+                        <span class="pull-right">
                         <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/projects">Update</a>
                     </span>
                         <% } %>
@@ -177,8 +180,8 @@ getBreadcrumb = function () {
             }
         });
 
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'Comment', 'delete', '<%=technology.name%>');
+        <% if (google_id != undefined) { %>
+        ga('send', 'event', 'Comment', 'delete', '<%= technology.name %>');
         <% } %>
     };
 
@@ -223,11 +226,12 @@ getBreadcrumb = function () {
                 function (result) {
                     if (result.success) {
                         refreshVotes();
-                    };
-                    $("#votePulldown" ).removeClass("disabled");
+                    }
+                    ;
+                    $("#votePulldown").removeClass("disabled");
                 });
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'Technology', 'vote', '<%=technology.name%> - ' + $(this).text());
+        <% if (google_id != undefined) { %>
+        ga('send', 'event', 'Technology', 'vote', '<%= technology.name %> - ' + $(this).text());
         <% } %>
     };
 
