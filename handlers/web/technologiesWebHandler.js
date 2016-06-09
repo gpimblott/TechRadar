@@ -83,7 +83,7 @@ TechnologiesWebHandler.updateStatus = function (req, res) {
 
     technology.getById(techid, function (value) {
         var statuses = cache.getStatuses();
-        res.render('pages/admin/updateStatus',
+        res.render('pages/updateStatus',
             {
                 technology: value,
                 user: req.user,
@@ -101,7 +101,7 @@ TechnologiesWebHandler.addProject = function (req, res) {
         } else {
             project.getAllForTechnology(techid, function (linkedProjects) {
                 project.getAll(function (allProjects) {
-                    res.render('pages/admin/addProjectToTechnology',
+                    res.render('pages/addProjectToTechnology',
                         {
                             technology: technology,
                             user: req.user,

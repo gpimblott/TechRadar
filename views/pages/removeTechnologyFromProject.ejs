@@ -22,8 +22,8 @@
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Projects</h1>
-                <p>Manage projects</p>
+                <h1><%=project.name%></h1>
+                <p>Remove Technologies</p>
             </div>
         </row>
 
@@ -34,64 +34,55 @@
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li class="active">Manage projects</li>
+            <li><a href="/project/<%=project.id%>"><%=project.name%></a></li>
+            <li class="active">Remove Technology</li>
         </ol>
     </div>
 
-
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-
-            <% if (user.admin) { %>
-
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <a href="/project/add" class="btn btn-success">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        Add
-                    </a>
-                    <button id="editBtn" class="btn btn-danger" disabled="">
+                    <button id="removeBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
-                        Edit
-                    </button>
-                    <button id="deleteBtn" class="btn btn-danger" disabled="">
-                        <i class="glyphicon glyphicon-remove"></i>
-                        Delete
+                        Remove selected
                     </button>
                 </div>
             </div>
-
-            <% } %>
             <table id="results"></table>
         </div>
     </div>
 
-
 </div>
 
 <% include ../partials/footer.ejs %>
+
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
     $table = $('#results');
 
-    $table.bootstrapTable({
+    $removeBtn = $('#removeBtn')
+
+    // Disabled by default
+    $removeBtn.prop('disabled', 1);
+
+    $table.bootstrapTable( {
         method: 'get',
-        url: '/api/projects',
+        url: '/api/project/<%=project.id%>/technologies',
         cache: false,
         striped: true,
         escape: true,
         idField: 'id',
         search: true,
-        sortName: 'name',
         showColumns: true,
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
         columns: [{
-            field: 'state',
-            checkbox: 'true'
+            field:'state',
+            checkbox:'true'
         }, {
             field: 'id',
             title: 'ID',
@@ -102,57 +93,48 @@
             sortable: true,
             formatter: operateFormatter
         }, {
-            field: 'description',
-            title: 'Description',
-            sortable: false,
+            field: 'status',
+            title: 'Status',
+            align: 'center',
+            sortable: true,
+            editable : true
+        }, {
+            field: 'website',
+            title: 'Website',
+            align: 'center',
+            sortable: true
         }]
     });
 
-    <% if (user.admin) { %>
-    $deleteBtn = $('#deleteBtn');
-    $editBtn = $('#editBtn');
-
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-        $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
-        $editBtn.prop('disabled', $table.bootstrapTable('getSelections').length != 1);
+        $removeBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
     });
 
-    $deleteBtn.click(function () {
-        var r = confirm("Are you sure you want to delete the selected projects");
+    $removeBtn.click( function() {
+        var r = confirm("Are you sure you want to remove the selected technology from the project ?");
         if (r == false) {
             return;
         }
+        $removeBtn.addClass("disabled");
 
         var data = {};
-        data.id = getIdSelections();
+        data.technologies = getIdSelections();
 
         $.ajax({
             type: "DELETE",
-            url: '/api/project',
+            url: '/api/project/<%= project.id %>/technology',
             contentType: "application/json",
             data: JSON.stringify(data),
-            complete: function (result) {
+            complete: function(result){
                 if (result.success) {
-                    $table.bootstrapTable('refresh');
-                    $deleteBtn.prop('disabled', true);
+                    location.href = "/project/<%=project.id%>";
                 } else {
-                    alert("There was an error deleting technology :(");
+                    alert("There was an error adding Technologies");
                 }
+                $removeBtn.removeClass("disabled");
             }
         });
-
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'Project', 'delete', data.id);
-        <% } %>
     });
-
-    $editBtn.click(function () {
-        var data = {};
-        data.id = getIdSelections();
-        location.href = '/project/' + data.id[0] + '/edit';
-    });
-
-    <% } %>
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
@@ -160,12 +142,12 @@
         });
     }
 
-
     function operateFormatter(value, row, index) {
         return [
-            '<a href="/project/' + row['id'] + '">' + value + '</a>'
+            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
         ].join('');
     }
+
 </script>
 
 </body>
