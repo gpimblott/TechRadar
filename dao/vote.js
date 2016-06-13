@@ -46,7 +46,7 @@ Vote.getVotesInLastMonthDifferentFromStatus = function ( done ){
         "FROM votes v " +
         "JOIN technologies t on v.technology=t.id " +
         "LEFT OUTER JOIN tech_status_link tsl on (tsl.id=t.id and coalesce( tsl.statusid, 0 )!=v.status) " +
-        "WHERE v.date between (now()-INTERVAL '1 MONTH') and now() " +
+        "WHERE v.date between (now()-INTERVAL '3 MONTH') and now() " +
         "GROUP BY t.name " +
         "ORDER BY total DESC";
 
