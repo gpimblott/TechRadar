@@ -10,16 +10,21 @@ var ApiDashboardRoutes = function () {
 
 ApiDashboardRoutes.createRoutes = function (self) {
 
-    /**
-     * Get all technology for all projects
-     */
-    self.app.get('/api/projects/technologies', security.isAuthenticated, handler.getTechnologyForProject );
-
+  
     /**
      * Get all votes for all technologies
      */
-    self.app.get('/api/dash/votes/technologies', security.isAuthenticated, handler.getVotesForAllTechnologies );
+    self.app.get('/api/dash/votes/technologies', security.isAuthenticated, handler.getVotesForAllTechnologies);
 
+    /**
+     * Get the number of votes for each technology where it is differrent to the current status
+     */
+    self.app.get('/api/dash/votes/month', security.isAuthenticated, handler.getVotesDifferentFromStatus);
+    
+    /**
+     * Get the number of projects each technology is used on
+     */
+    self.app.get('/api/dash/technology/project', security.isAuthenticated, handler.getMostUsedTechnologies);
 };
 
 module.exports = ApiDashboardRoutes;

@@ -286,4 +286,23 @@ Technology.removeProjects = function (technologyId, projectIds, callback) {
         });
 };
 
+Technology.getMostUsedTechnologies = function ( callback ) {
+    var sql = "SELECT t.name, count(technologyid) as total " +
+            "FROM technology_project_link tpl " +
+            "JOIN technologies t on tpl.technologyid=t.id " +
+            "GROUP BY t.name " +
+            "HAVING count(technologyid)>1 " +
+            "ORDER BY total DESC " +
+            "LIMIT 40";
+
+    dbhelper.query(sql, [],
+        function (results) {
+            callback(results);
+        },
+        function (error) {
+            console.log(error);
+            callback(null);
+        });
+}
+
 module.exports = Technology;
