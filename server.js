@@ -40,6 +40,7 @@ var apiUsers = require('./routes/api/api-users-routes.js');
 var apiComments = require('./routes/api/api-comments-routes.js');
 var apiProjects = require('./routes/api/api-projects-routes.js');
 var apiCategories = require('./routes/api/api-categories-routes.js');
+var apiDashboard = require('./routes/api/api-dashboard-routes.js');
 
 
 /**
@@ -155,6 +156,7 @@ var TechRadar = function () {
         apiComments.createRoutes(self);
         apiProjects.createRoutes(self);
         apiCategories.createRoutes(self);
+        apiDashboard.createRoutes(self);
     };
 
     /**

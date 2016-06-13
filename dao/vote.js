@@ -37,6 +37,28 @@ Vote.getVotesForTechnology = function (techid , limit, done) {
         });
 }
 
+/**
+ * Get a count of votes in the last month for each technology where the vots is different to the current status
+ * @param done
+ */
+Vote.getVotesInLastMonthDifferentFromStatus = function ( done ){
+    var sql = "SELECT t.name as name, count(v.id) as total " +
+        "FROM votes v " +
+        "JOIN technologies t on v.technology=t.id " +
+        "LEFT OUTER JOIN tech_status_link tsl on (tsl.id=t.id and coalesce( tsl.statusid, 0 )!=v.status) " +
+        "WHERE v.date between (now()-INTERVAL '1 MONTH') and now() " +
+        "GROUP BY t.name " +
+        "ORDER BY total DESC";
+
+    dbhelper.query(sql, [],
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+}
 
 /**
  * Get the number of votes for each status for each technology
@@ -60,6 +82,34 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
             console.log(error);
             done(null);
         });
+}
+
+
+/**
+ * Get the number of votes for all technologies.  This is used by the dashboard
+ * @param done Function to call with the results
+ */
+Vote.getVotesForAllTechnologies = function (done) {
+    var sql =   "SELECT count(v.id), s.name as status, t.name as technology" +
+                " FROM votes v" +
+                " LEFT JOIN technologies t on t.id=v.technology" + 
+                " LEFT JOIN status s on s.id=v.status" +
+                " GROUP BY t.id, s.id" + 
+                " ORDER BY t.name,s.name;";
+
+
+    var params = [];
+
+    dbhelper.query(sql, params,
+        function (results) {
+            console.log(results);
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+
 }
 
 /**
