@@ -23,6 +23,7 @@ var users = require('./dao/users');
 var passport = require('passport');
 require('./utils/passport.js');
 
+
 // Load the routes for the web Application and API REST services
 var routes = require('./routes/web/routes.js');
 var technologyRoutes = require('./routes/web/technology-routes');
@@ -114,20 +115,27 @@ var TechRadar = function () {
         }));
 
 
-        self.app.use(session({secret: 'myothersecretkeyforthiscookie'}));
+        // Setup the secret cookie key
+        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
+        self.app.use(session({secret: cookie_key }));
 
+        // Setup the Google Analytics ID if defined
+        self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
 
+        console.log("GA ID:" + self.app.locals.google_id);
+        console.log("Cookie key:" + cookie_key);
+        
         // Browser Cache
         var oneDay = 86400000;
         self.app.use('/', express.static('public', {maxAge: oneDay}));
-        self.app.use('/uploads', express.static('uploads', {maxAge: oneDay}));
         self.app.use('/shared', express.static('shared', {maxAge: oneDay}));
 
         // Initialize Passport and restore authentication state, if any, from the
         // session.
         self.app.use(passport.initialize());
         self.app.use(passport.session());
-
+        
+        
         // update the cache of static information from the DB
         cache.refresh(self.app);
 

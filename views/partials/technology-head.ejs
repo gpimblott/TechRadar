@@ -8,30 +8,20 @@
             <div class="col-md-4">
                  <span class="pull-right" style="margin-top: 40px">
                      <table class="table-condensed small">
-                         <tr>
-                             <td>Status</td>
-                             <td>-</td>
-                             <td class="banner-text">
-                                 <a class="banner-text-link"
-                                    href="/technology/<%= technology.id %>/statushistory"><%= technology.statusname %></a>
-                             </td>
-                         </tr>
                         <tr>
                             <td>Category</td>
                             <td>-</td>
                             <td>
                                 <a class="banner-text-link"
-                                   href="/category/<%= encodeURI(technology.categoryname) .toLowerCase() %>/technologies"><%= technology.categoryname %>
+                                   href="/category/<%=encodeURI( technology.categoryname) .toLowerCase()%>/technologies"><%= technology.categoryname %>
                                 </a>
                             </td>
                         </tr>
                          <tr>
                              <td>Website</td>
-                             <td>-</td>
+                              <td>-</td>
                              <td>
-                                 <a class="banner-text-link"
-                                    href="<%= (technology.website == null ? "#" : technology.website) %>"
-                                    target="_blank">
+                                 <a class="banner-text-link" href="<%= (technology.website == null ? "#" : technology.website) %>" target="_blank">
                                      <%= (technology.website == null ? "" : technology.website) %>
                                  </a>
                              </td>

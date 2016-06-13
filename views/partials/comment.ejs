@@ -1,8 +1,8 @@
 <article class="row">
     <div class="col-md-2 col-sm-2 hidden-xs">
         <figure class="thumbnail">
-            <img class="img-responsive"
-                 src="/<%= comment.avatar ? comment.avatar : 'default-avatar.jpg' %>"/>
+            <img class="img-responsive avatar-<%= comment.username %>"
+                 src="/default-avatar.jpg"/>
             <figcaption class="text-center"><%= comment.username %></figcaption>
         </figure>
     </div>
@@ -29,3 +29,8 @@
         </div>
     </div>
 </article>
+<script>
+    $(function() {
+        TechRadar.setAvatar("<%= comment.username %>", $(".avatar-<%= comment.username %>"));
+    });
+</script>

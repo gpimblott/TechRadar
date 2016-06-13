@@ -34,6 +34,61 @@ Projects.findById = function (id, done) {
 
 
 /**
+ * Add multiple technologies to a project
+ *
+ * @param projectId Project ID
+ * @param technologyIds Array of Technology IDs
+ * @param callback Function to call when the update is finished
+ */
+Projects.addTechnologies = function (projectId, technologyIds, callback) {
+    var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ";
+
+    var numRows = technologyIds.length;
+    for(var i=1;i<=numRows;i++) {
+        sql += " ( $" + i + "," + projectId + ")";
+        if( i!=numRows) {
+            sql+=",";
+        }
+    }
+
+    var params = technologyIds;
+
+    dbhelper.insert(sql, params,
+        function (result) {
+            callback(result);
+        },
+        function (error) {
+            console.log(error);
+            callback(null, error);
+        });
+};
+
+/**
+ * Delete a set of technologies using their ID numbers
+ * @param ids
+ * @param done
+ */
+Projects.deleteTechnologies = function (projectid, ids, done) {
+
+    var params = [];
+    for (var i = 1; i <= ids.length; i++) {
+        params.push('$' + i);
+    }
+
+    var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " )"
+        " and projectid=" + projectid;
+
+    dbhelper.query(sql, ids,
+        function (result) {
+            done(true);
+        },
+        function (error) {
+            console.log(error);
+            done(false, error);
+        });
+}
+
+/**
  * Add a new project
  * @param name Name of the project to add
  * @done function to call with the result

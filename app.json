@@ -1,7 +1,8 @@
 {
   "name": "TechRadar",
-  "description": "",
+  "description": "Community Technology decision making",
   "scripts": {
+    "postdeploy": "bash ./heroku_post_deploy.sh"
   },
   "env": {
   },

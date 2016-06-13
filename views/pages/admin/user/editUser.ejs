@@ -49,8 +49,9 @@
                             <div class="form-group">
                                 <label for="role">Account type:</label>
                                 <select class="form-control" id="role" name="role">
-                                    <option value="0" <%= editUser.role === 0 ? 'selected' : '' %>>Admin</option>
-                                    <option value="1" <%= editUser.role === 1 ? 'selected' : '' %>>User</option>
+                                    <% roles.forEach( function(role) { %>
+                                    <option value="<%=role.id%>" <%= editUser.role === role.id ? 'selected' : '' %>><%=role.name%></option>
+                                    <% }); %>
                                 </select>
                             </div>
                             <input type="hidden" id="userId" name="userId" value="<%= editUser.id %>">
@@ -68,7 +69,7 @@
                     <div class="col-md-5 col-sm-5 hidden-xs">
                         <figure class="thumbnail" style="padding-top: 20px;">
                             <img id="avatarPreview" class="img-responsive" style="max-height: 200px; max-width: 250px"
-                                 src="/<%= editUser.avatar ? editUser.avatar : 'default-avatar.jpg' %>"/>
+                                 src="/default-avatar.jpg"/>
                             <figcaption class="text-center">
                                 <label for="avatar">Avatar</label>
                                 <input type="file" id="avatar" class="form-control" name="avatar"
@@ -88,11 +89,12 @@
 
 <% include ../../../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
-
+<script src="/avatar.js"></script>
 
 <script>
     $(function () {
         var preview = $("#avatarPreview");
+        TechRadar.setAvatar("<%= editUser.username %>", preview);
 
         $("#avatar").change(function (event) {
             var input = $(event.currentTarget);
@@ -123,6 +125,7 @@
 
             if (!validationResult.valid) {
                 alert(validationResult.message);
+                $(":submit").attr("disabled", false);
                 return;
             }
 
@@ -137,11 +140,17 @@
                     if (result.success) {
                         location.href = "/users";
                     } else {
+                        console.log(result.error);
                         alert("There was an error while saving new user data");
                     }
                     $(":submit").attr("disabled", false);
                 }
             });
+
+
+            <% if (google_id!=undefined) { %>
+            ga('send', 'event', 'User', 'edit', '<%=editUser.username%>');
+            <% } %>
         });
 
     });

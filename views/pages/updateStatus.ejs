@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../partials/head.ejs %>
+    <% include ../partials/head.ejs %>
 
     <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
 
@@ -21,15 +21,15 @@
     }
 %>
 
-<% include ../../partials/menu.ejs %>
+<% include ../partials/menu.ejs %>
 
-<% include ../../partials/technology-head.ejs%>
+<% include ../partials/technology-head.ejs%>
 
 <div class="container bs-docs-container" style="padding-top: 10px;">
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/radar/<%=getBreadcrumb() %>"><%=technology.categoryname%></a></li>
+            <li><a href="/category/<%= getBreadcrumb() %>/technologies"><%= technology.categoryname %></a></li>
             <li><a href="/technology/<%=technology.id%>"><%=technology.name%></a></li>
             <li class="active">Update status</li>
         </ol>
@@ -38,7 +38,7 @@
         <div class="col-md-12" style="margin-top: 10px">
             <row>
                 <div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
-                    <% if( user.admin ) { %>
+                    <% if( user.canEdit ) { %>
                     <form  action="javascript:void(0);">
                         <fieldset class="form-group">
                             <label for="newStatusLabel">New status for <%=technology.name%></label>
@@ -69,7 +69,7 @@
 
 </div>
 
-<% include ../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
@@ -114,7 +114,7 @@
 
 
 
-    <% if (user.admin ) { %>
+    <% if (user.canEdit ) { %>
 
     var statusBtn = function () {
         var data = {statusvalue: $('#statusPulldown').val(), reason: $('#reasonTextArea').val(), technology:<%= technology.id %>};
@@ -126,6 +126,10 @@
             }
 
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Technology', 'status', '<%=technology.name%> - ' + $('#statusPulldown option:selected').text());
+        <% } %>
     };
 
     $(function () {

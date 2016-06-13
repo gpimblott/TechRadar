@@ -64,7 +64,7 @@
                     <div class="col-md-5 col-sm-5 hidden-xs">
                         <figure class="thumbnail" style="padding-top: 20px;">
                             <img id="avatarPreview" class="img-responsive"  style="max-height: 200px; max-width: 250px"
-                                 src="<%= editUser.avatar ? editUser.avatar : '/default-avatar.jpg' %>"/>
+                                 src="/default-avatar.jpg"/>
                             <figcaption class="text-center">
                                 <label for="avatar">Avatar</label>
                                 <input type="file" id="avatar" class="form-control" name="avatar"
@@ -84,10 +84,12 @@
 
 <% include ../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
+<script src="/avatar.js"></script>
 
 <script>
     $(function () {
         var preview = $("#avatarPreview");
+        TechRadar.setAvatar("<%= editUser.username %>", preview);
 
         $("#avatar").change(function (event) {
             var input = $(event.currentTarget);
@@ -136,6 +138,10 @@
                     $(":submit").attr("disabled", false);
                 }
             });
+
+            <% if (google_id!=undefined) { %>
+            ga('send', 'event', 'Profile', 'edit', '<%=editUser.username%>');
+            <% } %>
         });
     });
 </script>

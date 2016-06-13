@@ -114,12 +114,17 @@ function init(h, w, data) {
                 var point = polar_to_cartesian(r, t);
 
                 radar.add(pv.Dot)
+                    .event("click", function() {
+                        self.location = "#tech" + this.techNumber();
+                    })
                     .strokeStyle("#900")
                     .fillStyle("#900")
                     .left(point[0])
                     .bottom(point[1])
                     .shape(item.state == "new" ? "triangle" : "circle")
-                    .size(100);
+                    .size(100)
+                    .title(item.name)
+                    .def("techNumber", item.num);
 
                 radar.add(pv.Label)
                     .left(point[0])

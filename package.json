@@ -11,7 +11,7 @@
   ],
   "author": {
     "name": "Gordon Pimblott",
-    "email": "g.pimblott@kainos.com"
+    "email": "gordon@pimblott.com"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,17 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "console-stamp" : "latest",
+    "express": "latest",
+    "express-session":"latest",
+    "body-parser":"latest",
+    "ejs": "^1.0.0",
+    "cookie-parser":"latest",
+    "pg" : "latest",
+    "pg-large-object": "latest",
+>>>>>>> github/master
     "async": "latest",
     "body-parser": "latest",
     "chart.js": "^2.1.3",
@@ -35,11 +46,17 @@
     "multer": "latest",
     "mocha": "latest",
     "sinon": "latest",
+<<<<<<< HEAD
     "chai": "latest"
     "passport": "latest",
     "passport-local": "latest",
     "pg": "latest",
     "sanitize-html": "latest"
+=======
+    "chai": "latest",
+    "db-migrate": "0.10.0-beta.12",
+    "db-migrate-pg": "latest"
+>>>>>>> github/master
   },
   "devDependencies": {},
   "bundleDependencies": [],

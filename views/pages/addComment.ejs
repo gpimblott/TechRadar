@@ -27,7 +27,7 @@ getBreadcrumb = function () {
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-bottom: 5px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/radar/<%= getBreadcrumb() %>"><%= technology.categoryname %></a></li>
+            <li><a href="/category/<%= getBreadcrumb() %>/technologies"><%= technology.categoryname %></a></li>
             <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
             <li class="active">Comment</li>
         </ol>
@@ -55,7 +55,9 @@ getBreadcrumb = function () {
 <script>
 
     $("form").submit(function (event) {
+
         $(":submit").attr("disabled", true);
+
 
         var frm = $('form');
         var data = serialiseForm(frm);
@@ -74,6 +76,10 @@ getBreadcrumb = function () {
                 }
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Comment', 'add', '<%=technology.name%>');
+        <% } %>
     });
 
 </script>

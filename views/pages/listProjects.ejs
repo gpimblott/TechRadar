@@ -140,6 +140,10 @@
                 }
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Project', 'delete', data.id);
+        <% } %>
     });
 
     $editBtn.click(function () {

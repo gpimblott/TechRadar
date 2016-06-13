@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS tech_status_link;
+DROP TABLE IF EXISTS technology_stack_link;
+DROP TABLE IF EXISTS technology_project_link;
+DROP TABLE IF EXISTS projects CASCADE;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS technologies CASCADE;
+DROP TABLE IF EXISTS stacks;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;

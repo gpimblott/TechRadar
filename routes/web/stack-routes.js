@@ -1,13 +1,13 @@
 var users = require('../../dao/users');
 
-var technology = require('../../dao/technology.js');
-var comments = require('../../dao/comments.js');
+var technology = require('../../dao/technology');
+var comments = require('../../dao/comments');
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
 var passport = require('passport');
-var security = require('../../utils/security.js');
+var security = require('../../utils/security');
 
 var StackRoutes = function () {
 };

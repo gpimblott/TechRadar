@@ -78,6 +78,10 @@
                 $(":submit").attr("disabled", false);
             }
         });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'Project', 'edit', '<%=project.name%>');
+        <% } %>
     });
 
 </script>

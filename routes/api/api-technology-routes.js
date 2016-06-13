@@ -22,7 +22,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a vote for a technology
      */
-    self.app.post('/api/technology/:technology/vote', security.isAuthenticated, jsonParser, function (req, res) {
+    self.app.post('/api/technology/:technology/vote', security.canAddComments, jsonParser, function (req, res) {
         var tech = sanitizer( req.params.technology );
         var statusValue = sanitizer( req.body.statusvalue );
         var userId = sanitizer( req.user.id );
@@ -64,7 +64,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a new technology
      */
-    self.app.post('/api/technology', security.isAuthenticated, jsonParser,
+    self.app.post('/api/technology', security.canEdit, jsonParser,
         function (req, res) {
 
             technology.add(
@@ -80,7 +80,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Update a technology
      */
-    self.app.put('/api/technology/:technology', security.isAuthenticated, jsonParser,
+    self.app.put('/api/technology/:technology', security.canEdit, jsonParser,
         function (req, res) {
             var techid = sanitizer( req.params.technology );
 
@@ -99,7 +99,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Delete technologies
      */
-    self.app.delete('/api/technology', security.isAuthenticatedAdmin, jsonParser,
+    self.app.delete('/api/technology', security.canEdit, jsonParser,
         function (req, res) {
             var data = req.body.id ;
 
@@ -165,7 +165,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Update the status of a technology
      */
-    self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, function (req, res) {
+    self.app.post('/api/technology/:technology/status', security.canEdit, jsonParser, function (req, res) {
         var status = sanitizer( req.body.statusvalue );
         var reason = sanitizer( req.body.reason );
         var tech = sanitizer( req.params.technology );
@@ -178,7 +178,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a project to a technology
      */
-    self.app.post('/api/technology/:technology/project', security.isAuthenticated, jsonParser, function (req, res) {
+    self.app.post('/api/technology/:technology/project', security.canEdit, jsonParser, function (req, res) {
         var projectId = sanitizer(req.body.project);
         var technologyId = sanitizer(req.params.technology);
 
@@ -202,7 +202,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Remove links to Projects
      */
-    self.app.delete('/api/technology/:technology/projects', security.isAuthenticated, jsonParser, function (req, res) {
+    self.app.delete('/api/technology/:technology/projects', security.canEdit, jsonParser, function (req, res) {
         var technologyId = sanitizer(req.params.technology);
         var projectIds = req.body.projects;
 
