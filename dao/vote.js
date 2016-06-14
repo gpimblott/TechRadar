@@ -42,13 +42,20 @@ Vote.getVotesForTechnology = function (techid , limit, done) {
  * @param done
  */
 Vote.getVotesInLastMonthDifferentFromStatus = function ( done ){
-    var sql = "SELECT t.name as name, count(v.id) as total " +
+    var sql = "SELECT t.name as name, count(t.id) as total " +
         "FROM votes v " +
         "JOIN technologies t on v.technology=t.id " +
-        "LEFT OUTER JOIN tech_status_link tsl on (tsl.id=t.id and coalesce( tsl.statusid, 0 )!=v.status) " +
-        "WHERE v.date between (now()-INTERVAL '3 MONTH') and now() " +
-        "GROUP BY t.name " +
-        "ORDER BY total DESC";
+        "LEFT JOIN tech_status_link tsl on v.technology=tsl.technologyid " +
+        "WHERE " +
+            "(" +
+                "(tsl.date = (select max(date) from tech_status_link tsl2 where tsl.technologyid=tsl2.technologyid) " +
+                    "and v.status!=coalesce(tsl.statusid,0) ) " +
+                "OR tsl.technologyid IS NULL" +
+            ") " +
+        "AND " +
+            "( v.date between (now()-INTERVAL '3 MONTH') and now() ) " +
+        "GROUP BY t.id, t.name";
+
 
     dbhelper.query(sql, [],
         function (results) {
