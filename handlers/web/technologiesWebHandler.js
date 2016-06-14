@@ -20,10 +20,19 @@ TechnologiesWebHandler.add = function (req, res) {
 };
 
 TechnologiesWebHandler.edit = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var num = req.params.id;
     technology.getById(num, function (value) {
-        if (value.length == 0 || value.length > 1) {
-            res.render('pages/error', {user: req.user});
+        if (value == null || value.length == 0 || value.length > 1) {
+            res.redirect('/error');
+            return;
         } else {
 
             var statuses = cache.getStatuses();
@@ -38,10 +47,19 @@ TechnologiesWebHandler.edit = function (req, res) {
 };
 
 TechnologiesWebHandler.getTechnology = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var num = req.params.id;
+
     technology.getById(num, function (value) {
-        if (value.length == 0 || value.length > 1) {
-            res.render('pages/error', {user: req.user});
+        if (value == null || value.length == 0 || value.length > 1) {
+            res.redirect('/error');
         } else {
             var statuses = cache.getStatuses();
             res.render('pages/technology',
@@ -55,9 +73,23 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
 };
 
 TechnologiesWebHandler.getStatusHistory = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var techid = req.params.id;
 
     technology.getById(techid, function (value) {
+
+        if (value == null || value.length == 0) {
+            res.redirect('/error');
+            return;
+        }
+
         res.render('pages/statushistory',
             {
                 technology: value,
@@ -67,9 +99,23 @@ TechnologiesWebHandler.getStatusHistory = function (req, res) {
 };
 
 TechnologiesWebHandler.getVotes = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var techid = req.params.id;
 
     technology.getById(techid, function (value) {
+
+        if (value == null || value.length == 0) {
+            res.redirect('/error');
+            return;
+        }
+
         res.render('pages/votehistory',
             {
                 technology: value,
@@ -79,9 +125,22 @@ TechnologiesWebHandler.getVotes = function (req, res) {
 };
 
 TechnologiesWebHandler.updateStatus = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var techid = req.params.id;
 
     technology.getById(techid, function (value) {
+        if (value == null || value.length == 0) {
+            res.redirect('/error');
+            return;
+        }
+
         var statuses = cache.getStatuses();
         res.render('pages/updateStatus',
             {
@@ -93,20 +152,32 @@ TechnologiesWebHandler.updateStatus = function (req, res) {
 };
 
 TechnologiesWebHandler.addProject = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     var techid = req.params.id;
 
     technology.getById(techid, function (technology) {
         if (technology === null) {
-            res.render('pages/error', {user: req.user});
+            res.redirect('/error');
+            return;
         } else {
             project.getAllForTechnology(techid, function (linkedProjects) {
+                
                 project.getAll(function (allProjects) {
                     res.render('pages/addProjectToTechnology',
                         {
                             technology: technology,
                             user: req.user,
                             unassignedProjects: allProjects.filter(function (e) {
-                                return linkedProjects.map(function(linkedEl) {return linkedEl.id}).indexOf(e.id) === -1;
+                                return linkedProjects.map(function (linkedEl) {
+                                        return linkedEl.id
+                                    }).indexOf(e.id) === -1;
                             })
                         });
                 });

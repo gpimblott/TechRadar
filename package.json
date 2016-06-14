@@ -42,7 +42,8 @@
     "passport-local": "latest",
     "sanitize-html": "latest",
     "db-migrate": "0.10.0-beta.12",
-    "db-migrate-pg": "latest"
+    "db-migrate-pg": "latest",
+    "express-validator" : "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],

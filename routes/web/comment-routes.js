@@ -11,13 +11,13 @@ CommentRoutes.createRoutes = function (self) {
     /**
      * Add a new comment for technology
      */
-    self.app.get('/comments/add/:id', security.canAddComments, handler.add );
+    self.app.get('/comments/add/:id', security.canAddComments, handler.add);
 
     /**
-     * Get Comments for a technology 
+     * Get Comments for a technology
      */
-    self.app.get('/comments/:technologyId/:page', security.isAuthenticated, handler.commentsForTechnology );
-    
+    self.app.get('/comments/:technologyId/:page', security.isAuthenticated, handler.commentsForTechnology);
+
 };
 
 

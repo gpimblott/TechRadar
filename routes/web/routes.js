@@ -35,16 +35,20 @@ Routes.createRoutes = function (self) {
     /**
      * Error page
      */
-    self.app.get('/error', security.isAuthenticated,
+    self.app.get('/error',
         function (req, res) {
-            res.render('pages/error');
+            if (req.isAuthenticated()) {
+                res.render('pages/errorLoggedIn', {user: req.user});
+            } else {
+                res.render('pages/error');
+            }
         });
 
     /**
      * Login page
      */
     self.app.get('/login', function (req, res) {
-        if (res.isAuthenticated) {
+        if (req.isAuthenticated()) {
             res.render('pages/index')
         } else {
             res.render('pages/login');
@@ -56,17 +60,25 @@ Routes.createRoutes = function (self) {
     });
 
     self.app.get('/mindmap/project/:project', security.isAuthenticated, function (req, res) {
+        req.checkParams('project', 'Invalid project name').isAlpha();
+
+        var errors = req.validationErrors();
+        if (errors) {
+            res.redirect('/error');
+            return;
+        }
+
         var pid = req.params.project;
 
         technology.getAllForProject(pid, function (error, result) {
             if (error) {
                 console.log(error);
-                res.render('pages/error');
+                res.redirect('/error');
             } else {
                 res.render('pages/dashboards/mindmap', {user: req.user, data: result});
             }
         });
-        
+
     });
 
     /**
