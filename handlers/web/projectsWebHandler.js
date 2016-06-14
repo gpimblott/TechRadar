@@ -9,9 +9,18 @@ ProjectsWebHandler.add = function (req, res) {
 };
 
 ProjectsWebHandler.edit = function (req, res) {
+    req.checkParams('projectId', 'Invalid project id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     projects.findById(req.params.projectId, function (error, project) {
         if (error) {
-            res.render('pages/error', {user: req.user});
+            res.redirect('/error');
+            return;
         } else {
             res.render('pages/admin/editProject', {user: req.user, project: project});
         }
@@ -19,9 +28,17 @@ ProjectsWebHandler.edit = function (req, res) {
 };
 
 ProjectsWebHandler.addTechnology = function (req, res) {
+    req.checkParams('projectId', 'Invalid project id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     projects.findById(req.params.projectId, function (error, project) {
         if (error) {
-            res.render('pages/error', {user: req.user});
+            res.redirect('/error');
         } else {
             res.render('pages/addTechnologyToProject', {user: req.user, project: project});
         }
@@ -29,9 +46,17 @@ ProjectsWebHandler.addTechnology = function (req, res) {
 };
 
 ProjectsWebHandler.removeTechnology = function (req, res) {
+    req.checkParams('projectId', 'Invalid project id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     projects.findById(req.params.projectId, function (error, project) {
         if (error) {
-            res.render('pages/error', {user: req.user});
+            res.redirect('/error');
         } else {
             res.render('pages/removeTechnologyFromProject', {user: req.user, project: project});
         }
@@ -39,14 +64,23 @@ ProjectsWebHandler.removeTechnology = function (req, res) {
 };
 
 ProjectsWebHandler.showRadar = function (req, res) {
+    req.checkParams('projectId', 'Invalid project id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     projects.findById(req.params.projectId, function (error, project) {
 
         if (error) {
-            res.render('pages/error', {user: req.user});
+            res.redirect('/error');
+            return;
         } else {
             technology.getAllForProject(project.id, function (error, technologies) {
                 if (error) {
-                    res.render('pages/error', {user: req.user});
+                    res.redirect('/error');
                 } else {
                     res.render('pages/projectRadar', {
                         user: req.user,

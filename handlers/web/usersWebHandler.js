@@ -16,9 +16,18 @@ UsersWebHandler.editProfile = function (req, res) {
 };
 
 UsersWebHandler.editUser = function (req, res) {
+    req.checkParams('userId', 'Invalid user id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
     users.findById(req.params.userId, function (error, editUser) {
         if (error) {
-            res.render('pages/error', {user: req.user});
+            res.redirect_to('/error');
+            return;
         } else {
             res.render('pages/admin/user/editUser', {user: req.user, editUser: editUser});
         }

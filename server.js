@@ -11,6 +11,7 @@ require('dotenv').config({path: 'process.env'});
 
 // Express
 var express = require('express');
+var expressValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -113,6 +114,7 @@ var TechRadar = function () {
         self.app.use(bodyParser.urlencoded({
             extended: true
         }));
+        self.app.use(expressValidator([]));
 
 
         // Setup the secret cookie key

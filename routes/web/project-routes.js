@@ -36,7 +36,7 @@ ProjectRoutes.createRoutes = function (self) {
     /**
      * List projects page
      */
-    self.app.get('/projects', security.isAuthenticated, handler.list );
+    self.app.get('/projects', security.isAuthenticated, handler.list);
 
 
 }

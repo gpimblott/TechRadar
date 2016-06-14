@@ -21,6 +21,11 @@ CategoriesWebHandler.technologiesForCategory = function (req, res) {
     var cname = decodeURI(req.params.category);
     technology.getAllForCategory(cname.toLowerCase(), function (values) {
 
+        if (values == null || values.length == 0) {
+            res.redirect('/error');
+            return;
+        }
+
         var category = cache.getCategory(cname);
 
         res.render('pages/categoryRadar', {category: category, technologies: values, user: req.user});

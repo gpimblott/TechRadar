@@ -24,7 +24,11 @@ Projects.findById = function (id, done) {
 
     dbhelper.query(sql, [id],
         function (results) {
-            done(null, results[0]);
+            if (results.length == 0) {
+                done(true, null);
+            } else {
+                done(null, results[0]);
+            }
         },
         function (error) {
             console.log(error);
@@ -44,10 +48,10 @@ Projects.addTechnologies = function (projectId, technologyIds, callback) {
     var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ";
 
     var numRows = technologyIds.length;
-    for(var i=1;i<=numRows;i++) {
+    for (var i = 1; i <= numRows; i++) {
         sql += " ( $" + i + "," + projectId + ")";
-        if( i!=numRows) {
-            sql+=",";
+        if (i != numRows) {
+            sql += ",";
         }
     }
 
@@ -76,7 +80,7 @@ Projects.deleteTechnologies = function (projectid, ids, done) {
     }
 
     var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " )"
-        " and projectid=" + projectid;
+    " and projectid=" + projectid;
 
     dbhelper.query(sql, ids,
         function (result) {
@@ -156,8 +160,7 @@ Projects.getAllForTechnology = function (technologyId, done) {
 /**
  * Get all of the technologies used by each project
  */
-Projects.getTechForProject = function (id , done)
-{
+Projects.getTechForProject = function (id, done) {
     var sql = "SELECT p.name as project, t.name as technology FROM technology_project_link tpl" +
         " JOIN projects p on tpl.projectid=p.id" +
         " JOIN technologies t on tpl.technologyid=t.id" +
