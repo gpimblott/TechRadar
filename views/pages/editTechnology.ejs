@@ -36,14 +36,14 @@
                 <label for="technologyName">Name of Technology</label>
                 <input type="text" class="form-control" id="name"
                        value="<%= technology.name %>"
-                       name="name" placeholder="Name" required>
+                       name="name" placeholder="Name" required maxlength="40">
             </div>
             <div class="form-group">
                 <label for="technologyWebsite">Website</label>
                 <input type="url" class="form-control" id="website"
                        name="website" placeholder="Website"
                        value="<%= (technology.website == null ? "http://" : technology.website) %>"
-                       required>
+                       required maxlength="100">
             </div>
             <div class="form-group">
                 <label for="technologyGroup">Category:</label>
