@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="projectname" name="projectname"
-                           placeholder="Project name">
+                           placeholder="Project name" required>
                 </div>
                 <div class="form-group">
                     <label for="descriptioin">Description</label>
@@ -53,10 +53,20 @@
 </div><!-- /.container -->
 
 <% include ../../partials/footer.ejs %>
+<script src="/shared/validators/projectValidator.js"></script>
 
 <script>
 
     $("form").submit(function (event) {
+        var projectName = $("form [name=projectname]").val();
+
+        var validationResult = ProjectValidator.validateProjectName(projectName);
+        if(!validationResult.valid) {
+            alert(validationResult.message);
+            return;
+        }
+
+
         $(":submit").attr("disabled", true);
 
         var frm = $('form');
@@ -72,7 +82,7 @@
                 if (result.success) {
                     location.href = "/projects";
                 } else {
-                    alert("There was an error adding a comment :(");
+                    alert("There was an error adding a project :(");
                 }
                 $(":submit").attr("disabled", false);
             }
