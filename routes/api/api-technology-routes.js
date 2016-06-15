@@ -13,6 +13,7 @@ var apiutils = require('./apiUtils.js');
 
 var sanitizer = require('sanitize-html');
 
+var handler = require('../../handlers/api/technologyApiHandler.js');
 
 var ApiTechnologyRoutes = function () {
 };
@@ -22,195 +23,68 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Add a vote for a technology
      */
-    self.app.post('/api/technology/:technology/vote', security.canAddComments, jsonParser, function (req, res) {
-        var tech = sanitizer( req.params.technology );
-        var statusValue = sanitizer( req.body.statusvalue );
-        var userId = sanitizer( req.user.id );
-
-        votes.add(tech, statusValue , userId , function (result, error) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            if (error != null) {
-                res.end(JSON.stringify({success: false, error: error}));
-            } else {
-                res.end(JSON.stringify({success: true, vote: result}));
-            }
-        });
-    });
+    self.app.post('/api/technology/:technology/vote', security.canAddComments, jsonParser, handler.addVote);
 
     /**
      * Get all technologies
      */
-    self.app.get('/api/technology', security.isAuthenticated, jsonParser, function (req, res) {
-
-        var search = req.query.search ;
-
-        if (search == null) {
-
-            technology.getAll(function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            })
-
-        } else {
-
-            technology.search(sanitizer( search ), function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            })
-        }
-    });
+    self.app.get('/api/technology', security.isAuthenticated, jsonParser, handler.getTechnologies);
 
 
     /**
      * Add a new technology
      */
-    self.app.post('/api/technology', security.canEdit, jsonParser,
-        function (req, res) {
-
-            technology.add(
-                sanitizer( req.body.technologyName),
-                sanitizer( req.body.technologyWebsite),
-                sanitizer( req.body.technologyCategory),
-                sanitizer( req.body.technologyDescription) ,
-                function (result, error) {
-                    apiutils.handleResultSet( res , result , error );
-                });
-        });
+    self.app.post('/api/technology', security.canEdit, jsonParser, handler.addTechnology);
 
     /**
      * Update a technology
      */
-    self.app.put('/api/technology/:technology', security.canEdit, jsonParser,
-        function (req, res) {
-            var techid = sanitizer( req.params.technology );
-
-            technology.update(
-                techid,
-                sanitizer( req.body.name ),
-                sanitizer( req.body.website ),
-                sanitizer( req.body.category ),
-                sanitizer( req.body.description ),
-
-                function (result , error ) {
-                    apiutils.handleResultSet( res, result , error );
-                });
-        });
+    self.app.put('/api/technology/:technology', security.canEdit, jsonParser, handler.updateTechnology);
 
     /**
      * Delete technologies
      */
-    self.app.delete('/api/technology', security.canEdit, jsonParser,
-        function (req, res) {
-            var data = req.body.id ;
-
-            technology.delete( data , function( result , error ) {
-                apiutils.handleResultSet( res, result , error );
-            })
-        });
+    self.app.delete('/api/technology', security.canEdit, jsonParser, handler.deleteTechnology );
 
     /**
      * Get all votes for a technology
      */
-    self.app.get('/api/votes/:technology', security.isAuthenticated,
-        function (req, res) {
-            var techid = sanitizer( req.params.technology );
-            var limit = sanitizer( req.query.limit );
-
-            votes.getVotesForTechnology(techid, limit, function (result) {
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(result));
-            });
-        });
+    self.app.get('/api/votes/:technology', security.isAuthenticated, handler.getVotes );
 
     /**
      * Get the status history of a technology
      */
-    self.app.get('/api/technology/:technology/status/history', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = sanitizer( req.params.technology );
-        var limit = sanitizer( req.query.limit );
-
-        status.getHistoryForTechnology(tech, limit, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-
-    });
+    self.app.get('/api/technology/:technology/status/history', security.isAuthenticated, jsonParser, handler.getStatusHistory );
 
     /**
      * Get the vote history for a technology
      */
-    self.app.get('/api/technology/:technology/vote/history', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = sanitizer( req.params.technology );
-        var limit = sanitizer( req.query.limit );
-        
-        votes.getVotesForTechnology(tech, limit, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-
-    });
+    self.app.get('/api/technology/:technology/vote/history', security.isAuthenticated, jsonParser, handler.getVoteHistory );
 
     /**
      * Get the votes for a technology
      */
-    self.app.get('/api/technology/:technology/vote/totals', security.isAuthenticated, jsonParser, function (req, res) {
-        var tech = sanitizer( req.params.technology );
-        votes.getTotalVotesForTechnologyStatus(tech, function (result) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        })
-
-    });
+    self.app.get('/api/technology/:technology/vote/totals', security.isAuthenticated, jsonParser, handler.getVoteTotals );
 
     /**
      * Update the status of a technology
      */
-    self.app.post('/api/technology/:technology/status', security.canEdit, jsonParser, function (req, res) {
-        var status = sanitizer( req.body.statusvalue );
-        var reason = sanitizer( req.body.reason );
-        var tech = sanitizer( req.params.technology );
-
-        technology.updateStatus(tech, status, reason, req.user.id, function (result, error) {
-            apiutils.handleResultSet( res, result , error );
-        })
-    });
+    self.app.post('/api/technology/:technology/status', security.canEdit, jsonParser, handler.updateStatus );
 
     /**
      * Add a project to a technology
      */
-    self.app.post('/api/technology/:technology/project', security.canEdit, jsonParser, function (req, res) {
-        var projectId = sanitizer(req.body.project);
-        var technologyId = sanitizer(req.params.technology);
-
-        technology.addProject(technologyId, projectId, function (result, error) {
-            apiutils.handleResultSet(res, result , error);
-        })
-    });
+    self.app.post('/api/technology/:technology/project', security.canEdit, jsonParser, handler.addProject );
 
     /**
      * Get linked Projects
      */
-    self.app.get('/api/technology/:technology/projects', security.isAuthenticated, jsonParser, function (req, res) {
-        var technologyId = sanitizer(req.params.technology);
-
-        project.getAllForTechnology(technologyId, function (result, error) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        });
-    });
+    self.app.get('/api/technology/:technology/projects', security.isAuthenticated, jsonParser, handler.getProjects );
 
     /**
      * Remove links to Projects
      */
-    self.app.delete('/api/technology/:technology/projects', security.canEdit, jsonParser, function (req, res) {
-        var technologyId = sanitizer(req.params.technology);
-        var projectIds = req.body.projects;
-
-        technology.removeProjects(technologyId, projectIds, function (result, error) {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(result));
-        });
-    });
+    self.app.delete('/api/technology/:technology/projects', security.canEdit, jsonParser, handler.removeProject );
 
 }
 

@@ -37,12 +37,12 @@
             <div class="form-group">
                 <label for="technologyName">Name of Technology</label>
                 <input type="text" class="form-control" id="technologyName" name="technologyName" placeholder="Name"
-                       required>
+                       required maxlength="40">
             </div>
             <div class="form-group">
                 <label for="technologyWebsite">Website</label>
                 <input type="url" class="form-control" id="technologyWebsite" name="technologyWebsite"
-                       placeholder="Website" required>
+                       placeholder="Website" required maxlength="100">
             </div>
             <div class="form-group">
                 <label for="technologyGroup">Category:</label>
@@ -74,12 +74,24 @@
 </div><!-- /.container -->
 
 <% include ../partials/footer.ejs %>
+<script src="/shared/validators/technologyValidator.js"></script>
+
 <script>
 
     $("form").submit(function (event) {
+
+
+        var technologyName = $("form [name=technologyName]").val();
+        var technologyWebsite = $("form [name=technologyWebsite]").val();
+
+        var validationResult = TechnologyValidator.validateTechnologyName(technologyName);
+        validateResult = validationResult.valid ? TechnologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+        if (!validationResult.valid) {
+            alert(validationResult.message);
+            return;
+        }
+
         $(":submit").attr("disabled", true);
-
-
         var frm = $('form');
         var frmdata = serialiseForm(frm);
 
@@ -99,8 +111,8 @@
             }
         });
 
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'Technology', 'add', frm.find('input[name="technologyName"]').val() );
+        <% if (google_id != undefined) { %>
+        ga('send', 'event', 'Technology', 'add', frm.find('input[name="technologyName"]').val());
         <% } %>
     });
 
