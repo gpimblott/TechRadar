@@ -5,7 +5,7 @@
             return { valid: false, message: "Technology Name too short" };
         }
 
-        if( name.length > 39) {
+        if( name.length > 40) {
             return { valid: false, message: "Technology Name too long" };
         }
 
@@ -23,7 +23,7 @@
             return { valid: false, message: "Technology website too short" };
         }
 
-        if( name.length > 99) {
+        if( name.length > 100) {
             return { valid: false, message: "Technology website too long" };
         }
 

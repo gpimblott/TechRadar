@@ -9,10 +9,6 @@ var jsonParser = bodyParser.json();
 var passport = require('passport');
 var security = require('../../utils/security.js');
 
-var apiutils = require('./apiUtils.js');
-
-var sanitizer = require('sanitize-html');
-
 var handler = require('../../handlers/api/technologyApiHandler.js');
 
 var ApiTechnologyRoutes = function () {

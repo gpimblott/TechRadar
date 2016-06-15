@@ -77,10 +77,22 @@
     </div>
 </div><!-- /.container -->
 <% include ../partials/footer.ejs %>
+<script src="/shared/validators/technologyValidator.js"></script>
 
 <script>
 
     $("form").submit(function (event) {
+
+        var technologyName = $("form [name=name]").val();
+        var technologyWebsite = $("form [name=website]").val();
+
+        var validationResult = TechnologyValidator.validateTechnologyName(technologyName);
+        validateResult = validationResult.valid ? TechnologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+        if (!validationResult.valid) {
+            alert(validationResult.message);
+            return;
+        }
+
         $(":submit").attr("disabled", true);
 
         var frm = $('form');

@@ -5,7 +5,7 @@
             return { valid: false, message: "Project Name too short" };
         }
 
-        if( name.length > 99) {
+        if( name.length > 100) {
             return { valid: false, message: "Project Name too long" };
         }
 

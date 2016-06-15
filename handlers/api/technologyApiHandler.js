@@ -65,8 +65,8 @@ TechnologyApiHandler.addTechnology = function (req, res) {
     
     
     technology.add(
-        sanitizer(req.body.technologyName),
-        sanitizer(req.body.technologyWebsite),
+        sanitizer(technologyName),
+        sanitizer(technologyWebsite),
         sanitizer(req.body.technologyCategory),
         sanitizer(req.body.technologyDescription),
         function (result, error) {
@@ -77,10 +77,25 @@ TechnologyApiHandler.addTechnology = function (req, res) {
 TechnologyApiHandler.updateTechnology = function (req, res) {
     var techid = sanitizer(req.params.technology);
 
+    var technologyName = sanitizer(req.body.name);
+    var technologyWebsite = sanitizer(req.body.website);
+
+    var validationResult = technologyValidator.validateTechnologyName(technologyName);
+    validateResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+
+    if (!validationResult.valid) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        var data = {};
+        data.error = validationResult.message;
+        data.success = false;
+        res.end(JSON.stringify(data));
+        return;
+    }
+    
     technology.update(
         techid,
-        sanitizer(req.body.name),
-        sanitizer(req.body.website),
+        sanitizer(technologyName),
+        sanitizer(technologyWebsite),
         sanitizer(req.body.category),
         sanitizer(req.body.description),
 
