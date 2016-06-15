@@ -292,7 +292,6 @@ Technology.getMostUsedTechnologies = function ( callback ) {
             "FROM technology_project_link tpl " +
             "JOIN technologies t on tpl.technologyid=t.id " +
             "GROUP BY t.name " +
-            "HAVING count(technologyid)>1 " +
             "ORDER BY total DESC " +
             "LIMIT 40";
 
