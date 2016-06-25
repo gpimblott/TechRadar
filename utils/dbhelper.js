@@ -34,11 +34,13 @@ DBHelper.query = function (sql, parameters, done, error) {
         var query = client.query(sql, parameters);
 
         query.on('row', function (row) {
+            console.log(row);
             results.push(row);
         });
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
+            console.log("Query ended");
             client.end();
             done(results);
         });

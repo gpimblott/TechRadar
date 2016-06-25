@@ -182,6 +182,7 @@ TechnologyApiHandler.getProjects = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
 
     project.getAllForTechnology(technologyId, function (result, error) {
+        console.log("Response 2 : " + result);
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
