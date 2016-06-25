@@ -150,6 +150,7 @@ TechnologyApiHandler.getVoteHistory = function (req, res) {
 
 TechnologyApiHandler.getVoteTotals = function (req, res) {
     var tech = sanitizer(req.params.technology);
+    console.log("Getting Vote totals");
     votes.getTotalVotesForTechnologyStatus(tech, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));

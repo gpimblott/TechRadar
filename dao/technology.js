@@ -24,6 +24,7 @@ Technology.add = function (name, website, category, description, done) {
             done(result.rows[0].id);
         },
         function (error) {
+            console.log(error);
             done(null, error);
         });
 }
@@ -48,7 +49,7 @@ Technology.update = function (id, name, website, category, description, done) {
             done(true);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(false, error);
         });
 }
@@ -73,7 +74,7 @@ Technology.delete = function (ids, done) {
             done(true);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(false, error);
         });
 }
@@ -95,7 +96,7 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
             done(result.rows[0].id);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null, error);
         });
 }
@@ -126,7 +127,7 @@ Technology.getById = function (userid, id, done) {
             }
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null);
         });
 }
@@ -152,7 +153,7 @@ Technology.getAll = function (userid, done) {
             done(results);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             return done(null, error);
         });
 }
@@ -179,7 +180,7 @@ Technology.getAllForCategory = function (cname, done) {
             done(results);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null);
         });
 }
@@ -205,7 +206,7 @@ Technology.getAllForProject = function (id, done) {
             done(null, results);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(error, null);
         });
 }
@@ -230,7 +231,7 @@ Technology.search = function (value, done) {
             done(results);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null);
         });
 }
@@ -242,17 +243,17 @@ Technology.search = function (value, done) {
  * @param projectId Project ID
  * @param callback Function to call when the update is finished
  */
-Technology.addProject = function (technologyId, projectId, callback) {
+Technology.addProject = function (technologyId, projectId, done) {
     var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ($1, $2)";
     var params = [technologyId, projectId];
 
     dbhelper.insert(sql, params,
         function (result) {
-            callback(result);
+            done(result);
         },
         function (error) {
-            console.log(error);
-            callback(null, error);
+            console.error(error);
+            done(null, error);
         });
 };
 
@@ -264,7 +265,7 @@ Technology.addProject = function (technologyId, projectId, callback) {
  * @param projectIds Project IDs
  * @param callback Function to call when the deletion is finished
  */
-Technology.removeProjects = function (technologyId, projectIds, callback) {
+Technology.removeProjects = function (technologyId, projectIds, done) {
     var idPlaceholders = [];
     for (var i = 2; i <= projectIds.length + 1; i++) {
         idPlaceholders.push('$' + i);
@@ -279,15 +280,15 @@ Technology.removeProjects = function (technologyId, projectIds, callback) {
 
     dbhelper.query(sql, params,
         function (result) {
-            callback(true);
+            done(true);
         },
         function (error) {
-            console.log(error);
-            callback(false, error);
+            console.error(error);
+            done(false, error);
         });
 };
 
-Technology.getMostUsedTechnologies = function ( callback ) {
+Technology.getMostUsedTechnologies = function ( done ) {
     var sql = "SELECT t.name, count(technologyid) as total " +
             "FROM technology_project_link tpl " +
             "JOIN technologies t on tpl.technologyid=t.id " +
@@ -297,11 +298,11 @@ Technology.getMostUsedTechnologies = function ( callback ) {
 
     dbhelper.query(sql, [],
         function (results) {
-            callback(results);
+            done(results);
         },
         function (error) {
-            console.log(error);
-            callback(null);
+            console.error(error);
+            done(null);
         });
 }
 

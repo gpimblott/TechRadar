@@ -27,7 +27,6 @@ CategoriesWebHandler.technologiesForCategory = function (req, res) {
         }
 
         var category = cache.getCategory(cname);
-
         res.render('pages/categoryRadar', {category: category, technologies: values, user: req.user});
     });
 };
