@@ -16,7 +16,7 @@ CommentsWebHandler.add = function (req, res) {
     }
 
     var num = req.params.id;
-    technology.getById(num, function (value) {
+    technology.getById(req.user.id, num, function (value) {
         res.render('pages/addComment', {technology: value, user: req.user});
     });
 };

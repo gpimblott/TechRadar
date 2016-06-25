@@ -22,8 +22,7 @@
     <div class="container">
         <row>
             <div class="col-md-12">
-                <h1>Projects</h1>
-                <p>Manage projects</p>
+                <h1>Project Search</h1>
             </div>
         </row>
 
@@ -34,7 +33,7 @@
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li class="active">Manage projects</li>
+            <li class="active">Project search</li>
         </ol>
     </div>
 
@@ -86,7 +85,9 @@
         search: true,
         sortName: 'name',
         showColumns: true,
+        showExport: true,
         showRefresh: true,
+        searchOnEnterKey: true,
         showPaginationSwitch: true,
         pagination: true,
         columns: [{
@@ -166,6 +167,7 @@
             '<a href="/project/' + row['id'] + '">' + value + '</a>'
         ].join('');
     }
+
 </script>
 
 </body>

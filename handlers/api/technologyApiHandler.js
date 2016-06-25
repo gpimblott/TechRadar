@@ -1,11 +1,12 @@
-var technology = require('../../dao/technology.js');
-var status = require('../../dao/status.js');
-var votes = require('../../dao/vote.js');
-var project = require('../../dao/projects.js');
+var technology = require('../../dao/technology');
+var status = require('../../dao/status');
+var votes = require('../../dao/vote');
+var project = require('../../dao/projects');
+var cache = require('../../dao/cache');
 
-var apiutils = require('./apiUtils.js');
+var apiutils = require('./apiUtils');
 var sanitizer = require('sanitize-html');
-var technologyValidator = require('../../shared/validators/technologyValidator.js');
+var technologyValidator = require('../../shared/validators/technologyValidator');
 
 
 var TechnologyApiHandler = function () {
@@ -13,8 +14,11 @@ var TechnologyApiHandler = function () {
 
 TechnologyApiHandler.addVote = function (req, res) {
     var tech = sanitizer(req.params.technology);
-    var statusValue = sanitizer(req.body.statusvalue);
+    var statusName = sanitizer(req.body.statusname);
     var userId = sanitizer(req.user.id);
+
+    var status = cache.getStatus( statusName );
+    var statusValue = status.id;
 
     votes.add(tech, statusValue, userId, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -32,7 +36,7 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
 
     if (search == null) {
 
-        technology.getAll(function (result) {
+        technology.getAll(req.user.id, function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
         })

@@ -46,10 +46,10 @@ getBreadcrumb = function () {
                                 return;
                             }
                         %>
-                        <li><a class="dropdown-item"
-                               id="voteBtn_<%= status.id %>"
+                        <li><a class="dropdown-item btn"
+                               id="voteBtn_<%= status.name %>"
                                href="javascript:void(0);"
-                               value="<%= status.id %>"><%= status.name %></a>
+                               value="<%= status.name %>"><%= status.name %></a>
                         </li>
 
                         <% }); %>
@@ -62,9 +62,6 @@ getBreadcrumb = function () {
                 <% } %>
                 <% if(user.canEdit) { %>
                 <li><a href="/technology/<%= technology.id %>/edit">Edit</a></li>
-                <% } %>
-                <% if(user.canEdit) { %>
-                <li><a href="/technology/<%= technology.id %>/updatestatus">Change status</a></li>
                 <% } %>
             </ul>
         </div><!--/.nav-collapse -->
@@ -91,6 +88,10 @@ getBreadcrumb = function () {
                 <div class="panel-heading">
                     <div>Status
                         <span class="pull-right">
+                            <% if(user.canEdit) { %>
+                            <a class="btn btn-default btn-xs"
+                               href="/technology/<%= technology.id %>/updatestatus">Change Status</a>
+                            <% } %>
                             <a class="btn btn-default btn-xs"
                                href="/technology/<%= technology.id %>/statushistory">History</a>
                         </span>
@@ -219,12 +220,14 @@ getBreadcrumb = function () {
 
     var voteClickedBtn = function () {
         $("#votePulldown").addClass("disabled");
-
-        var data = {statusvalue: this.getAttribute("value")};
+        var statusValue = this.getAttribute("value");
+        var data = {statusname: statusValue};
         $.post('/api/technology/<%= technology.id %>/vote',
                 data,
                 function (result) {
                     if (result.success) {
+                        enableVoteButtons();
+                        $('#voteBtn_'+statusValue).toggleClass('disabled', true);
                         refreshVotes();
                     }
                     ;
@@ -237,10 +240,20 @@ getBreadcrumb = function () {
 
 
     <% statuses.forEach( function(status) { %>
-    $('#voteBtn_<%= status.id %>').click(voteClickedBtn);
+    $('#voteBtn_<%= status.name %>').click(voteClickedBtn);
     <% }); %>
 
 
+    var enableVoteButtons = function() {
+        <% statuses.forEach( function(status) { %>
+        $('#voteBtn_<%= status.name %>').toggleClass('disabled', false);
+
+        <% }); %>
+    }
+
+    // Perform initial setup
+    enableVoteButtons();
+    $('#voteBtn_<%=technology.vote%>').toggleClass('disabled', true);
     refreshVotes();
     refreshProjectUse();
 </script>

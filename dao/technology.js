@@ -105,16 +105,19 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
  * @param id ID of the technology
  * @param done Function to call with the results
  */
-Technology.getById = function (id, done) {
-    var sql = "SELECT t.* ,s.name as statusName, s.id as status, c.name as categoryName FROM technologies t" +
+Technology.getById = function (userid, id, done) {
+    var sql = "SELECT t.* ,s.name as statusName, s.id as status, c.name as categoryName, " +
+        "COALESCE( " +
+            "(select s2.name from votes v " +
+            "JOIN STATUS s2 on s2.id=v.status WHERE userid=$1 AND technology=t.id order by date desc limit 1), " +
+            "'TBD') as vote" +
+        " FROM technologies t " +
         " INNER JOIN categories c on t.category=c.id " +
-        " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid " +
-        " LEFT OUTER JOIN tech_status_link tsl2 ON (t.id = tsl2.technologyid AND " +
-        "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
-        " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
-        " where t.id=$1 AND tsl2.id IS NULL";
+        " LEFT OUTER JOIN status s on s.id = " +
+        "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
+        " where t.id=$2";
 
-    dbhelper.query(sql, [id],
+    dbhelper.query(sql, [userid, id],
         function (results) {
             if (results.length != 1) {
                 done(null);
@@ -132,17 +135,19 @@ Technology.getById = function (id, done) {
  * Get all technologies
  * @param done Function to call with the results
  */
-Technology.getAll = function (done) {
-    var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+Technology.getAll = function (userid, done) {
+    var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category, " +
+        "COALESCE( " +
+        "(select s2.name from votes v " +
+        "join status s2 on s2.id=v.status where userid=$1 and technology=t.id order by date desc limit 1), " +
+        "'TBD') as vote" +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
-        " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid " +
-        " LEFT OUTER JOIN tech_status_link tsl2 ON (t.id = tsl2.technologyid AND " +
-        "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
-        " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
-        " WHERE tsl2.id IS NULL;";
+        " LEFT OUTER JOIN status s on s.id = " +
+        "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )";
 
-    dbhelper.query(sql, [],
+
+    dbhelper.query(sql, [userid],
         function (results) {
             done(results);
         },
@@ -163,11 +168,9 @@ Technology.getAllForCategory = function (cname, done) {
     var sql = "SELECT row_number() over (order by s) as num, t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
-        " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid " +
-        " LEFT OUTER JOIN tech_status_link tsl2 ON (t.id = tsl2.technologyid AND " +
-        "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
-        " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
-        " WHERE tsl2.id IS NULL AND LOWER(c.name)=$1" +
+        " LEFT OUTER JOIN status s on s.id = " +
+        "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
+        " WHERE LOWER(c.name)=$1" +
         " ORDER BY status, t.name ASC";
 
 
@@ -192,11 +195,9 @@ Technology.getAllForProject = function (id, done) {
         " FROM technologies t" +
         " INNER JOIN technology_project_link tpl on t.id=tpl.technologyid" +
         " INNER JOIN projects p on p.id=tpl.projectid" +
-        " LEFT JOIN tech_status_link tsl on t.id=tsl.technologyid" +
-        " LEFT OUTER JOIN tech_status_link tsl2 ON " +
-        "(t.id = tsl2.technologyid AND (tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id))" +
-        " INNER JOIN STATUS s on COALESCE(tsl.statusid, 0)=s.id" +
-        " WHERE tsl2.id IS NULL AND p.id=$1" +
+        " LEFT OUTER JOIN status s on s.id = " +
+        "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
+        " WHERE p.id=$1" +
         " ORDER BY status, t.name ASC;";
 
     dbhelper.query(sql, [id],
@@ -216,13 +217,12 @@ Technology.getAllForProject = function (id, done) {
  */
 Technology.search = function (value, done) {
 
-    var sql = "SELECT technologies.id, technologies.name,status.name as Status,categories.name as Category" +
-        " FROM technologies" +
-        " INNER JOIN categories on technologies.category=categories.id " +
-        " LEFT JOIN tech_status_link tsl on technologies.id=tsl.technologyid " +
-        " LEFT OUTER JOIN tech_status_link tsl2 ON (technologies.id = tsl2.technologyid AND " +
-        "(tsl.date < tsl2.date OR tsl.date = tsl2.date AND tsl.id < tsl2.id)) " +
-        " INNER JOIN STATUS on COALESCE(tsl.statusid, 0)=status.id" +
+    var sql =
+        "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+        " FROM technologies t" +
+        " INNER JOIN categories c on t.category=c.id" +
+        " LEFT OUTER JOIN status s on s.id = " +
+        "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
         " WHERE technologies.name ILIKE $1 AND tsl2.id IS NULL";
 
     dbhelper.query(sql, ['%' + value + '%'],

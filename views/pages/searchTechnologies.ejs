@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
+
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div tabindex="-1" id="content" class="site-header">
+    <div class="container">
+        <row>
+            <div class="col-md-8">
+                <h1>Technology Search</h1>
+            </div>
+        </row>
+
+    </div>
+</div>
+
+<div class="container bs-docs-container">
+
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Technology search</li>
+        </ol>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <table id="results"></table>
+        </div>
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>
+
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script>
+
+    window.voteEvents = {
+        'click .adopt': function (e, value, row, index) {
+            vote('Adopt', row);
+        },
+        'click .discuss': function (e, value, row, index) {
+            vote('Discuss', row);
+        },
+        'click .trial': function (e, value, row, index) {
+            vote('Trial', row);
+        },
+        'click .avoid': function (e, value, row, index) {
+            vote('Avoid', row);
+        }
+    };
+
+    $('#results').bootstrapTable({
+        method: 'get',
+        url: '/api/technology',
+        search: true,
+        cache: false,
+        striped: true,
+        escape: true,
+        idField: 'id',
+        showColumns: true,
+        showRefresh: true,
+        showExport: true,
+        searchOnEnterKey: true,
+        showPaginationSwitch: true,
+        pagination: true,
+        columns: [{
+            field: 'id',
+            title: 'Item ID',
+            visible: false
+        }, {
+            field: 'name',
+            title: 'Technology',
+            sortable: true,
+            formatter: operateFormatter
+        }, {
+            field: 'status',
+            title: 'Status',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'category',
+            title: 'Category',
+            align: 'center',
+            sortable: true
+        }, {
+            field: 'yourVote',
+            title: 'Click to Vote',
+            sortable: false,
+            events: voteEvents,
+            formatter: voteFormatter
+        }]
+    })
+
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a href="/technology/' + row['id'] + '">' + value + '</a>'
+        ].join('');
+    }
+
+
+    var vote = function (status, row) {
+        if (row.vote == status) {
+            return;
+        }
+
+        var data = {statusname: status};
+        $.post('/api/technology/' + row.id + '/vote',
+                data,
+                function (result) {
+                    if (result.success) {
+                        row.vote = status;
+                        $('#results').bootstrapTable('updateRow', {index: row.index, row: row});
+                        <% if (google_id != undefined) { %>
+                        ga('send', 'event', 'Technology', 'vote', row.name + ' - ' + status);
+                        <% } %>
+                    } else {
+                        console.log(result);
+                    };
+                });
+    }
+
+    function voteFormatter(value, row, index) {
+
+        var vote = row.vote;
+
+        return [
+            '<a class="adopt" href="javascript:void(0)" title="Adopt">',
+            '<span class="glyphicon glyphicon-heart" style=\"color:', (vote === 'Adopt' ? 'red' : 'grey'), '\">',
+            '</span>',
+            '</a>  ',
+            '<a class="trial" href="javascript:void(0)" title="Trial">',
+            '<span class="glyphicon glyphicon-eye-open" style=\"color:', (vote === 'Trial' ? 'red' : 'grey'), '\">',
+            '</span>',
+            '</a>  ',
+            '<a class="discuss" href="javascript:void(0)" title="Discuss">',
+            '<span class="glyphicon glyphicon-earphone" style=\"color:', (vote === 'Discuss' ? 'red' : 'grey'), '\">',
+            '</span>',
+            '</a>  ',
+            '<a class="avoid" href="javascript:void(0)" title="Avoid">',
+            '<span class="glyphicon glyphicon-remove" style=\"color:', (vote === 'Avoid' ? 'red' : 'grey'), '\">',
+            '</span>',
+            '</a>'
+        ].join('');
+    }
+
+</script>
+
+</body>
+</html>
