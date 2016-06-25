@@ -25,6 +25,8 @@ CommentsWebHandler.commentsForTechnology = function (req, res) {
     req.checkParams('technologyId', 'Invalid technology id').isInt();
     req.checkParams('page', 'Invalid page number').isInt();
 
+    console.log("commentsForTechnology");
+
     var errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
@@ -33,7 +35,8 @@ CommentsWebHandler.commentsForTechnology = function (req, res) {
 
     var techid = req.params.technologyId;
     var pageNumber = req.params.page;
-    comments.getForTechnology(techid, pageNumber, PAGE_SIZE, function (result) {
+    comments.getForTechnology(techid, pageNumber, PAGE_SIZE, function (result,error) {
+        console.log("Got technology");
         comments.getCountForTechnology(techid, function (countData) {
             res.render('partials/comments', {
                 comments: result,

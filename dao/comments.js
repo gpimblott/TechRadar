@@ -33,6 +33,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
         },
         function (error) {
             console.log(error);
+            done(null, error);
         });
 };
 
@@ -51,6 +52,7 @@ Comments.getCountForTechnology = function (technology, done) {
         },
         function (error) {
             console.log(error);
+            done(null, error);
         });
 };
 
@@ -61,18 +63,18 @@ Comments.getCountForTechnology = function (technology, done) {
  * @param userid User ID adding the comment
  * @param done function to call with the results
  */
-Comments.add = function (technology, text , userid, done) {
+Comments.add = function (technology, text, userid, done) {
     var sql = "INSERT INTO comments ( technology , text , userid) values ( $1 , $2 , $3 ) returning id";
-    var params = [ technology, text, userid ];
+    var params = [technology, text, userid];
 
-    dbhelper.insert( sql, params ,
-        function( result ) {
-            done( result.rows[0].id );
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(result.rows[0].id);
         },
-        function(error) {
+        function (error) {
             console.log(error);
-            done( null , error );
-        } );
+            done(null, error);
+        });
 }
 
 /**
@@ -83,21 +85,21 @@ Comments.add = function (technology, text , userid, done) {
 Comments.delete = function (ids, done) {
 
     var params = [];
-    for(var i = 1; i <= ids.length; i++) {
+    for (var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM COMMENTS WHERE id IN (" +  params.join(',') + "  )";
+    var sql = "DELETE FROM COMMENTS WHERE id IN (" + params.join(',') + "  )";
 
 
-    dbhelper.query( sql, ids ,
-        function( result ) {
-            done( true );
+    dbhelper.query(sql, ids,
+        function (result) {
+            done(true);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
-            done( false , error );
-        } );
+            done(false, error);
+        });
 }
 
 
