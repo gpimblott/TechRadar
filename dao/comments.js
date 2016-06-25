@@ -32,7 +32,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
             done(results);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null, error);
         });
 };
@@ -51,7 +51,7 @@ Comments.getCountForTechnology = function (technology, done) {
             done(results[0]);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null, error);
         });
 };
@@ -72,7 +72,7 @@ Comments.add = function (technology, text, userid, done) {
             done(result.rows[0].id);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(null, error);
         });
 }
@@ -97,7 +97,7 @@ Comments.delete = function (ids, done) {
             done(true);
         },
         function (error) {
-            console.log(error);
+            console.error(error);
             done(false, error);
         });
 }
