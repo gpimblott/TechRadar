@@ -148,12 +148,17 @@ Projects.getAllForTechnology = function (technologyId, done) {
         " INNER JOIN technology_project_link tpl on p.id = tpl.projectid" +
         " where tpl.technologyid = $1" +
         " ORDER BY p.name ASC";
-    var params = [technologyId];
+    
+    console.log("getAllForTechnology query");
 
-    dbhelper.query(sql, params, done,
+    dbhelper.query(sql, [technologyId],
+        function (result) {
+            console.log("getAllForTechnology response");
+            done(result);
+        },
         function (error) {
             console.log(error);
-            return done(null, error);
+            done(null, error);
         });
 };
 
