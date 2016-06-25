@@ -150,6 +150,7 @@ Technology.getAll = function (userid, done) {
         "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )";
 
 
+    console.log("Getting all technologies");
     dbhelper.query(sql, [userid],
         function (results) {
             console.log("got technology results");

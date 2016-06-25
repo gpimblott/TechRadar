@@ -12,10 +12,6 @@ var TechnologyRoutes = function () {
 
 TechnologyRoutes.createRoutes = function (self) {
 
-    /**
-     * List all the technologies
-     */
-    self.app.get('/technologies', security.isAuthenticatedAdmin,  handler.listTechnologies );
 
     /**
      * Show the technology search page
@@ -56,6 +52,12 @@ TechnologyRoutes.createRoutes = function (self) {
      * Show the projects for a specified technology
      */
     self.app.get('/technology/:id/projects', security.isAuthenticated, handler.addProject );
+
+    /**
+     * List all the technologies
+     */
+    self.app.get('/technologies', security.isAuthenticatedAdmin,  handler.listTechnologies );
+
 
 }
 
