@@ -79,8 +79,7 @@ Projects.deleteTechnologies = function (projectid, ids, done) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " )"
-    " and projectid=" + projectid;
+    var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " ) and projectid=" + projectid;
 
     dbhelper.query(sql, ids,
         function (result) {
@@ -99,9 +98,8 @@ Projects.deleteTechnologies = function (projectid, ids, done) {
  */
 Projects.add = function (name, description, done) {
     var sql = "INSERT INTO projects ( name, description ) values ( $1 , $2 ) returning id";
-    var params = [name, description];
 
-    dbhelper.insert(sql, params,
+    dbhelper.insert(sql, [name, description],
         function (result) {
             done(result.rows[0].id);
         },
@@ -125,9 +123,8 @@ Projects.delete = function (ids, done) {
  */
 Projects.update = function (id, name, description, done) {
     var sql = "UPDATE projects SET name=$1, description=$2 where id=$3";
-    var params = [name, description, id];
 
-    dbhelper.query(sql, params,
+    dbhelper.query(sql, [name, description, id],
         function (result) {
             done(result);
         },
@@ -140,7 +137,7 @@ Projects.update = function (id, name, description, done) {
 /**
  * Get all projects linked to a given technology
  *
- * @technologyId
+ * @technologyId ID of the technology to get the projects for
  * @param done function to call with the results
  */
 Projects.getAllForTechnology = function (technologyId, done) {
@@ -148,12 +145,13 @@ Projects.getAllForTechnology = function (technologyId, done) {
         " INNER JOIN technology_project_link tpl on p.id = tpl.projectid" +
         " where tpl.technologyid = $1" +
         " ORDER BY p.name ASC";
-    
+
     console.log("getAllForTechnology query");
 
     dbhelper.query(sql, [technologyId],
         function (result) {
             console.log("getAllForTechnology response");
+            console.log(result);
             done(result);
         },
         function (error) {
@@ -171,9 +169,7 @@ Projects.getTechForProject = function (id, done) {
         " JOIN technologies t on tpl.technologyid=t.id" +
         " WHERE p.id=$1";
 
-    var params = [id];
-
-    dbhelper.query(sql, params,
+    dbhelper.query(sql, [id],
         function (result) {
             done(result);
         },

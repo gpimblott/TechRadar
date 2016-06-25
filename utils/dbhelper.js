@@ -29,18 +29,15 @@ DBHelper.query = function (sql, parameters, done, error) {
             error(err);
             return;
         }
-
-        console.log(sql);
+        
         var query = client.query(sql, parameters);
 
         query.on('row', function (row) {
-            console.log(row);
             results.push(row);
         });
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
-            console.log("Query ended");
             client.end();
             done(results);
         });
@@ -75,8 +72,8 @@ DBHelper.insert = function (sql, parameters, done, error) {
                 if (err) {
                     error(err)
                 } else {
-                    done(result);
                     client.end();
+                    done(result);
                 }
             });
     });
@@ -124,7 +121,7 @@ DBHelper.getAllFromTable = function( tableName , done , order ) {
         },
         function (error) {
             console.log(error);
-            return done( null );
+            done( null );
         });
 }
 
