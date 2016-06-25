@@ -38,6 +38,7 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
     if (search == null) {
         console.log("getTechnologies ; null search ");
         technology.getAll(req.user.id, function (result) {
+            console.log("Got all tech results");
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
         })

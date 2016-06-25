@@ -55,7 +55,9 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
         return;
     }
 
+     
     var num = req.params.id;
+    console.log("Get technology:" + num);
 
     technology.getById(req.user.id, num, function (value) {
         if (value == null || value.length == 0 || value.length > 1) {
