@@ -81,8 +81,10 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
         " HAVING votes.technology=$1 " +
         " ORDER BY technologies.name, count desc";
 
+    console.log("getTotalVotesForTechnologyStatus");
     dbhelper.query(sql, [techid],
         function (results) {
+            console.log(results);
             done(results);
         },
         function (error) {

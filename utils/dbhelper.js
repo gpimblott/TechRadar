@@ -30,6 +30,7 @@ DBHelper.query = function (sql, parameters, done, error) {
             return;
         }
 
+        console.log(sql);
         var query = client.query(sql, parameters);
 
         query.on('row', function (row) {
@@ -38,8 +39,8 @@ DBHelper.query = function (sql, parameters, done, error) {
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
-            done(results);
             client.end();
+            done(results);
         });
 
     });
