@@ -205,15 +205,15 @@ getBreadcrumb = function () {
 
 
     var refreshProjectUse = function () {
-        $.get('/api/technology/<%= technology.id %>/projects', function (result) {
-            var output = "";
-            result.forEach(function (project) {
-                output += "<tr><td><a href='/project/" + project.id + "'>" + project.name + "</a></td>";
-            });
+        <!--$.get('/api/technology/<%= technology.id %>/projects', function (result) {-->
+            <!--var output = "";-->
+            <!--result.forEach(function (project) {-->
+                <!--output += "<tr><td><a href='/project/" + project.id + "'>" + project.name + "</a></td>";-->
+            <!--});-->
 
-            $('#project-use').empty();
-            $('#project-use').append(output);
-        })
+            <!--$('#project-use').empty();-->
+            <!--$('#project-use').append(output);-->
+        <!--})-->
 
     };
 
