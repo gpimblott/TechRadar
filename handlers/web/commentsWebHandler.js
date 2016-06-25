@@ -9,6 +9,8 @@ var CommentsWebHandler = function () {
 CommentsWebHandler.add = function (req, res) {
     req.checkParams('id', 'Invalid comment id').isInt();
 
+    console.log("Add comment ????");
+
     var errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
