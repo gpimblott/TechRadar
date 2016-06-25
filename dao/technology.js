@@ -150,11 +150,12 @@ Technology.getAll = function (userid, done) {
 
     dbhelper.query(sql, [userid],
         function (results) {
+            console.log(results);
             done(results);
         },
         function (error) {
             console.error(error);
-            return done(null, error);
+            done(null, error);
         });
 }
 
