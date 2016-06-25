@@ -68,7 +68,6 @@ Technology.delete = function (ids, done) {
 
     var sql = "DELETE FROM TECHNOLOGIES WHERE id IN (" + params.join(',') + "  )";
 
-
     dbhelper.query(sql, ids,
         function (result) {
             done(true);
@@ -103,12 +102,13 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
 
 /**
  * Get a specific technology using its ID
+ * @param userid id of the user performing the query
  * @param id ID of the technology
  * @param done Function to call with the results
  */
 Technology.getById = function (userid, id, done) {
-    var sql = "SELECT t.* ,s.name as statusName, s.id as status, c.name as categoryName, " +
-        "COALESCE( " +
+    var sql = "SELECT t.* ,s.name as statusName, s.id as status, c.name as categoryName," +
+        " COALESCE( " +
             "(select s2.name from votes v " +
             "JOIN STATUS s2 on s2.id=v.status WHERE userid=$1 AND technology=t.id order by date desc limit 1), " +
             "'TBD') as vote" +
@@ -118,7 +118,7 @@ Technology.getById = function (userid, id, done) {
         "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
         " where t.id=$2";
 
-    console.log("getById");
+    console.log("getById:"+userid+":"+id);
     dbhelper.query(sql, [userid, id],
         function (results) {
             console.log("getById:results");
