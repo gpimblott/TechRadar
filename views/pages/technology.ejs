@@ -187,20 +187,20 @@ getBreadcrumb = function () {
     };
 
     var refreshVotes = function () {
-        var data = {limit: 5};
+        <!--var data = {limit: 5};-->
 
-        $.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {
+        <!--$.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {-->
 
-            var output = "";
-            result.forEach(function (vote) {
-                output += "<tr><td>" + vote.status + "</td>";
-                output += "<td>" + vote.count + "</td></tr>";
+            <!--var output = "";-->
+            <!--result.forEach(function (vote) {-->
+                <!--output += "<tr><td>" + vote.status + "</td>";-->
+                <!--output += "<td>" + vote.count + "</td></tr>";-->
 
-            });
+            <!--});-->
 
-            $('#votes').empty();
-            $('#votes').append(output);
-        });
+            <!--$('#votes').empty();-->
+            <!--$('#votes').append(output);-->
+        <!--});-->
     };
 
 

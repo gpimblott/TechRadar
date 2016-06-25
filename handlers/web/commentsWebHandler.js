@@ -35,6 +35,9 @@ CommentsWebHandler.commentsForTechnology = function (req, res) {
         return;
     }
 
+    console.log("commentsForTechnology-2");
+
+
     var techid = req.params.technologyId;
     var pageNumber = req.params.page;
     comments.getForTechnology(techid, pageNumber, PAGE_SIZE, function (result,error) {
