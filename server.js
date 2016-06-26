@@ -114,13 +114,14 @@ var TechRadar = function () {
         self.app.use(bodyParser.urlencoded({
             extended: true
         }));
+
         self.app.use(expressValidator([]));
 
         self.app.use(function(err, req, res, next) {
             console.error(err.stack);
-            res.status(500).send('Something broke!');
+            res.status(500).send('A Fatal error has occurred');
         });
-        
+
         // Setup the secret cookie key
         var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
         self.app.use(session({secret: cookie_key }));
@@ -154,8 +155,8 @@ var TechRadar = function () {
         projectRoutes.createRoutes(self);
         userRoutes.createRoutes(self);
         commentRoutes.createRoutes(self);
-
-        // API routes
+        //
+        // // API routes
         apiStack.createRoutes(self);
         apiTechnologies.createRoutes(self);
         apiUsers.createRoutes(self);

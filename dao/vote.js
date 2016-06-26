@@ -80,11 +80,9 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
         " GROUP BY technologies.name,votes.technology, status.name " +
         " HAVING votes.technology=$1 " +
         " ORDER BY technologies.name, count desc";
-
-    console.log("getTotalVotesForTechnologyStatus");
+    
     dbhelper.query(sql, [techid],
         function (results) {
-            console.log(results);
             done(results);
         },
         function (error) {
@@ -105,11 +103,9 @@ Vote.getVotesForAllTechnologies = function (done) {
         " LEFT JOIN status s on s.id=v.status" +
         " GROUP BY t.id, s.id" +
         " ORDER BY t.name,s.name;";
-
-
+    
     dbhelper.query(sql, [],
         function (results) {
-            console.log(results);
             done(results);
         },
         function (error) {

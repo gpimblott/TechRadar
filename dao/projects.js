@@ -146,12 +146,8 @@ Projects.getAllForTechnology = function (technologyId, done) {
         " where tpl.technologyid = $1" +
         " ORDER BY p.name ASC";
 
-    console.log("getAllForTechnology query");
-
     dbhelper.query(sql, [technologyId],
         function (result) {
-            console.log("getAllForTechnology response");
-            console.log(result);
             done(result);
         },
         function (error) {

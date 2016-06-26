@@ -36,7 +36,6 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
 
     if (search == null) {
         technology.getAll(req.user.id, function (result) {
-            console.log("Got all tech results");
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));
         })
@@ -149,7 +148,6 @@ TechnologyApiHandler.getVoteHistory = function (req, res) {
 
 TechnologyApiHandler.getVoteTotals = function (req, res) {
     var tech = sanitizer(req.params.technology);
-    console.log("Getting Vote totals:" + tech);
     votes.getTotalVotesForTechnologyStatus(tech, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
@@ -180,7 +178,6 @@ TechnologyApiHandler.getProjects = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
 
     project.getAllForTechnology(technologyId, function (result, error) {
-        console.log("Response 2 : " + result);
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });

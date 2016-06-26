@@ -3,8 +3,10 @@
  */
 var pg = require('pg');
 
+
 var DBHelper = function () {
 };
+
 
 /**
  * Perform a select query operation
@@ -18,6 +20,9 @@ DBHelper.query = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
+    pg.defaults.poolSize=50;
+
+    //console.log("query:" + sql);
     pg.connect(process.env.DATABASE_URL, function (err, client) {
         var results = [];
 
