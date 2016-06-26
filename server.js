@@ -116,7 +116,11 @@ var TechRadar = function () {
         }));
         self.app.use(expressValidator([]));
 
-
+        self.app.use(function(err, req, res, next) {
+            console.error(err.stack);
+            res.status(500).send('Something broke!');
+        });
+        
         // Setup the secret cookie key
         var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
         self.app.use(session({secret: cookie_key }));
