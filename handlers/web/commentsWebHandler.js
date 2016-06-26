@@ -16,7 +16,7 @@ CommentsWebHandler.add = function (req, res) {
     }
 
     var num = req.params.id;
-    technology.getById(num, function (value) {
+    technology.getById(req.user.id, num, function (value) {
         res.render('pages/addComment', {technology: value, user: req.user});
     });
 };
@@ -33,7 +33,7 @@ CommentsWebHandler.commentsForTechnology = function (req, res) {
 
     var techid = req.params.technologyId;
     var pageNumber = req.params.page;
-    comments.getForTechnology(techid, pageNumber, PAGE_SIZE, function (result) {
+    comments.getForTechnology(techid, pageNumber, PAGE_SIZE, function (result,error) {
         comments.getCountForTechnology(techid, function (countData) {
             res.render('partials/comments', {
                 comments: result,

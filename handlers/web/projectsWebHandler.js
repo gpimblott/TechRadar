@@ -94,7 +94,7 @@ ProjectsWebHandler.showRadar = function (req, res) {
 };
 
 ProjectsWebHandler.list = function (req, res) {
-    res.render('pages/listProjects', {user: req.user});
+    res.render('pages/searchProjects', {user: req.user});
 };
 
 module.exports = ProjectsWebHandler;

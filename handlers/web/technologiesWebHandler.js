@@ -12,7 +12,7 @@ TechnologiesWebHandler.listTechnologies = function (req, res) {
 };
 
 TechnologiesWebHandler.search = function (req, res) {
-    res.render('pages/search', {user: req.user});
+    res.render('pages/searchTechnologies', {user: req.user});
 };
 
 TechnologiesWebHandler.add = function (req, res) {
@@ -29,7 +29,7 @@ TechnologiesWebHandler.edit = function (req, res) {
     }
 
     var num = req.params.id;
-    technology.getById(num, function (value) {
+    technology.getById(req.user.id, num, function (value) {
         if (value == null || value.length == 0 || value.length > 1) {
             res.redirect('/error');
             return;
@@ -55,9 +55,10 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
         return;
     }
 
+     
     var num = req.params.id;
 
-    technology.getById(num, function (value) {
+    technology.getById(req.user.id, num, function (value) {
         if (value == null || value.length == 0 || value.length > 1) {
             res.redirect('/error');
         } else {
@@ -83,7 +84,7 @@ TechnologiesWebHandler.getStatusHistory = function (req, res) {
 
     var techid = req.params.id;
 
-    technology.getById(techid, function (value) {
+    technology.getById(req.user.id, techid, function (value) {
 
         if (value == null || value.length == 0) {
             res.redirect('/error');
@@ -109,7 +110,7 @@ TechnologiesWebHandler.getVotes = function (req, res) {
 
     var techid = req.params.id;
 
-    technology.getById(techid, function (value) {
+    technology.getById(req.user.id, techid, function (value) {
 
         if (value == null || value.length == 0) {
             res.redirect('/error');
@@ -135,7 +136,7 @@ TechnologiesWebHandler.updateStatus = function (req, res) {
 
     var techid = req.params.id;
 
-    technology.getById(techid, function (value) {
+    technology.getById(req.user.id, techid, function (value) {
         if (value == null || value.length == 0) {
             res.redirect('/error');
             return;
@@ -162,7 +163,7 @@ TechnologiesWebHandler.addProject = function (req, res) {
 
     var techid = req.params.id;
 
-    technology.getById(techid, function (technology) {
+    technology.getById(req.user.id, techid, function (technology) {
         if (technology === null) {
             res.redirect('/error');
             return;

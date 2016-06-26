@@ -52,8 +52,8 @@ Users.findById = function(id, done) {
  */
 Users.findByUsername = function(username, done) {
     var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role FROM users u where u.username=$1";
-    
-    dbhelper.query(sql, [username],
+    var params = [username];
+    dbhelper.query(sql, params,
         function (results) {
             done(null , results[0]);
         },

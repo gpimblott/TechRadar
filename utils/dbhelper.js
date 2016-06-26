@@ -3,8 +3,10 @@
  */
 var pg = require('pg');
 
+
 var DBHelper = function () {
 };
+
 
 /**
  * Perform a select query operation
@@ -18,6 +20,9 @@ DBHelper.query = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
+    pg.defaults.poolSize=50;
+
+    //console.log("query:" + sql);
     pg.connect(process.env.DATABASE_URL, function (err, client) {
         var results = [];
 
@@ -29,7 +34,7 @@ DBHelper.query = function (sql, parameters, done, error) {
             error(err);
             return;
         }
-
+        
         var query = client.query(sql, parameters);
 
         query.on('row', function (row) {
@@ -38,8 +43,8 @@ DBHelper.query = function (sql, parameters, done, error) {
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
-            done(results);
             client.end();
+            done(results);
         });
 
     });
@@ -72,8 +77,8 @@ DBHelper.insert = function (sql, parameters, done, error) {
                 if (err) {
                     error(err)
                 } else {
-                    done(result);
                     client.end();
+                    done(result);
                 }
             });
     });
@@ -121,7 +126,7 @@ DBHelper.getAllFromTable = function( tableName , done , order ) {
         },
         function (error) {
             console.log(error);
-            return done( null );
+            done( null );
         });
 }
 

@@ -2,7 +2,6 @@
  *  Main routes for the Application
  */
 
-var comments = require('../../dao/comments.js');
 var technology = require('../../dao/technology.js');
 
 var passport = require('passport');

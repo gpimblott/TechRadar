@@ -20,7 +20,6 @@ ApiUserRoutes.createRoutes = function (self) {
      */
     self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser, handler.addUser);
 
-
     /**
      * Update an user
      */
