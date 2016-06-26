@@ -187,33 +187,33 @@ getBreadcrumb = function () {
     };
 
     var refreshVotes = function () {
-        <!--var data = {limit: 5};-->
+        var data = {limit: 5};
 
-        <!--$.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {-->
+        $.get('/api/technology/<%= technology.id %>/vote/totals', data, function (result) {
 
-            <!--var output = "";-->
-            <!--result.forEach(function (vote) {-->
-                <!--output += "<tr><td>" + vote.status + "</td>";-->
-                <!--output += "<td>" + vote.count + "</td></tr>";-->
+            var output = "";
+            result.forEach(function (vote) {
+                output += "<tr><td>" + vote.status + "</td>";
+                output += "<td>" + vote.count + "</td></tr>";
 
-            <!--});-->
+            });
 
-            <!--$('#votes').empty();-->
-            <!--$('#votes').append(output);-->
-        <!--});-->
+            $('#votes').empty();
+            $('#votes').append(output);
+        });
     };
 
 
     var refreshProjectUse = function () {
-        <!--$.get('/api/technology/<%= technology.id %>/projects', function (result) {-->
-            <!--var output = "";-->
-            <!--result.forEach(function (project) {-->
-                <!--output += "<tr><td><a href='/project/" + project.id + "'>" + project.name + "</a></td>";-->
-            <!--});-->
+        $.get('/api/technology/<%= technology.id %>/projects', function (result) {
+            var output = "";
+            result.forEach(function (project) {
+                output += "<tr><td><a href='/project/" + project.id + "'>" + project.name + "</a></td>";
+            });
 
-            <!--$('#project-use').empty();-->
-            <!--$('#project-use').append(output);-->
-        <!--})-->
+            $('#project-use').empty();
+            $('#project-use').append(output);
+        })
 
     };
 

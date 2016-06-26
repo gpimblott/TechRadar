@@ -117,12 +117,10 @@ Technology.getById = function (userid, id, done) {
         " LEFT OUTER JOIN status s on s.id = " +
         "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
         " where t.id=$2";
-
-    console.log("getById:"+userid+":"+id);
+    
     var params = [userid, id];
     dbhelper.query(sql, params ,
         function (results) {
-            console.log("getById:results");
             if (results.length != 1) {
                 done(null);
             } else {

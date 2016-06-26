@@ -57,14 +57,11 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
 
      
     var num = req.params.id;
-    console.log("Router : getTechnology:" + num);
 
     technology.getById(req.user.id, num, function (value) {
         if (value == null || value.length == 0 || value.length > 1) {
-            console.log("getById error");
             res.redirect('/error');
         } else {
-            console.log("Router : getTechnology Rendering page");
             var statuses = cache.getStatuses();
             res.render('pages/technology',
                 {

@@ -31,12 +31,10 @@ TechnologyApiHandler.addVote = function (req, res) {
 };
 
 TechnologyApiHandler.getTechnologies = function (req, res) {
-
-    console.log("getTechnologies");
+    
     var search = req.query.search;
 
     if (search == null) {
-        console.log("getTechnologies ; null search ");
         technology.getAll(req.user.id, function (result) {
             console.log("Got all tech results");
             res.writeHead(200, {"Content-Type": "application/json"});
@@ -44,7 +42,6 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
         })
 
     } else {
-        console.log("getTechnologies ; NOT Null search ");
         technology.search(sanitizer(search), function (result) {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));

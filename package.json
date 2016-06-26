@@ -18,15 +18,15 @@
     "url": "https://git.heroku.com/techradar-demo.git"
   },
   "engines": {
-    "node": ">= 6.2.2",
-    "npm": ">= 1.0.0"
+    "node": "6.2.2",
+    "npm": ">= 3.9.5"
   },
   "dependencies": {
     "console-stamp" : "latest",
     "express": "latest",
     "express-session":"latest",
     "body-parser":"latest",
-    "ejs": "^1.0.0",
+    "ejs": "2.4.2",
     "cookie-parser":"latest",
     "pg" : "latest",
     "pg-large-object": "latest",
