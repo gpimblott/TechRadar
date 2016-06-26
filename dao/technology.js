@@ -119,7 +119,8 @@ Technology.getById = function (userid, id, done) {
         " where t.id=$2";
 
     console.log("getById:"+userid+":"+id);
-    dbhelper.query(sql, [userid, id],
+    var params = [userid, id];
+    dbhelper.query(sql, params ,
         function (results) {
             console.log("getById:results");
             if (results.length != 1) {

@@ -24,7 +24,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
         " order by date desc" +
         " LIMIT $2 OFFSET $3";
 
-    console.log("commentsForTechnology-3");
+    console.log("getForTechnology-a");
 
     var limit = pageSize || DEFAULT_PAGE_SIZE;
     var offset = pageNum ? pageNum * limit : 0;
@@ -32,7 +32,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
     dbhelper.query(sql, [technology, limit, offset],
         function (results) {
             console.log(results);
-            done(results);
+            done(results,null);
         },
         function (error) {
             console.error(error);

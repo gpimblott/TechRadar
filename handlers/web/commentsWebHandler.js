@@ -32,6 +32,8 @@ CommentsWebHandler.commentsForTechnology = function (req, res) {
     var errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
+        console.log("commentsForTechnology-error");
+
         return;
     }
 

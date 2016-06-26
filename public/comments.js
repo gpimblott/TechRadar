@@ -34,13 +34,13 @@ $(function() {
      * @param pageNumber
      */
     TechRadar.getComments = function (technologyId, pageNumber) {
-        $.ajax({
-            type: "GET",
-            url: '/comments/'+ technologyId + '/' + pageNumber,
-            contentType: "application/json",
-            complete: function (result) {
-                $('#commentContainer').html(result.responseText);
-            }
-        });
+        // $.ajax({
+        //     type: "GET",
+        //     url: '/comments/'+ technologyId + '/' + pageNumber,
+        //     contentType: "application/json",
+        //     complete: function (result) {
+        //         $('#commentContainer').html(result.responseText);
+        //     }
+        // });
     };
 });
