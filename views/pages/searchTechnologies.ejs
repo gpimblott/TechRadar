@@ -107,6 +107,8 @@
             sortable: false,
             <% if(user.canComment) { %>
             events: voteEvents,
+            <% } else { %>
+            visible: false,
             <% } %>
             formatter: voteFormatter
         }]
