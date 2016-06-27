@@ -14,13 +14,13 @@ passport.use(new Strategy(
                 return cb(err);
             }
             if (!user) {
-                return cb(null, false);
+                return cb(null, false, { message: 'Incorrect login'});
             }
 
             var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
             if (user.password != userHash) {
-                return cb(null, false);
+                return cb(null, false, { message: 'Incorrect login'});
             }
             return cb(null, user);
         });
