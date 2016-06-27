@@ -51,6 +51,7 @@
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
+    <% if(user.canComment) { %>
     window.voteEvents = {
         'click .adopt': function (e, value, row, index) {
             vote('Adopt', row);
@@ -65,6 +66,7 @@
             vote('Avoid', row);
         }
     };
+    <% } %>
 
     $('#results').bootstrapTable({
         method: 'get',
@@ -103,7 +105,9 @@
             field: 'yourVote',
             title: 'Click to Vote',
             sortable: false,
+            <% if(user.canComment) { %>
             events: voteEvents,
+            <% } %>
             formatter: voteFormatter
         }]
     })
@@ -115,7 +119,7 @@
         ].join('');
     }
 
-
+    <% if(user.canComment) { %>
     var vote = function (status, row) {
         if (row.vote == status) {
             return;
@@ -136,6 +140,7 @@
                     };
                 });
     }
+    <%}%>
 
     function voteFormatter(value, row, index) {
 
