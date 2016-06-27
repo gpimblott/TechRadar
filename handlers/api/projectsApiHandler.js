@@ -65,7 +65,7 @@ ProjectsApiHandler.deleteTechnologiesFromProject = function (req, res) {
 ProjectsApiHandler.getTechnologiesForProject = function (req, res) {
     var projectId = sanitizer(req.params.projectId);
 
-    technologies.getAllForProject(projectId, function (error, result) {
+    technology.getAllForProject(projectId, function (error, result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
