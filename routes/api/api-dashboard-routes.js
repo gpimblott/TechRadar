@@ -25,6 +25,16 @@ ApiDashboardRoutes.createRoutes = function (self) {
      * Get the number of projects each technology is used on
      */
     self.app.get('/api/dash/technology/project', security.isAuthenticated, handler.getMostUsedTechnologies);
+
+    /**
+     * Get the number of comments each technology has
+     */
+    self.app.get('/api/dash/technology/comments', security.isAuthenticated, handler.getCommentsPerTechnology);
+    
+    /**
+     * Get the number of votes cast by each user
+     */
+    self.app.get('/api/dash/votes/users' , security.isAuthenticated, handler.getVotesPerUserCount);
 };
 
 module.exports = ApiDashboardRoutes;

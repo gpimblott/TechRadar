@@ -29,7 +29,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
 
     dbhelper.query(sql, [technology, limit, offset],
         function (results) {
-            done(results,null);
+            done(results, null);
         },
         function (error) {
             console.error(error);
@@ -55,6 +55,30 @@ Comments.getCountForTechnology = function (technology, done) {
             done(null, error);
         });
 };
+
+/**
+ * Get the number of comments for each technology
+ * @param technology
+ * @param done
+ */
+Comments.getTotalNumberCommentsForTechnologies = function (done) {
+    var sql = "select count(*) total, t.name technology " +
+        "FROM comments c " +
+        "JOIN technologies t on c.technology=t.id " +
+        "GROUP BY t.name " +
+        "ORDER BY total DESC limit 10";
+
+    console.log(sql);
+    dbhelper.query(sql, [],
+        function (results) {
+            done(results, null);
+        },
+        function (error) {
+            console.error(error);
+            done(null, error);
+        });
+};
+
 
 /**
  * Add a new comment

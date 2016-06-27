@@ -2,6 +2,7 @@ var cache = require('../../dao/cache');
 var projects = require('../../dao/projects');
 var votes = require('../../dao/vote');
 var technologies = require('../../dao/technology');
+var comments = require('../../dao/comments');
 
 var DashboardApiHandler = function () {
 };
@@ -38,6 +39,21 @@ DashboardApiHandler.getMostUsedTechnologies = function (req,res) {
         res.end(JSON.stringify(result));
     });
 };
+
+DashboardApiHandler.getVotesPerUserCount = function (req,res) {
+    votes.getVotesPerUserCount(function (result) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
+DashboardApiHandler.getCommentsPerTechnology = function (req,res) {
+    comments.getTotalNumberCommentsForTechnologies(function (result) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
 
 
 module.exports = DashboardApiHandler;
