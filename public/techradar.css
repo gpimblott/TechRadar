@@ -18,6 +18,8 @@ body {
     width: auto;
 }
 
+
+
 /* Main menu text black */
 nav ul  a{
     color : #000;
@@ -219,5 +221,9 @@ form[role=login] button {
 }
 form[role=login] > div {
     text-align: center;
+}
+
+form[role=login] .warning {
+    color: red;
 }
 
