@@ -55,8 +55,7 @@ Vote.getVotesInLastMonthDifferentFromStatus = function (done) {
         "AND " +
         "( v.date between (now()-INTERVAL '3 MONTH') and now() ) " +
         "GROUP BY t.id, t.name";
-
-
+    
     dbhelper.query(sql, [],
         function (results) {
             done(results);
@@ -116,6 +115,49 @@ Vote.getVotesForAllTechnologies = function (done) {
 }
 
 /**
+ * Get the number of votes for all technologies.  This is used by the dashboard
+ * @param done Function to call with the results
+ */
+Vote.getVotesForAllTechnologies = function (done) {
+    var sql = "SELECT count(v.id), s.name as status, t.name as technology" +
+        " FROM votes v" +
+        " LEFT JOIN technologies t on t.id=v.technology" +
+        " LEFT JOIN status s on s.id=v.status" +
+        " GROUP BY t.id, s.id" +
+        " ORDER BY t.name,s.name;";
+
+    dbhelper.query(sql, [],
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+
+}/**
+ * Get the number of votes for all technologies.  This is used by the dashboard
+ * @param done Function to call with the results
+ */
+Vote.getVotesPerUserCount = function (done) {
+    var sql = "SELECT u.username username, count(v.id) total " +
+        "FROM votes v " +
+        "JOIN users u ON v.userid=u.id " +
+        "GROUP BY username " +
+        "ORDER BY total desc limit 10";
+
+    dbhelper.query(sql, [],
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+
+}
+
+/**
  * Add a vote for a technology
  * PostgreSQL doesn't have an upsert until 9.5 so do a delete then insert for now
  * @param technology ID of technology
@@ -158,8 +200,6 @@ Vote.add = function (technology, status, userid, done) {
         function (error) {
             done(null, error);
         });
-
-
 }
 
 module.exports = Vote;

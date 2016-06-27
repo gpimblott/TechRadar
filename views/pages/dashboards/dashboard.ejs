@@ -36,6 +36,15 @@
     </div>
 
     <div class="row">
+        <div class="col-md-5 col-md-offset-1" height="300">
+            <canvas id="userChart" height="150"></canvas>
+        </div>
+        <div class="col-md-5" height="300">
+            <canvas id="commentsChart" height="150"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <canvas id="barChart" height="150"></canvas>
         </div>
@@ -63,8 +72,8 @@
             data.push(item.total);
         });
 
-        var barCtx = document.getElementById("barChart");
-        var myBarChart = new Chart(barCtx, {
+        var statusVoteElement = document.getElementById("barChart");
+        var statusVoteChart = new Chart(statusVoteElement, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -129,7 +138,82 @@
                 }
             }
         });
+    });
 
+    $.get('/api/dash/votes/users', function (result) {
+
+        var labels = [];
+        var data = [];
+        result.forEach(function (item) {
+            labels.push(item.username);
+            data.push(item.total);
+        });
+
+        var userChartElement = document.getElementById("userChart");
+        var userChart = new Chart(userChartElement, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Votes',
+                    data: data
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Top 10 voting users'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            stepSize: 5
+                        }
+                    }]
+                }
+            }
+        });
+    });
+
+
+
+    $.get('/api/dash/technology/comments', function (result) {
+
+        var labels = [];
+        var data = [];
+        result.forEach(function (item) {
+            labels.push(item.technology);
+            data.push(item.total);
+        });
+
+        var commentChartElement = document.getElementById("commentsChart");
+        var commentChart = new Chart(commentChartElement, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Comments',
+                    data: data
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Top 10 Technologies with comments'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            stepSize: 5
+                        }
+                    }]
+                }
+            }
+        });
     });
 </script>
 
