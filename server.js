@@ -12,6 +12,7 @@ require('dotenv').config({path: 'process.env'});
 // Express
 var express = require('express');
 var expressValidator = require('express-validator');
+var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -116,6 +117,7 @@ var TechRadar = function () {
         }));
 
         self.app.use(expressValidator([]));
+        self.app.use(flash());
 
         self.app.use(function(err, req, res, next) {
             console.error(err.stack);

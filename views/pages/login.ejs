@@ -36,6 +36,9 @@
             <form class="form-signin" action="/login" method="post" role="login">
                 <img src="radar.png"  width="75px">
                 <h3 class="form-signin-heading">Sign in</h3>
+                <% if(messages.length>0) {%>
+                <label color="red"><%=messages[0]%></label>
+                <%}%>
                 <label for="inputUsername" class="sr-only">Username</label>
                 <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
                 <label for="inputPassword" class="sr-only">Password</label>
