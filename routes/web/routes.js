@@ -50,7 +50,8 @@ Routes.createRoutes = function (self) {
         if (req.isAuthenticated()) {
             res.render('pages/index')
         } else {
-            res.render('pages/login');
+            var messages = req.flash('error');
+            res.render('pages/login', {messages: messages});
         }
     });
 
@@ -85,7 +86,8 @@ Routes.createRoutes = function (self) {
      */
     self.app.post('/login', passport.authenticate('local', {
         successRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/login',
+        failureFlash: true
     }));
 
 
