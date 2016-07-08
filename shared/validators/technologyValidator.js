@@ -1,7 +1,7 @@
 (function(exports){
 
     exports.validateTechnologyName = function (name) {
-        if(name==undefined || name.length < 4 ) {
+        if(name==undefined || name.length < 2 ) {
             return { valid: false, message: "Technology Name too short" };
         }
 
