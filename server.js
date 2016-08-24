@@ -11,6 +11,7 @@ require('dotenv').config({path: 'process.env'});
 
 // Express
 var express = require('express');
+var helpers = require('express-helpers')();
 var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
@@ -109,6 +110,9 @@ var TechRadar = function () {
         self.app = express();
 
         self.app.set('view engine', 'ejs');
+
+        // Define helper functions
+        self.app.locals.link_to = helpers.link_to;
 
         self.app.use(cookieParser());
         self.app.use(bodyParser.json());

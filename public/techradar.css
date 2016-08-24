@@ -227,3 +227,45 @@ form[role=login] .warning {
     color: red;
 }
 
+.tab-content {
+    color : white;
+    background-color: #6f5499;
+    padding : 5px 5px;
+}
+
+
+.nav-pills{
+    background-color:#ffffff;
+}
+.tab-content{
+    background-color:#6f5499;
+    color:#fff;
+    padding:5px
+}
+.nav-pills > li > a{
+    ext-decoration: none;
+    border: medium none;
+}
+.nav-pills > li > a:hover{
+    ext-decoration: none;
+    background-color: #6f5499 !important;
+    border: medium none;
+    border-radius: 0;
+    color:#fff;
+}
+
+.nav-pills > li > a:focus{
+    ext-decoration: none;
+    background-color: #6f5499 !important;
+    border: medium none;
+    border-radius: 0;
+    color:#fff;
+}
+
+.nav-pills > li.active > a{
+    ext-decoration: none;
+    background-color: #6f5499 !important;
+    border: medium none;
+    border-radius: 0;
+    color:#fff;
+}

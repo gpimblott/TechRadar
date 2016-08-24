@@ -23,7 +23,7 @@
 
 <% include ../partials/menu.ejs %>
 
-<div tabindex="-1" id="content" class="site-header" >
+<div tabindex="-1" id="content" class="site-header">
     <div class="container">
         <h1><%= project.name %></h1>
         <p><%= project.description %></p>
@@ -52,50 +52,72 @@
 <div class="container bs-docs-container">
 
     <div class="col-md-12">
-        <ol class="breadcrumb" >
+        <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
             <li class="active"><%= project.name %></li>
         </ol>
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <ul class="list-group">
-                <%
+
+            <%
+            if( technologies.length == 0) {
+            %>
+            <p>No technologies found</p>
+            <%
+            } else {
                 var heading = "";
+            %>
+            <ul class="nav nav-pills" data-tabs="tabs">
 
-                if( technologies.length == 0) {
+                <%
+                for (var i = 0, len = technologies.length; i < len; i++) {
+                    var technology = technologies[i];
+                if( technology.status != heading) {
+                    heading = technology.status;
                 %>
-
-                <li class="list-group-item active">No technologies found</li>
-
+                <li class="<%- (i === 0 ) ? 'active' : ''%>" >
+                    <a href="#<%= technology.status %>" data-toggle="tab"><%= technology.status %></a>
+                </li>
                 <%
                 }
+                }
+                %>
+            </ul>
 
+            <div class="tab-content">
+                <%
+                    var heading = "";
                 for (var i = 0, len = technologies.length; i < len; i++) {
                     var technology = technologies[i];
 
                 if( technology.status != heading) {
                     heading = technology.status;
-                %>
-                <li class="list-group-item active"><%= heading %></li>
+
+                if(i != 0) { %>
+            </div>
+            <% } %>
+
+            <div class="tab-pane <%- (i === 0 ) ? 'active' : ''%>" id="<%= heading %>">
 
                 <% } %>
 
                 <li class="list-group-item" id="tech<%= technology.num %>">
                     <span class="badge"><%= technology.num %></span>
-                    <a href="/technology/<%= technology.id %>"><%= technology.name %></a>
+                    <%- link_to(technology.name, '/technology/' + technology.id) %>
                 </li>
 
-                <% } %>
-
-            </ul>
-
-
+                <% }
+                %>
+            </div>
         </div>
-        <div class="col-sm-6">
-            <div id="radar"></div>
-        </div>
+        <% } %>
+
     </div>
+    <div class="col-sm-6">
+        <div id="radar"></div>
+    </div>
+</div>
 
 
 </div>

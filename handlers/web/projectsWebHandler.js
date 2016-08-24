@@ -94,7 +94,24 @@ ProjectsWebHandler.showRadar = function (req, res) {
 };
 
 ProjectsWebHandler.list = function (req, res) {
-    res.render('pages/searchProjects', {user: req.user});
+
+    // check if a project name parameter has been specified
+    var name = req.query.name;
+
+    if( name==undefined) {
+        res.render('pages/searchProjects', {user: req.user});
+    } else {
+        name = decodeURI(name);
+
+        projects.findByName( name , function( error , project ) {
+            if (error) {
+                res.redirect('/error');
+            } else {
+                res.redirect('/project/' + project.id)
+            }
+        })
+    }
+
 };
 
 module.exports = ProjectsWebHandler;

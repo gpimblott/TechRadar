@@ -24,6 +24,7 @@
   "dependencies": {
     "console-stamp" : "latest",
     "express": "latest",
+    "express-helpers": "latest",
     "express-session":"latest",
     "body-parser":"latest",
     "ejs": "2.4.2",
