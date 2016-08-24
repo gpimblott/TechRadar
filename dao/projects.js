@@ -36,6 +36,29 @@ Projects.findById = function (id, done) {
         });
 };
 
+/**
+ * Get a project by it's name
+ * @param name Name of the project to get
+ * @param done Function to call with the result
+ */
+Projects.findByName = function (name, done) {
+    var sql = "SELECT *" +
+        " FROM projects " +
+        " where lower(projects.name)=lower($1) ";
+
+    dbhelper.query(sql, [name],
+        function (results) {
+            if (results.length == 0) {
+                done(true, null);
+            } else {
+                done(null, results[0]);
+            }
+        },
+        function (error) {
+            console.log(error);
+            return done(error, null);
+        });
+};
 
 /**
  * Add multiple technologies to a project
