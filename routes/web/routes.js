@@ -55,6 +55,18 @@ Routes.createRoutes = function (self) {
         }
     });
 
+    /**
+     * Sign up page
+     */
+    self.app.get('/signup', function (req, res) {
+        if (req.isAuthenticated()) {
+            res.render('pages/index')
+        } else {
+            var messages = req.flash('error');
+            res.render('pages/signup', {messages: messages});
+        }
+    });
+
     self.app.get('/dashboard', security.isAuthenticated, function (req, res) {
         res.render('pages/dashboards/dashboard', {user: req.user});
     });

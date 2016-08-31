@@ -43,6 +43,12 @@ UsersApiHandler.addUser = function (req, res) {
         });
 };
 
+UsersApiHandler.addUserSignUp = function(req, res){
+    req.body.role = 1; // prevent other roles than "user" from being set
+    // new user accounts are disabled by default
+    UsersApiHandler.addUser(req, res);
+}
+
 UsersApiHandler.updateProfile = function (req, res) {
     var oldPassword = sanitizer(req.body.oldPassword);
     var oldPasswordHash = crypto.createHash('sha256').update(oldPassword).digest('base64');

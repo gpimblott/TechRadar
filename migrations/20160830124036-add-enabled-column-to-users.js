@@ -18,9 +18,10 @@ exports.up = function(db) {
   db.addColumn('users', 'enabled', {
     type: type.BOOLEAN,
     defaultValue: true //sets enabled=true in all pre-existing records 
-  });
-  db.changeColumn('users', 'enabled', {
-    defaultValue: false // all newly created records will default to enabled=false
+  }, function(){
+      db.changeColumn('users', 'enabled', {
+        defaultValue: false // all newly created records will default to enabled=false
+      });
   });
   return null;
 };

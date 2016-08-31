@@ -16,9 +16,14 @@ var ApiUserRoutes = function () {
 ApiUserRoutes.createRoutes = function (self) {
 
     /**
-     * Add a new User
+     * Add a new User as Admin
      */
     self.app.post('/api/user', security.isAuthenticatedAdmin, jsonParser, handler.addUser);
+
+    /**
+     * Add a new User using sign up page
+     */
+    self.app.post('/api/user/signup', handler.addUserSignUp);
 
     /**
      * Update an user

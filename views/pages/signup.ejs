@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+<% include ../partials/menu-logged-out.ejs %>
+
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 60px">
+    <div class="container">
+        <h1 >Technology radar</h1>
+        <p>Community technology planning</p>
+    </div>
+</div>
+<div class="container bs-docs-container">
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li class="active">Add User</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3" style="padding-left: 15px; padding-top: 40px;">
+            <form action="javascript:void(0);" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="username"
+                           required maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password"  name="password" placeholder="Password"
+                           required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Confirm password</label>
+                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Password"
+                           required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="fullname">Full name</label>
+                    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Full name"
+                           required maxlength="40">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div><!-- /.container -->
+
+<% include ../partials/footer.ejs %>
+<script src="/shared/validators/userValidator.js"></script>
+<script>
+
+    $( "form" ).submit(function( event ) {
+        var username = $("form [name=username]").val();
+        var password1 = $("form [name=password]").val();
+        var password2 = $("form [name=password2]").val();
+
+        var validationResult = UserValidator.validateNewPassword(password1, password2);
+        validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
+        if(!validationResult.valid) {
+            alert(validationResult.message);
+            return;
+        }
+
+        $(":submit").attr("disabled", true);
+        var frm = $('form');
+        var frmdata = serialiseForm(frm);
+
+        $.ajax({
+            type: "POST",
+            url: '/api/user/signup',
+            contentType: "application/json",
+            data: JSON.stringify(frmdata),
+            success: function(result) {
+                if( result.success) {
+                    location.href = "/users";
+                } else {
+                    alert( "There was an error adding the user :)" );
+                }
+                $(":submit").attr("disabled", false);
+            }
+        });
+
+        <% if (google_id!=undefined) { %>
+        ga('send', 'event', 'User', 'add', frm.find('input[name="username"]').val() );
+        <% } %>
+    });
+</script>
+</body>
+</html>
