@@ -98,6 +98,7 @@ UsersApiHandler.updateUser = function (req, res) {
     var confirmPassword = sanitizer(req.body.confirmPassword);
     var displayName = sanitizer(req.body.displayname);
     var role = sanitizer(req.body.role);
+    var enabled = sanitizer(req.body.enabled);
     var avatarData = null;
 
     if(req.file) {
@@ -123,7 +124,7 @@ UsersApiHandler.updateUser = function (req, res) {
                     .update(password).digest('base64')
             }
 
-            users.update(userId, displayName, passwordHash, avatarData, role, function (result, error) {
+            users.update(userId, displayName, passwordHash, avatarData, role, enabled, function (result, error) {
                 apiutils.handleResultSet(res, result, error);
             });
         }

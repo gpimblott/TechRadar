@@ -60,10 +60,9 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/signup', function (req, res) {
         if (req.isAuthenticated()) {
-            res.render('pages/index')
+            res.render('pages/index');
         } else {
-            var messages = req.flash('error');
-            res.render('pages/signup', {messages: messages});
+            res.render('pages/signup');
         }
     });
 

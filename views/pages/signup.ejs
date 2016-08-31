@@ -87,16 +87,17 @@
             data: JSON.stringify(frmdata),
             success: function(result) {
                 if( result.success) {
-                    location.href = "/users";
+                    location.href = "/login";
                 } else {
-                    alert( "There was an error adding the user :)" );
+                    alert(`The registration process is not working. 
+                        Please contact the administrator.`);
                 }
                 $(":submit").attr("disabled", false);
             }
         });
 
         <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'User', 'add', frm.find('input[name="username"]').val() );
+        ga('send', 'event', 'User', 'SignUp', frm.find('input[name="username"]').val() );
         <% } %>
     });
 </script>

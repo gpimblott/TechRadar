@@ -122,15 +122,15 @@ Users.delete = function (ids, done) {
  * @param role User role
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, avatarData, role, done) {
-    var params = [displayName, passwordHash, role, id];
+Users.update = function (id, displayName, passwordHash, avatarData, role, enabled, done) {
+    var params = [displayName, passwordHash, role, enabled, id];
 
     var avatarUpdate = '';
     if(avatarData) {
         avatarUpdate = ', avatar=$5';
         params.push('\\x' + avatarData.toString('hex'));
     }
-    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3 where id=$4";
+    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3, enabled=$4 where id=$5";
 
     dbhelper.query(sql, params,
         function(result) {
