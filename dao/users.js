@@ -51,7 +51,7 @@ Users.findById = function(id, done) {
  * @param done Function to call with the result
  */
 Users.findByUsername = function(username, done) {
-    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role FROM users u where u.username=$1";
+    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role, u.email FROM users u where u.username=$1";
     var params = [username];
     dbhelper.query(sql, params,
         function (results) {
@@ -71,12 +71,12 @@ Users.findByUsername = function(username, done) {
  * @param admin Is the user an admin (boolean)
  * @param done Function to call when complete
  */
-Users.add = function (username, displayName, password, admin, done) {
+Users.add = function (username, email, displayName, password, admin, done) {
 
     var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
-    var sql = "INSERT INTO users ( username, displayName, password, role) values ( $1 , $2 , $3 ,$4 ) returning id";
-    var params = [ username,displayName,userHash,admin ];
+    var sql = "INSERT INTO users (username, email, displayName, password, role) values ($1, $5, $2, $3, $4) returning id";
+    var params = [username, displayName, userHash, admin, email];
 
     dbhelper.insert( sql, params ,
         function( result ) {
@@ -122,15 +122,15 @@ Users.delete = function (ids, done) {
  * @param role User role
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, avatarData, role, done) {
-    var params = [displayName, passwordHash, role, id];
+Users.update = function (id, email, displayName, passwordHash, avatarData, role, done) {
+    var params = [displayName, passwordHash, role, id, email];
 
     var avatarUpdate = '';
     if(avatarData) {
-        avatarUpdate = ', avatar=$5';
+        avatarUpdate = ', avatar=$6';
         params.push('\\x' + avatarData.toString('hex'));
     }
-    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3 where id=$4";
+    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3, email=$5 where id=$4";
 
     dbhelper.query(sql, params,
         function(result) {

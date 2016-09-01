@@ -17,11 +17,13 @@ var UsersApiHandler = function () {
  */
 UsersApiHandler.addUser = function (req, res) {
     var username = sanitizer(req.body.username);
+    var email = sanitizer(req.body.email);
     var password = sanitizer(req.body.password);
     var password2 = sanitizer(req.body.password2);
 
     var validationResult = userValidator.validateNewPassword(password, password2);
     validationResult = validationResult.valid ? userValidator.validateUsername(username) : validationResult;
+    validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
 
     if(!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -34,6 +36,7 @@ UsersApiHandler.addUser = function (req, res) {
 
     users.add(
         username,
+        email,
         sanitizer(req.body.displayName),
         password,
         sanitizer(req.body.role),
@@ -46,6 +49,7 @@ UsersApiHandler.addUser = function (req, res) {
 UsersApiHandler.updateProfile = function (req, res) {
     var oldPassword = sanitizer(req.body.oldPassword);
     var oldPasswordHash = crypto.createHash('sha256').update(oldPassword).digest('base64');
+    var email = sanitizer(req.body.email);
     var password = sanitizer(req.body.password);
     var confirmPassword = sanitizer(req.body.confirmPassword);
     var displayName = sanitizer(req.body.displayname);
@@ -56,6 +60,7 @@ UsersApiHandler.updateProfile = function (req, res) {
     }
 
     var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+    validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
     if(req.file && validationResult.valid) {
         validationResult = userValidator.validateAvatar(req.file);
     }
@@ -78,7 +83,7 @@ UsersApiHandler.updateProfile = function (req, res) {
                         .update(password).digest('base64')
                 }
 
-                users.update(req.user.id, displayName, passwordHash, avatarData, userFromDb.role, function (result, error) {
+                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, function (result, error) {
                     apiutils.handleResultSet(res, result , error);
                 });
             }
@@ -89,6 +94,7 @@ UsersApiHandler.updateProfile = function (req, res) {
 UsersApiHandler.updateUser = function (req, res) {
     var userId = sanitizer(req.params.userId);
     var password = sanitizer(req.body.password);
+    var email = sanitizer(req.body.email);
     var confirmPassword = sanitizer(req.body.confirmPassword);
     var displayName = sanitizer(req.body.displayname);
     var role = sanitizer(req.body.role);
@@ -99,6 +105,9 @@ UsersApiHandler.updateUser = function (req, res) {
     }
 
     var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+    if(email && validationResult.valid) {
+        validationResult = userValidator.validateEmail(email);
+    }
     if(req.file && validationResult.valid) {
         validationResult = userValidator.validateAvatar(req.file);
     }
@@ -116,8 +125,11 @@ UsersApiHandler.updateUser = function (req, res) {
                 passwordHash = crypto.createHash('sha256')
                     .update(password).digest('base64')
             }
+            if(!email) {
+                email = userFromDb.email;
+            }
 
-            users.update(userId, displayName, passwordHash, avatarData, role, function (result, error) {
+            users.update(userId, email, displayName, passwordHash, avatarData, role, function (result, error) {
                 apiutils.handleResultSet(res, result, error);
             });
         }

@@ -40,6 +40,11 @@
                            required maxlength="15">
                 </div>
                 <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" placeholder="e-mail"
+                           required maxlength="100">
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password"  name="password" placeholder="Password"
                            required maxlength="100">
@@ -77,11 +82,13 @@
 
     $( "form" ).submit(function( event ) {
         var username = $("form [name=username]").val();
+        var email = $("form [name=email]").val();
         var password1 = $("form [name=password]").val();
         var password2 = $("form [name=password2]").val();
 
         var validationResult = UserValidator.validateNewPassword(password1, password2);
         validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
+        validationResult = validationResult.valid ? UserValidator.validateEmail(email) : validationResult;
         if(!validationResult.valid) {
             alert(validationResult.message);
             return;
