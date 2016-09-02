@@ -265,20 +265,22 @@ describe("Users api handler", function() {
                 password: "test_password",
                 confirmPassword: "test_password",
                 displayname: "test displayName",
-                role: '0'
+                role: '0',
+                enabled: "on"
             };
             userFromDbMock = {
                 id: 12,
                 email: "test_db@email.com",
                 password: "pass_hash",
                 displayName: "test displayName_db",
-                role: '1'
+                role: '1',
+                enabled: "on"
             };
             req.params = {userId: existingUserId};
             req.file = {buffer: 'file_mock'};
             updateError = false;
 
-            updateUserSpy = sinon.stub(users, 'update', function (id, email, displayName, passwordHash, avatarData, role, cb) {
+            updateUserSpy = sinon.stub(users, 'update', function (id, email, displayName, passwordHash, avatarData, role, enabled, cb) {
                 cb(id);
             });
             findByIdUserSpy = sinon.stub(users, 'findById', function (id, cb) {
@@ -372,6 +374,7 @@ describe("Users api handler", function() {
             expect(updateUserSpy.getCalls()[0].args[3]).that.is.a('string').to.equal(crypto.createHash('sha256').update(req.body.password).digest('base64'));
             expect(updateUserSpy.getCalls()[0].args[4]).that.is.a('string').to.equal(req.file.buffer);
             expect(updateUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal(req.body.role);
+            expect(updateUserSpy.getCalls()[0].args[6]).that.is.a('string').to.equal(req.body.enabled);
         });
 
         it("should handle update result", function() {

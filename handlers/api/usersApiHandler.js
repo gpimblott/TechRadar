@@ -136,7 +136,7 @@ UsersApiHandler.updateUser = function (req, res) {
                 email = userFromDb.email;
             }
 
-            users.update(userId, email, enabled, displayName, passwordHash, avatarData, role, function (result, error) {
+            users.update(userId, email, displayName, passwordHash, avatarData, role, enabled, function (result, error) {
                 apiutils.handleResultSet(res, result, error);
             });
         }
