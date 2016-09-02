@@ -45,6 +45,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" id="email"
+                                   name="email" placeholder="Email" value="<%= editUser.email %>"
+                                   required maxlength="100">
+                        </div>
+
+                        <div class="form-group">
                             <label for="oldPassword">Old password</label>
                             <input type="password" class="form-control" id="oldPassword" name="oldPassword"
                                    placeholder="Old password" maxlength="100">
@@ -106,6 +113,7 @@
         $("form").submit(function (event) {
             $(":submit").attr("disabled", true);
 
+            var email = $("#email").val();
             var oldPassword = $("#oldPassword").val();
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
@@ -113,6 +121,7 @@
             var data = new FormData(this);
 
             var validationResult = UserValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+            validationResult = validationResult.valid ? UserValidator.validateEmail(email) : validationResult;
 
             if (data.get('avatar') && validationResult.valid) {
                 validationResult = UserValidator.validateAvatar(data.get('avatar'));

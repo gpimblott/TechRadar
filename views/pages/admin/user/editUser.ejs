@@ -56,6 +56,9 @@
                             </div>
                             <input type="hidden" id="userId" name="userId" value="<%= editUser.id %>">
 
+                            <label for="email">New email</label>
+                            <input type="text" class="form-control" id="email" name="email"
+                                   placeholder="New email" value="<%= editUser.email %>" required maxlength="100">
                             <label for="password">New password</label>
                             <input type="password" class="form-control" id="password" name="password"
                                    placeholder="New password" maxlength="100">
@@ -116,12 +119,14 @@
 
             var userId = $("form [name=userId]").val();
             var username = $("form [name=username]").val();
+            var email = $("form [name=email]").val();
             var password = $("form [name=password]").val();
             var confirmPassword = $("form [name=confirmPassword]").val();
 
             var data = new FormData(this);
 
             var validationResult = UserValidator.validateNewPassword(password, confirmPassword);
+            validationResult = validationResult.valid ? UserValidator.validateEmail(email) : validationResult;
 
             if (data.get('avatar') && validationResult.valid) {
                 validationResult = UserValidator.validateAvatar(data.get('avatar'));

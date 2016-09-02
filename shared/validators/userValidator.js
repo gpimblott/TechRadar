@@ -38,4 +38,18 @@
         return { valid: true };
     };
 
+    exports.validateEmail = function (email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(email && email.length > 100) {
+            return { valid: false, message: "Email too long" };
+        }
+
+        if(!emailRegex.test(email)) {
+            return { valid: false, message: "Not a valid email" };
+        }
+
+        return { valid: true };
+    };
+
 })(typeof exports === 'undefined'? this['UserValidator']={}: exports);
