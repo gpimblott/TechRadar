@@ -76,47 +76,6 @@
 
 <% include ../../../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
-
-
-<script>
-
-    $( "form" ).submit(function( event ) {
-        var username = $("form [name=username]").val();
-        var email = $("form [name=email]").val();
-        var password1 = $("form [name=password]").val();
-        var password2 = $("form [name=password2]").val();
-
-        var validationResult = UserValidator.validateNewPassword(password1, password2);
-        validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
-        validationResult = validationResult.valid ? UserValidator.validateEmail(email) : validationResult;
-        if(!validationResult.valid) {
-            alert(validationResult.message);
-            return;
-        }
-
-        $(":submit").attr("disabled", true);
-        var frm = $('form');
-        var frmdata = serialiseForm(frm);
-
-        $.ajax({
-            type: "POST",
-            url: '/api/user/',
-            contentType: "application/json",
-            data: JSON.stringify(frmdata),
-            success: function(result) {
-                if( result.success) {
-                    location.href = "/users";
-                } else {
-                    alert( "There was an error adding the user :)" );
-                }
-                $(":submit").attr("disabled", false);
-            }
-        });
-
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'User', 'add', frm.find('input[name="username"]').val() );
-        <% } %>
-    });
-</script>
+<script src="/addUserRequest.js" id="addUserRequest" request-url="/api/user/" redirect-success-url="/users"></script>
 </body>
 </html>

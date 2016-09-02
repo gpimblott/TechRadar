@@ -122,7 +122,7 @@ Users.delete = function (ids, done) {
  * @param role User role
  * @param done Callback
  */
-Users.update = function (id, email, enabled, displayName, passwordHash, avatarData, role, done) {
+Users.update = function (id, email, displayName, passwordHash, avatarData, role, enabled, done) {
     var params = [displayName, passwordHash, role, id, email, enabled];
 
     var avatarUpdate = '';

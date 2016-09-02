@@ -39,6 +39,12 @@
                            required maxlength="15">
                 </div>
                 <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email"
+                           name="email" placeholder="Email" 
+                           required maxlength="100">
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password"  name="password" placeholder="Password"
                            required maxlength="100">
@@ -62,44 +68,6 @@
 
 <% include ../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
-<script>
-
-    $( "form" ).submit(function( event ) {
-        var username = $("form [name=username]").val();
-        var password1 = $("form [name=password]").val();
-        var password2 = $("form [name=password2]").val();
-
-        var validationResult = UserValidator.validateNewPassword(password1, password2);
-        validationResult = validationResult.valid ? UserValidator.validateUsername(username) : validationResult;
-        if(!validationResult.valid) {
-            alert(validationResult.message);
-            return;
-        }
-
-        $(":submit").attr("disabled", true);
-        var frm = $('form');
-        var frmdata = serialiseForm(frm);
-
-        $.ajax({
-            type: "POST",
-            url: '/api/user/signup',
-            contentType: "application/json",
-            data: JSON.stringify(frmdata),
-            success: function(result) {
-                if( result.success) {
-                    location.href = "/login";
-                } else {
-                    alert(`The registration process is not working. 
-                        Please contact the administrator.`);
-                }
-                $(":submit").attr("disabled", false);
-            }
-        });
-
-        <% if (google_id!=undefined) { %>
-        ga('send', 'event', 'User', 'SignUp', frm.find('input[name="username"]').val() );
-        <% } %>
-    });
-</script>
+<script src="/addUserRequest.js" id="addUserRequest" request-url="/api/user/signup" redirect-success-url="/login"></script>
 </body>
 </html>
