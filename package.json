@@ -45,7 +45,11 @@
     "db-migrate": "0.10.0-beta.12",
     "db-migrate-pg": "latest",
     "express-validator" : "latest",
-    "connect-flash" : "0.1.1"
+    "connect-flash" : "0.1.1",
+    "nodemailer": "2.5.0",
+    "nodemailer-sparkpost-transport": "1.0.0",
+    "nodemailer-stub-transport": "latest",
+    "nodemailer-smtp-transport": "latest"
   },
   "devDependencies": {},
   "bundleDependencies": [],
