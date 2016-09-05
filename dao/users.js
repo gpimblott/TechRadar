@@ -71,12 +71,12 @@ Users.findByUsername = function(username, done) {
  * @param admin Is the user an admin (boolean)
  * @param done Function to call when complete
  */
-Users.add = function (username, email, displayName, password, admin, done) {
+Users.add = function (username, email, displayName, password, admin, enabled, done) {
 
     var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
-    var sql = "INSERT INTO users (username, email, displayName, password, role) values ($1, $5, $2, $3, $4) returning id";
-    var params = [username, displayName, userHash, admin, email];
+    var sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $5, $2, $3, $4, $6) returning id";
+    var params = [username, displayName, userHash, admin, email, enabled];
 
     dbhelper.insert( sql, params ,
         function( result ) {

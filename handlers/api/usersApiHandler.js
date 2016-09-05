@@ -18,12 +18,17 @@ var UsersApiHandler = function () {
 UsersApiHandler.addUser = function (req, res) {
     var username = sanitizer(req.body.username);
     var email = sanitizer(req.body.email);
+    var enabled = sanitizer(req.body.enabled);
     var password = sanitizer(req.body.password);
     var password2 = sanitizer(req.body.password2);
 
     var validationResult = userValidator.validateNewPassword(password, password2);
     validationResult = validationResult.valid ? userValidator.validateUsername(username) : validationResult;
     validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
+
+    if(enabled == 'undefined') { // happens when the sanitized value was undefined
+        enabled = 'no';
+    }
 
     if(!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -40,6 +45,7 @@ UsersApiHandler.addUser = function (req, res) {
         sanitizer(req.body.displayName),
         password,
         sanitizer(req.body.role),
+        enabled,
 
         function (result, error) {
             apiutils.handleResultSet(res, result, error);
@@ -48,7 +54,7 @@ UsersApiHandler.addUser = function (req, res) {
 
 UsersApiHandler.addUserSignUp = function(req, res){
     req.body.role = 1; // prevent other roles than "user" from being set
-    // new user accounts are disabled by default
+    req.body.enabled = 'no'; // new user accounts are disabled by default
     UsersApiHandler.addUser(req, res);
 }
 
@@ -89,7 +95,7 @@ UsersApiHandler.updateProfile = function (req, res) {
                         .update(password).digest('base64')
                 }
 
-                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, function (result, error) {
+                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, userFromDb.enabled, function (result, error) {
                     apiutils.handleResultSet(res, result , error);
                 });
             }
