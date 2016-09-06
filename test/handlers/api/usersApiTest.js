@@ -118,7 +118,6 @@ describe("Users api handler", function() {
                 expect(addUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal('no'); // 'no' = disabled account
             });
         });
-
     });
 
     describe("updateProfile", function() {
