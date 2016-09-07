@@ -67,6 +67,10 @@
                                 <input type="password" class="form-control" id="confirmPassword"
                                        name="confirmPassword" placeholder="Confirm password" maxlength="100">
                             </div>
+                            <div class="form-group">
+                                <label for="enabled">Account enabled</label>
+                                <input type="checkbox" id="enabled" name="enabled" <%= editUser.enabled == true ? 'checked' : '' %> />
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-5 hidden-xs">
@@ -126,6 +130,10 @@
 
             if (data.get('avatar') && validationResult.valid) {
                 validationResult = UserValidator.validateAvatar(data.get('avatar'));
+            }
+
+            if (data.get('enabled') == null) {
+                data.set('enabled', 'no');
             }
 
             if (!validationResult.valid) {

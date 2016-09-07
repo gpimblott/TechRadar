@@ -8,22 +8,21 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <% include ../../../partials/head.ejs %>
+    <% include ../partials/head.ejs %>
 
     <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
 
-<% include ../../../partials/menu.ejs %>
+<% include ../partials/menu-logged-out.ejs %>
 
-<div tabindex="-1" id="content" class="site-header">
+<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 60px">
     <div class="container">
-        <h1>Add User</h1>
-        <p>New user creation</p>
+        <h1 >Technology radar</h1>
+        <p>Community technology planning</p>
     </div>
 </div>
-
 <div class="container bs-docs-container">
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
@@ -41,7 +40,8 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="e-mail"
+                    <input type="text" class="form-control" id="email"
+                           name="email" placeholder="Email" 
                            required maxlength="100">
                 </div>
                 <div class="form-group">
@@ -59,18 +59,6 @@
                     <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Full name"
                            required maxlength="40">
                 </div>
-                <div class="form-group">
-                    <label for="usertype">Account type:</label>
-                    <select class="form-control" id="role" name="role">
-                        <% roles.forEach( function(role) { %>
-                        <option value="<%=role.id%>" ><%=role.name%></option>
-                        <% }); %>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="enabled">Account enabled</label>
-                    <input type="checkbox" id="enabled" name="enabled" checked />
-                </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>
@@ -78,8 +66,8 @@
 
 </div><!-- /.container -->
 
-<% include ../../../partials/footer.ejs %>
+<% include ../partials/footer.ejs %>
 <script src="/shared/validators/userValidator.js"></script>
-<script src="/addUserRequest.js" id="addUserRequest" request-url="/api/user/" redirect-success-url="/users"></script>
+<script src="/addUserRequest.js" id="addUserRequest" request-url="/api/user/signup" redirect-success-url="/login"></script>
 </body>
 </html>
