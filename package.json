@@ -24,11 +24,12 @@
   "dependencies": {
     "console-stamp" : "latest",
     "express": "latest",
+    "express-enforces-ssl":"latest",
     "express-helpers": "latest",
     "express-session":"latest",
     "body-parser":"latest",
     "ejs": "2.4.2",
-    "cookie-parser":"latest",
+    "helmet": "latest",
     "pg" : "4.1.1",
     "pg-large-object": "latest",
     "async": "latest",
