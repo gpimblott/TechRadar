@@ -28,7 +28,16 @@ UserRoutes.createRoutes = function (self) {
      */
     self.app.get('/user/:userId/edit', security.isAuthenticatedAdmin, handler.editUser);
 
-}
+    /**
+     * Reset a users password page
+     */
+    self.app.get('/user/resetpassword', handler.resetPassword);
+
+    /**
+     * Generate a reset password code page
+     */
+    self.app.get('/user/generateresetpassword', handler.generateResetPasswordCode);
+};
 
 
 module.exports = UserRoutes;

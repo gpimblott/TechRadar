@@ -32,4 +32,5 @@ var Mailer = function() {
     throw "Mailer type not specified";
 };
 
-module.exports = Mailer();
+var mailerImpl = Mailer();
+module.exports.sendEmail = mailerImpl.sendEmail;

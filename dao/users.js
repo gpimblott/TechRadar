@@ -64,6 +64,24 @@ Users.findByUsername = function(username, done) {
 };
 
 /**
+ * Get a user by email
+ * @param email Email of the user to search for
+ * @param done Function to call with the result
+ */
+Users.findByEmail = function(email, done) {
+    var sql = "SELECT u.* FROM users u where u.email=$1";
+    var params = [email];
+    dbhelper.query(sql, params,
+        function (results) {
+            done(null , results[0]);
+        },
+        function (error) {
+            console.log(error);
+            return done( null , null );
+        });
+};
+
+/**
  * Add a new user
  * @param username Username to insert
  * @param displayName Full name of the user
@@ -162,6 +180,72 @@ Users.getAvatar = function (username, done) {
         function (error) {
             console.log(error);
             done(null, error);
+        });
+};
+
+/**
+ * Add a new password reset code for a user
+ *
+ * @param userId Users ID
+ * @param resetCode Reset code which the user should use
+ * @param expiresDate Date when the password reset code should expire
+ * @param callback Function to call when complete
+ */
+Users.addPasswordResetCode = function (userId, resetCode, expiresDate, callback) {
+
+    var sql = "INSERT INTO reset_codes (\"userId\", \"resetCode\", \"resetCodeExpires\") values ($1, $2, $3) returning id";
+    var params = [userId, resetCode, expiresDate];
+
+    dbhelper.insert(sql, params,
+        function(result) {
+            callback(result.rows[0].id, null);
+        },
+        function(error) {
+            console.log(error);
+            callback(null, error);
+        });
+};
+
+/**
+ * Retrieve user associated with the given password reset code
+ *
+ * @param resetCode Reset code to be queried
+ * @param callback Function to call when complete
+ */
+Users.getUserByPasswordResetCode = function (resetCode, callback) {
+
+    var sql = "SELECT u.* FROM users u " +
+        "inner join reset_codes rc on u.id = rc.\"userId\" where rc.\"resetCode\"=$1";
+
+    var params = [resetCode];
+    dbhelper.query(sql, params,
+        function (results) {
+            callback(results[0], null);
+        },
+        function (error) {
+            console.log(error);
+            callback(null, error);
+        });
+};
+
+/**
+ * Delete password reset code
+ *
+ * @param resetCode Reset code to be deleted
+ * @param callback Function to call when complete
+ */
+Users.deleteResetCode = function (resetCode, callback) {
+
+    var params = [resetCode];
+    var sql = "DELETE FROM reset_codes WHERE \"resetCode\"=$1";
+
+    dbhelper.query(sql, params,
+        function(result) {
+            callback(true);
+        },
+        function(error) {
+            console.log(error);
+            callback(false, error);
         });
 };
 
