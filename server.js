@@ -11,10 +11,11 @@ require('dotenv').config({path: 'process.env'});
 
 // Express
 var express = require('express');
+var helmet = require('helmet');
+var express_enforces_ssl = require('express-enforces-ssl');
 var helpers = require('express-helpers')();
 var expressValidator = require('express-validator');
 var flash = require('connect-flash');
-var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
@@ -114,7 +115,12 @@ var TechRadar = function () {
         // Define helper functions
         self.app.locals.link_to = helpers.link_to;
 
-        self.app.use(cookieParser());
+        /*
+        * Uses 7 out of 10 helmet middleware functions,
+        * leaving out contentSecurityPolicy, hpkp, and noCache
+        */
+        self.app.use(helmet()); 
+
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({
             extended: true
@@ -130,7 +136,19 @@ var TechRadar = function () {
 
         // Setup the secret cookie key
         var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
-        self.app.use(session({secret: cookie_key }));
+        var sess = {
+            secret: cookie_key,
+            cookie: {}
+         }
+ 
+         if (self.app.get('env')  == 'production') {
+            self.app.enable('trust proxy', 1); // trusts first proxy - Heroku load balancer
+            console.log("In production mode");
+            self.app.use(express_enforces_ssl());
+            sess.cookie.secure = true;
+         }
+ 
+        self.app.use(session(sess));
 
         // Setup the Google Analytics ID if defined
         self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
