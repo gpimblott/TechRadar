@@ -19,12 +19,17 @@ var UsersApiHandler = function () {
 UsersApiHandler.addUser = function (req, res) {
     var username = sanitizer(req.body.username);
     var email = sanitizer(req.body.email);
+    var enabled = sanitizer(req.body.enabled);
     var password = sanitizer(req.body.password);
     var password2 = sanitizer(req.body.password2);
 
     var validationResult = userValidator.validateNewPassword(password, password2);
     validationResult = validationResult.valid ? userValidator.validateUsername(username) : validationResult;
     validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
+
+    if(enabled == 'undefined') { // happens when the sanitized value was undefined
+        enabled = 'no';
+    }
 
     if(!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -41,11 +46,18 @@ UsersApiHandler.addUser = function (req, res) {
         sanitizer(req.body.displayName),
         password,
         sanitizer(req.body.role),
+        enabled,
 
         function (result, error) {
             apiutils.handleResultSet(res, result, error);
         });
 };
+
+UsersApiHandler.addUserSignUp = function(req, res){
+    req.body.role = 1; // prevent other roles than "user" from being set
+    req.body.enabled = 'no'; // new user accounts are disabled by default
+    UsersApiHandler.addUser(req, res);
+}
 
 UsersApiHandler.updateProfile = function (req, res) {
     var oldPassword = sanitizer(req.body.oldPassword);
@@ -84,7 +96,7 @@ UsersApiHandler.updateProfile = function (req, res) {
                         .update(password).digest('base64')
                 }
 
-                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, function (result, error) {
+                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, userFromDb.enabled, function (result, error) {
                     apiutils.handleResultSet(res, result , error);
                 });
             }
@@ -99,6 +111,7 @@ UsersApiHandler.updateUser = function (req, res) {
     var confirmPassword = sanitizer(req.body.confirmPassword);
     var displayName = sanitizer(req.body.displayname);
     var role = sanitizer(req.body.role);
+    var enabled = sanitizer(req.body.enabled);
     var avatarData = null;
 
     if(req.file) {
@@ -130,7 +143,7 @@ UsersApiHandler.updateUser = function (req, res) {
                 email = userFromDb.email;
             }
 
-            users.update(userId, email, displayName, passwordHash, avatarData, role, function (result, error) {
+            users.update(userId, email, displayName, passwordHash, avatarData, role, enabled, function (result, error) {
                 apiutils.handleResultSet(res, result, error);
             });
         }
@@ -236,7 +249,7 @@ UsersApiHandler.resetPassword = function (req, res) {
         if(!user) {
             apiutils.handleResultSet(res, null, "Invalid reset code");
         } else {
-            users.update(user.id, user.email, user.displayName, passwordHash, null, user.role, function(result, error) {
+            users.update(user.id, user.email, user.displayName, passwordHash, null, user.role, user.enabled, function(result, error) {
                 if(error) {
                     apiutils.handleResultSet(res, null, error);
                 } else {

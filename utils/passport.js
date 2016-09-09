@@ -17,6 +17,13 @@ passport.use(new Strategy(
                 return cb(null, false, { message: 'Incorrect login'});
             }
 
+            if (!user.enabled) {
+                return cb(null, false, { 
+                    message: `Account disabled. 
+                        Please contact the platform administrator to activate this account.`
+                });
+            }
+
             var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
             if (user.password != userHash) {

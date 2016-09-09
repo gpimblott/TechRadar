@@ -48,10 +48,11 @@ var statements = [
     "INSERT INTO technologies ( name , description , category ) VALUES ('AWS' , 'Infrastructure as a Service' , 3 )",
     "INSERT INTO technologies ( name , description , category ) VALUES ('Java EE' , 'The enterprise java' , 3 )",
 
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , '" + hpassword + "' , 'User One', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , '" + hpassword + "' , 'User Two', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , '" + hpassword + "' , 'User Three', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user4' , '" + hpassword + "' , 'User Four', 1) "
+    "INSERT INTO users (username , password , displayName , role , enabled ) VALUES ('user1' , '" + hpassword + "' , 'User One', 0, TRUE) ",
+    "INSERT INTO users (username , password , displayName , role , enabled ) VALUES ('user2' , '" + hpassword + "' , 'User Two', 0, TRUE) ",
+    "INSERT INTO users (username , password , displayName , role , enabled ) VALUES ('user3' , '" + hpassword + "' , 'User Three', 0, TRUE) ",
+    "INSERT INTO users (username , password , displayName , role , enabled ) VALUES ('user4' , '" + hpassword + "' , 'User Four', 1, TRUE) ",
+    "INSERT INTO users (username , password , displayName , role , enabled ) VALUES ('user5' , '" + hpassword + "' , 'User Disabled', 1, FALSE) "
 
 ];
 
