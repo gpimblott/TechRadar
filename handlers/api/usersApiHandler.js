@@ -204,10 +204,10 @@ UsersApiHandler.generateResetPasswordCode = function (req, res) {
         } else {
             crypto.randomBytes(48, function(err, buffer) {
                 var token = buffer.toString('hex');
-                var now = new Date();
-                now.setHours(now.getHours() + 1);
+                var expireDate = new Date();
+                expireDate.setHours(expireDate.getHours() + 1);
 
-                users.addPasswordResetCode(user.id, token, now, function(result, error) {
+                users.addPasswordResetCode(user.id, token, expireDate, function(result, error) {
                     if(error) {
                         apiutils.handleResultSet(res, null, error);
                     } else {

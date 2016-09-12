@@ -5,6 +5,8 @@ var expect = chai.expect;
 var users = require('../../../dao/users.js');
 var apiutils = require('../../../handlers/api/apiUtils.js');
 var userValidator  = require('../../../shared/validators/userValidator.js');
+process.env.MAILER = 'stub';
+var mailer = require('../../../mailer/mailer');
 
 var apiUsers = require('../../../handlers/api/usersApiHandler.js');
 var crypto = require('crypto');
@@ -541,6 +543,113 @@ describe("Users api handler", function() {
 
             sinon.assert.calledOnce(res.end);
             expect(JSON.parse(res.end.getCalls()[0].args[0])).that.is.a('object').to.eql({success: false, error: errorMsg});
+        });
+    });
+
+    describe("generateResetPasswordCode", function() {
+        var findByEmailSpy,
+            apiUtilsSpy,
+            errorMsg = 'mock error',
+            invalidEmailError = "invalid_email",
+            testData = '12',
+            validEmail = "valid@email.test",
+            validateEmailSpy,
+            addPasswordResetCodeSpy,
+            sendEmailSpy,
+            userFromDbMock,
+            cryptoRandomSpy;
+
+        beforeEach(function() {
+            req.body = {email: validEmail};
+            req.headers = {host: "UNIT.TESTS"}
+            userFromDbMock = {
+                username: "test_username",
+                id: 12,
+                email: validEmail,
+                password: "pass_hash",
+                displayName: "test displayName_db",
+                role: '1',
+                enabled: "on"
+            };
+
+            validateEmailSpy = sinon.stub(userValidator, 'validateEmail', function(email) {
+                return email.indexOf('@') !== -1 ? {valid: true} : {valid: false, message: invalidEmailError};
+            });
+            findByEmailSpy = sinon.stub(users, 'findByEmail', function (email, cb) {
+                if (email === validEmail) {
+                    cb(null, userFromDbMock);
+                } else {
+                    cb(errorMsg)
+                }
+            });
+            addPasswordResetCodeSpy = sinon.stub(users, 'addPasswordResetCode', function (userId, token, expireDate, cb) {
+                if (userId) {
+                    cb(testData);
+                } else {
+                    cb(null, errorMsg)
+                }
+            });
+            apiUtilsSpy = sinon.stub(apiutils, 'handleResultSet', function(res, result, error) {
+            });
+            sendEmailSpy = sinon.stub(mailer, 'sendEmail', function(mailData, cb) {
+                cb(null, {response: true});
+            });
+            cryptoRandomSpy = sinon.stub(crypto, 'randomBytes', function(byteAmmount, cb) {
+                cb(null, "ASDF");
+            });
+        });
+
+        afterEach(function() {
+            userValidator.validateEmail.restore();
+            users.findByEmail.restore();
+            users.addPasswordResetCode.restore();
+            apiutils.handleResultSet.restore();
+            mailer.sendEmail.restore();
+            crypto.randomBytes.restore();
+        });
+
+        it("should check whether email is valid", function() {
+            req.body.email = 'invalidemail';
+            apiUsers.generateResetPasswordCode(req, res);
+
+            sinon.assert.calledOnce(apiutils.handleResultSet);
+            expect(apiUtilsSpy.getCalls()[0].args[2]).that.is.a('string').to.equal(invalidEmailError);
+        });
+
+        it("should call findByEmail dao to verify that the user exists", function() {
+            apiUsers.generateResetPasswordCode(req, res);
+
+            sinon.assert.calledOnce(users.findByEmail);
+            expect(findByEmailSpy.getCalls()[0].args[0]).that.is.a('string').to.equal(validEmail);
+        });
+
+        it("should respond with failure when user retrieval by email unsuccessful", function() {
+            req.body.email = "emaildoes@not.exist";
+            apiUsers.generateResetPasswordCode(req, res);
+
+            sinon.assert.calledOnce(apiutils.handleResultSet);
+            expect(apiUtilsSpy.getCalls()[0].args[2]).that.is.a('string').to.eql("Email not found");
+        });
+
+        it("should generate reset code when everything is successful", function() {
+            apiUsers.generateResetPasswordCode(req, res);
+
+            sinon.assert.calledOnce(users.addPasswordResetCode);
+            expect(addPasswordResetCodeSpy.getCalls()[0].args[0]).that.is.a('number').to.eql(userFromDbMock.id);
+            expect(addPasswordResetCodeSpy.getCalls()[0].args[1]).to.be.a.string;
+            expect(addPasswordResetCodeSpy.getCalls()[0].args[2]).to.be.a.date;
+        });
+
+        it("should send an email", function() {
+            apiUsers.generateResetPasswordCode(req, res);
+
+            sinon.assert.calledOnce(mailer.sendEmail);
+            expect(sendEmailSpy.getCalls()[0].args[0].to).that.is.a('string').to.eql(userFromDbMock.email);
+            expect(addPasswordResetCodeSpy.getCalls()[0].args[0].subject).to.be.a.string;
+            expect(addPasswordResetCodeSpy.getCalls()[0].args[0].html).to.be.a.string;
+
+            sinon.assert.calledOnce(apiutils.handleResultSet);
+            expect(apiUtilsSpy.getCalls()[0].args[1]).that.is.a('object').to.eql({response: true});
         });
     });
 });
