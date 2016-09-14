@@ -46,6 +46,24 @@ Users.findById = function(id, done) {
 };
 
 /**
+ * Get a user by email
+ * @param email Email of the user to search for
+ * @param done Function to call with the result
+ */
+Users.findByEmail = function(email, done) {
+    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role, u.enabled, u.email FROM users u where u.email=$1";
+    var params = [email];
+    dbhelper.query(sql, params,
+        function (results) {
+            done(null , results[0]);
+        },
+        function (error) {
+            console.log(error);
+            return done( null , null );
+        });
+};
+
+/**
  * Get a user by username
  * @param username Username of the user to search for
  * @param done Function to call with the result

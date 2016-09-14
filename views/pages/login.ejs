@@ -36,6 +36,7 @@
             <form class="form-signin" action="/login" method="post" role="login">
                 <img src="radar.png"  width="75px">
                 <h3 class="form-signin-heading">Sign in</h3>
+                <p class="bg-info"> Use <a href="/loginAzureAD">Kainos ADFS</a> instead</p>
                 <% if(messages.length>0) {%>
                 <label class="warning"><%=messages[0]%></label>
                 <%}%>
@@ -43,7 +44,6 @@
                 <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" name="password" class="form-control" placeholder="Password" required>
-
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 <p class="text-center">No account? <a href="/signup">Sign up</a></p>
             </form>

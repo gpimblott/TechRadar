@@ -45,6 +45,19 @@ The following environment variables can be set
 COOKIE_KEY = The secret key to use for cookie encryption - uses an insecure value if not defined
 GOOGLE_ID = Google Analytics tracking code. GA is turned off if not defined
 
+To enable Azure AD sign-in, set the following environment variables:
+ 
+`AZURE_IDENTITY_METADATA=https://login.microsoftonline.com/YOUR_TENANT_NAME_OR_ID/.well-known/openid-configuration`
+
+`AZURE_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx`
+
+`AZURE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxx=`
+
+`AZURE_RETURN_URL=https://xxxxxxxxxxx.com/auth/openid/return`
+
+To learn more about the above values, click [here](https://azure.microsoft.com/en-us/documentation/articles/active-directory-b2c-reference-oidc/#get-a-token).
+Additional Azure AD settings can be found in [configAzureAD.js](utils/configAzureAD.js)
+
 ## Installation
 
 Installation is as follows:
@@ -56,7 +69,7 @@ Installation is as follows:
 4. Run `database/runMigrations.js up` to create all the required tables
 5. Run `database/dbtestdata.js` to create some test data if required
 6. Use `npm test` to run unit tests.
-7. Run `server.js` :)
+7. Run `node server.js | bunyan` :)
 
 Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)
 
