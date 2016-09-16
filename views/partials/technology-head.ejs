@@ -26,6 +26,15 @@
                                  </a>
                              </td>
                          </tr>
+                         <tr>
+                             <td>Licence</td>
+                             <td>-</td>
+                             <td>
+                                 <a class="banner-text-link" href="<%= (technology.licencelink == null ? "#" : technology.licencelink) %>" target="_blank">
+                                     <%= (technology.licence == null ? (technology.licencelink ? "link" : "") : technology.licence) %>
+                                 </a>
+                             </td>
+                         </tr>
 
                          </table>
                 </span>
