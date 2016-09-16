@@ -110,7 +110,17 @@
             title: 'Category',
             align: 'center',
             sortable: true
-        },]
+        },{
+            field: 'licence',
+            title: 'Licence',
+            align: 'center',
+            sortable: true
+        },{
+            field: 'licencelink',
+            title: 'Licence link',
+            align: 'center',
+            visible: false
+        }]
     });
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
