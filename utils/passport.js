@@ -5,6 +5,7 @@
  */
 const passport = require('passport');
 const bunyan = require('bunyan');
+const LocalStrategy = require('passport-local').Strategy;
 const users = require('../dao/users.js');
 const config = require('./configAzureAD');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
@@ -40,6 +41,35 @@ var log = bunyan.createLogger({
 
 if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingLevel); }
 
+// Used by non-ADFS users
+passport.use(new LocalStrategy(
+    function (username, password, cb) {
+        users.findByUsername(username, function (err, user) {
+
+            if (err) {
+                return cb(err);
+            }
+            if (!user) {
+                return cb(null, false, { message: 'Incorrect login'});
+            }
+
+            if (!user.enabled) {
+                return cb(null, false, { 
+                    message: `Account disabled. 
+                        Please contact the platform administrator to activate this account.`
+                });
+            }
+
+            var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
+
+            if (user.password != userHash) {
+                return cb(null, false, { message: 'Incorrect login'});
+            }
+            return cb(null, user);
+        });
+    }));
+
+// Used by ADFS users
 passport.use(new OIDCStrategy(strategyConfig,
     function (profile, done) {
         // Depending on the type of the account e.g. registered in live.com or kainos.com
@@ -50,7 +80,8 @@ passport.use(new OIDCStrategy(strategyConfig,
         }
 
         process.nextTick(function () {
-            users.findByEmail(email, function (err, user) {
+            // ADFS user's username is set to the email used in the authentication process
+            users.findByUsername(email, function (err, user) {
                 if (err) {
                     return done(err);
                 }
