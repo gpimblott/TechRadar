@@ -7,6 +7,7 @@ const passport = require('passport');
 const bunyan = require('bunyan');
 const LocalStrategy = require('passport-local').Strategy;
 const users = require('../dao/users.js');
+const User = require('../models/User.js');
 const config = require('./configAzureAD');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
@@ -93,7 +94,11 @@ passport.use(new OIDCStrategy(strategyConfig,
                         log.info("A new user has been created. Email: " + user.email);
                         return done(null, user);
                     });
-                } else {
+                } 
+                else if (!user.enabled) {
+                    return done(null, false);
+                }
+                else {
                     log.info("An existing user is logging in using email: " + user.email);
                     log.debug(user);
                     return done(null, user);
@@ -113,7 +118,8 @@ function registerUserUsingProfileData(profileJson, done) {
     var email = profileJson.email || profileJson.unique_name;
     // password is required, so we need to provide one even when the true password is handled by ADFS
     var randomPassword = require('crypto').randomBytes(256).toString();
-    users.add(profileJson.unique_name, email, profileJson.name, randomPassword, 1, false, function(userId, error){
+    var newUser = new User(null, profileJson.unique_name, email, profileJson.name, randomPassword, null, 1, true);
+    users.add(newUser, function(userId, error){
         log.info("Getting user with id = " + userId + " from the database");
         users.findById(userId, function(err, user){
             if(err){
