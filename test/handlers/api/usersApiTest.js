@@ -501,7 +501,7 @@ describe("Users api handler", function() {
                 if (username === validUsername) {
                     cb(testData);
                 } else {
-                    cb(null, errorMsg)
+                    cb(null, errorMsg);
                 }
             });
             apiUtilsSpy = sinon.stub(apiutils, 'handleResultSet', function(res, result, error) {

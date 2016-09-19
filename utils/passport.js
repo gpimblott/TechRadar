@@ -5,7 +5,6 @@
  */
 const passport = require('passport');
 const bunyan = require('bunyan');
-const Strategy = require('passport-local').Strategy;
 const users = require('../dao/users.js');
 const config = require('./configAzureAD');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
