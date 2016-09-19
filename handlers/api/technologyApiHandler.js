@@ -52,9 +52,11 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
 TechnologyApiHandler.addTechnology = function (req, res) {
     var technologyName = sanitizer(req.body.technologyName);
     var technologyWebsite = sanitizer(req.body.technologyWebsite);
+    var technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
 
     var validationResult = technologyValidator.validateTechnologyName(technologyName);
-    validateResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+    validationResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+    validationResult = validationResult.valid ? technologyValidator.validateTechnologyLicenceWebsite(technologyLicenceLink) : validationResult;
     
     if (!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -64,13 +66,14 @@ TechnologyApiHandler.addTechnology = function (req, res) {
         res.end(JSON.stringify(data));
         return;
     }
-    
-    
+
     technology.add(
-        sanitizer(technologyName),
-        sanitizer(technologyWebsite),
+        technologyName,
+        technologyWebsite,
         sanitizer(req.body.technologyCategory),
         sanitizer(req.body.technologyDescription),
+        sanitizer(req.body.technologyLicence),
+        technologyLicenceLink,
         function (result, error) {
             apiutils.handleResultSet(res, result, error);
         });
@@ -81,9 +84,11 @@ TechnologyApiHandler.updateTechnology = function (req, res) {
 
     var technologyName = sanitizer(req.body.name);
     var technologyWebsite = sanitizer(req.body.website);
+    var technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
 
     var validationResult = technologyValidator.validateTechnologyName(technologyName);
-    validateResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+    validationResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+    validationResult = validationResult.valid ? technologyValidator.validateTechnologyLicenceWebsite(technologyLicenceLink) : validationResult;
 
     if (!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -100,6 +105,8 @@ TechnologyApiHandler.updateTechnology = function (req, res) {
         sanitizer(technologyWebsite),
         sanitizer(req.body.category),
         sanitizer(req.body.description),
+        sanitizer(req.body.technologyLicence),
+        technologyLicenceLink,
 
         function (result, error) {
             apiutils.handleResultSet(res, result, error);
