@@ -40,27 +40,6 @@ describe("dao/users", function() {
         });
     });
 
-    describe("findByEmail", function() {
-
-        it("should create a query that selects user by email", function() {
-            usersDao.findByEmail(1, null);
-            var sqlQuery = dbhelperQuerySpy.getCalls()[0].args[0];
-
-            expect(sqlQuery).is.a('string').to.contain("SELECT");
-            expect(sqlQuery).is.a('string').to.contain("FROM users");
-            expect(sqlQuery).to.match(/WHERE.*email=\$1/i);
-        });
-        
-        it("should pass user's email to the SQL query", function() {
-            var email = "user@mail.com";
-
-            usersDao.findByEmail(email, null);
-            var emailQueryParam = dbhelperQuerySpy.getCalls()[0].args[1][0];
-
-            expect(emailQueryParam).is.a('string').equal(email);
-        });
-    });
-
     describe("add", function() {
         var user1 = new User(1, "Username", "email@email.com", "John Doe", "Password", "avatar-data", 1, true);
 
