@@ -20,7 +20,7 @@ UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
 
 
     var params = [techid];
-    if (limit != null) {
+    if (limit != null && limit != "undefined") {
         sql += " limit $2";
         params.push(limit);
     }
@@ -46,7 +46,7 @@ UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
 UsedThisTech.add = function (technology, daysAgo, userId, done) {
     var date = new Date();
     date.setDate(date.getDate() - daysAgo);
-    
+
     dbhelper.query("SELECT id FROM used_this_technology WHERE technology=$1 and userid=$2", [technology, userId],
         function (selectResult) {
             if (selectResult[0] != undefined && selectResult[0].id != undefined) {

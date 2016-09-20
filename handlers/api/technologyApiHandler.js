@@ -199,8 +199,12 @@ TechnologyApiHandler.addProject = function (req, res) {
 
 TechnologyApiHandler.getUsers = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
+    var limit; // getUsersForTechnology can handle undefined limit
+    if(typeof req.query.limit != "undefined"){
+        limit = sanitizer(req.query.limit);
+    }
 
-    usedThisVotes.getUsersForTechnology(technologyId, 10, function (result, error) {
+    usedThisVotes.getUsersForTechnology(technologyId, limit, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
