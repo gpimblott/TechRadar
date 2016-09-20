@@ -46,13 +46,11 @@ getBreadcrumb = function () {
                             if (usedThis.id == 0) {
                                 return;
                             }
-                            var usedThisDate = new Date();
-                            usedThisDate.setDate(usedThisDate.getDate() - usedThis.days);
                         %>
                         <li><a class="dropdown-item btn"
-                               id="usedThisBtn_<%= usedThis.name %>"
+                               id="usedThisBtn_<%= usedThis.id %>"
                                href="javascript:void(0);"
-                               value="<%= usedThisDate %>"><%= usedThis.name %></a>
+                               value="<%= usedThis.daysAgo %>"><%= usedThis.name %></a>
                         </li>
                         <% }); %>
                     </ul>
@@ -240,6 +238,36 @@ getBreadcrumb = function () {
 
     };
 
+    var usedThisClickedBtn = function () {
+        $("#usedThisTechnologyPulldown").addClass("disabled");
+        var daysAgo = this.getAttribute("value");
+        var btnId = this.getAttribute("id");
+        var data = {daysAgo: daysAgo};
+        $.post('/api/technology/<%= technology.id %>/usedThisTechnology',
+                data,
+                function (result) {
+                    if (result.success) {
+                        enableUsedThisButtons();
+                        $("#" + btnId).toggleClass('disabled', true);
+                    }
+                    ;
+                    $("#usedThisTechnologyPulldown").removeClass("disabled");
+                });
+        <% if (google_id != undefined) { %>
+        ga('send', 'event', 'Technology', 'usedThisTechnology', '<%= technology.name %> - ' + $(this).text());
+        <% } %>
+    };
+
+    <% usedThisOptions.forEach( function(usedThis) { %>
+        $('#usedThisBtn_<%= usedThis.id %>').click(usedThisClickedBtn);
+    <% }); %>
+
+    var enableUsedThisButtons = function() {
+        <% usedThisOptions.forEach( function(usedThis) { %>
+            $('#usedThisBtn_<%= usedThis.id %>').toggleClass('disabled', false);
+        <% }); %>
+    }
+
     var voteClickedBtn = function () {
         $("#votePulldown").addClass("disabled");
         var statusValue = this.getAttribute("value");
@@ -276,6 +304,8 @@ getBreadcrumb = function () {
     // Perform initial setup
     enableVoteButtons();
     $('#voteBtn_<%=technology.vote%>').toggleClass('disabled', true);
+    enableUsedThisButtons();
+    // TODO: disable "usedThis" option here if it's in the DB
     refreshVotes();
     refreshProjectUse();
 </script>

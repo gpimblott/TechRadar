@@ -39,11 +39,14 @@ UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
  * Add a new used_this_technology vote
  * PostgreSQL doesn't have an upsert until 9.5 so do a delete then insert for now
  * @param technology ID of technology
- * @param date Date of the last use of this technology
+ * @param daysAgo How many days ago the technology was used
  * @param userId ID if the user voting
  * @param done Function called when complete
  */
-UsedThisTech.add = function (technology, date, userId, done) {
+UsedThisTech.add = function (technology, daysAgo, userId, done) {
+    var date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    
     dbhelper.query("SELECT id FROM used_this_technology WHERE technology=$1 and userid=$2", [technology, userId],
         function (selectResult) {
             if (selectResult[0] != undefined && selectResult[0].id != undefined) {
