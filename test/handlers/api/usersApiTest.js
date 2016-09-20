@@ -38,7 +38,7 @@ describe("Users api handler", function() {
                 enabled: 'on'
             };
 
-            addUserSpy = sinon.stub(users, 'add', function (username, email, displayName, password, admin, enabled, cb) {
+            addUserSpy = sinon.stub(users, 'add', function (user, cb) {
                 cb(testData);
             });
             apiUtilsSpy = sinon.stub(apiutils, 'handleResultSet', function(res, result, error) {
@@ -67,12 +67,12 @@ describe("Users api handler", function() {
             apiUsers.addUser(req, res);
 
             sinon.assert.calledOnce(users.add);
-            expect(addUserSpy.getCalls()[0].args[0]).that.is.a('string').to.equal(req.body.username);
-            expect(addUserSpy.getCalls()[0].args[1]).that.is.a('string').to.equal(req.body.email);
-            expect(addUserSpy.getCalls()[0].args[2]).that.is.a('string').to.equal(req.body.displayName);
-            expect(addUserSpy.getCalls()[0].args[3]).that.is.a('string').to.equal(req.body.password);
-            expect(addUserSpy.getCalls()[0].args[4]).that.is.a('string').to.equal(req.body.role);
-            expect(addUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal(req.body.enabled);
+            expect(addUserSpy.getCalls()[0].args[0].username).that.is.a('string').to.equal(req.body.username);
+            expect(addUserSpy.getCalls()[0].args[0].email).that.is.a('string').to.equal(req.body.email);
+            expect(addUserSpy.getCalls()[0].args[0].displayName).that.is.a('string').to.equal(req.body.displayName);
+            expect(addUserSpy.getCalls()[0].args[0].password).that.is.a('string').to.equal(req.body.password);
+            expect(addUserSpy.getCalls()[0].args[0].role).that.is.a('string').to.equal(req.body.role);
+            expect(addUserSpy.getCalls()[0].args[0].enabled).that.is.a('string').to.equal(req.body.enabled);
         });
 
         it("should generate response based on dao results", function() {
@@ -108,14 +108,14 @@ describe("Users api handler", function() {
                 apiUsers.addUserSignUp(req, res);
 
                 sinon.assert.calledOnce(users.add);
-                expect(addUserSpy.getCalls()[0].args[4]).that.is.a('string').to.equal('1'); // 1 = 'user' role
+                expect(addUserSpy.getCalls()[0].args[0].role).that.is.a('string').to.equal('1'); // 1 = 'user' role
             });
             it("should create a disabled account", function() {
                 req.body.enabled = 'on'; // try to create an enabled account
                 apiUsers.addUserSignUp(req, res);
 
                 sinon.assert.calledOnce(users.add);
-                expect(addUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal('no'); // 'no' = disabled account
+                expect(addUserSpy.getCalls()[0].args[0].enabled).that.is.a('string').to.equal('no'); // 'no' = disabled account
             });
         });
     });
@@ -154,8 +154,8 @@ describe("Users api handler", function() {
             req.file = {buffer: 'file_mock'};
             updateError = false;
 
-            updateUserSpy = sinon.stub(users, 'update', function (id, email, displayName, passwordHash, avatarData, role, enabled, cb) {
-                cb(id);
+            updateUserSpy = sinon.stub(users, 'update', function (user, cb) {
+                cb(user.id);
             });
             findByIdUserSpy = sinon.stub(users, 'findById', function (id, cb) {
                 if (id === existingUserId) {
@@ -251,11 +251,11 @@ describe("Users api handler", function() {
             apiUsers.updateProfile(req, res);
 
             sinon.assert.calledOnce(users.update);
-            expect(updateUserSpy.getCalls()[0].args[0]).that.is.a('number').to.equal(req.user.id);
-            expect(updateUserSpy.getCalls()[0].args[1]).that.is.a('string').to.equal(req.body.email);
-            expect(updateUserSpy.getCalls()[0].args[2]).that.is.a('string').to.equal(req.body.displayname);
-            expect(updateUserSpy.getCalls()[0].args[3]).that.is.a('string').to.equal(crypto.createHash('sha256').update(req.body.password).digest('base64'));
-            expect(updateUserSpy.getCalls()[0].args[4]).that.is.a('string').to.equal(req.file.buffer);
+            expect(updateUserSpy.getCalls()[0].args[0].id).that.is.a('number').to.equal(req.user.id);
+            expect(updateUserSpy.getCalls()[0].args[0].email).that.is.a('string').to.equal(req.body.email);
+            expect(updateUserSpy.getCalls()[0].args[0].displayName).that.is.a('string').to.equal(req.body.displayname);
+            expect(updateUserSpy.getCalls()[0].args[0].password).that.is.a('string').to.equal(crypto.createHash('sha256').update(req.body.password).digest('base64'));
+            expect(updateUserSpy.getCalls()[0].args[0].avatar).that.is.a('string').to.equal(req.file.buffer);
         });
 
         it("should not allow to change the role", function() {
@@ -264,7 +264,7 @@ describe("Users api handler", function() {
             apiUsers.updateProfile(req, res); 
 
             sinon.assert.calledOnce(users.update);
-            expect(updateUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal(userFromDbMock.role);
+            expect(updateUserSpy.getCalls()[0].args[0].role).that.is.a('string').to.equal(userFromDbMock.role);
         });
 
         it("should not allow to disable the account", function() {
@@ -273,7 +273,7 @@ describe("Users api handler", function() {
             apiUsers.updateProfile(req, res); 
 
             sinon.assert.calledOnce(users.update);
-            expect(updateUserSpy.getCalls()[0].args[6]).that.is.a('string').to.equal(userFromDbMock.enabled);
+            expect(updateUserSpy.getCalls()[0].args[0].enabled).that.is.a('string').to.equal(userFromDbMock.enabled);
         });
 
         it("should handle update result", function() {
@@ -318,8 +318,8 @@ describe("Users api handler", function() {
             req.file = {buffer: 'file_mock'};
             updateError = false;
 
-            updateUserSpy = sinon.stub(users, 'update', function (id, email, displayName, passwordHash, avatarData, role, enabled, cb) {
-                cb(id);
+            updateUserSpy = sinon.stub(users, 'update', function (user, cb) {
+                cb(user.id);
             });
             findByIdUserSpy = sinon.stub(users, 'findById', function (id, cb) {
                 if (id === existingUserId) {
@@ -406,13 +406,13 @@ describe("Users api handler", function() {
             apiUsers.updateUser(req, res);
 
             sinon.assert.calledOnce(users.update);
-            expect(updateUserSpy.getCalls()[0].args[0]).that.is.a('string').to.equal(req.params.userId);
-            expect(updateUserSpy.getCalls()[0].args[1]).that.is.a('string').to.equal(req.body.email);
-            expect(updateUserSpy.getCalls()[0].args[2]).that.is.a('string').to.equal(req.body.displayname);
-            expect(updateUserSpy.getCalls()[0].args[3]).that.is.a('string').to.equal(crypto.createHash('sha256').update(req.body.password).digest('base64'));
-            expect(updateUserSpy.getCalls()[0].args[4]).that.is.a('string').to.equal(req.file.buffer);
-            expect(updateUserSpy.getCalls()[0].args[5]).that.is.a('string').to.equal(req.body.role);
-            expect(updateUserSpy.getCalls()[0].args[6]).that.is.a('string').to.equal(req.body.enabled);
+            expect(updateUserSpy.getCalls()[0].args[0].id).that.is.a('string').to.equal(req.params.userId);
+            expect(updateUserSpy.getCalls()[0].args[0].email).that.is.a('string').to.equal(req.body.email);
+            expect(updateUserSpy.getCalls()[0].args[0].displayName).that.is.a('string').to.equal(req.body.displayname);
+            expect(updateUserSpy.getCalls()[0].args[0].password).that.is.a('string').to.equal(crypto.createHash('sha256').update(req.body.password).digest('base64'));
+            expect(updateUserSpy.getCalls()[0].args[0].avatar).that.is.a('string').to.equal(req.file.buffer);
+            expect(updateUserSpy.getCalls()[0].args[0].role).that.is.a('string').to.equal(req.body.role);
+            expect(updateUserSpy.getCalls()[0].args[0].enabled).that.is.a('string').to.equal(req.body.enabled);
         });
 
         it("should handle update result", function() {
@@ -501,7 +501,7 @@ describe("Users api handler", function() {
                 if (username === validUsername) {
                     cb(testData);
                 } else {
-                    cb(null, errorMsg)
+                    cb(null, errorMsg);
                 }
             });
             apiUtilsSpy = sinon.stub(apiutils, 'handleResultSet', function(res, result, error) {
