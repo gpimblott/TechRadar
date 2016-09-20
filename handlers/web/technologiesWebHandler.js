@@ -67,7 +67,9 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
                 {
                     technology: value,
                     user: req.user,
-                    statuses: statuses
+                    statuses: statuses,
+                    // TODO: get the options from DB
+                    usedThisOptions: [{name: "Last week", days: 7}, {name: "Last month", days: 30}]
                 });
         }
     });

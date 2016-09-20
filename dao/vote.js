@@ -162,7 +162,7 @@ Vote.getVotesPerUserCount = function (done) {
  * PostgreSQL doesn't have an upsert until 9.5 so do a delete then insert for now
  * @param technology ID of technology
  * @param status ID of status
- * @param userid ID if the user viting
+ * @param userid ID if the user voting
  * @param done Function called when complete
  */
 Vote.add = function (technology, status, userid, done) {
