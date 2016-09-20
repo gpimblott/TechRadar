@@ -197,6 +197,15 @@ TechnologyApiHandler.addProject = function (req, res) {
     })
 };
 
+TechnologyApiHandler.getUsers = function (req, res) {
+    var technologyId = sanitizer(req.params.technology);
+
+    usedThisVotes.getUsersForTechnology(technologyId, 10, function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
 TechnologyApiHandler.getProjects = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
 

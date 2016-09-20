@@ -167,6 +167,25 @@ getBreadcrumb = function () {
                     </tbody>
                 </table>
             </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Used by people</div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Date of last use</th>
+                    </tr>
+                    </thead>
+                    <tbody id="used-by-people">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </row>
 </div>
@@ -225,6 +244,21 @@ getBreadcrumb = function () {
     };
 
 
+    var refreshTechnologyUsers = function () {
+        $.get('/api/technology/<%= technology.id %>/users', function (result) {
+            var output = "";
+            result.forEach(function (user) {
+                output += "<tr>"
+                output += "<td>" + user.username + "</a>";
+                output += "<td>" + user.date + "</a>";
+                output += "</tr>"
+            });
+
+            $('#used-by-people').empty();
+            $('#used-by-people').append(output);
+        })
+
+    };
     var refreshProjectUse = function () {
         $.get('/api/technology/<%= technology.id %>/projects', function (result) {
             var output = "";
@@ -308,6 +342,7 @@ getBreadcrumb = function () {
     // TODO: disable "usedThis" option here if it's in the DB
     refreshVotes();
     refreshProjectUse();
+    refreshTechnologyUsers();
 </script>
 
 </body>

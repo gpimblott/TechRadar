@@ -27,6 +27,11 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     self.app.post('/api/technology/:technology/usedThisTechnology', security.canAddComments, jsonParser, handler.addUsedThisTechnologyVote);
 
     /**
+     * Get users who used this technology 
+     */
+    self.app.get('/api/technology/:technology/users', security.isAuthenticated, jsonParser, handler.getUsers);
+
+    /**
      * Get all technologies
      */
     self.app.get('/api/technology', security.isAuthenticated, jsonParser, handler.getTechnologies);
