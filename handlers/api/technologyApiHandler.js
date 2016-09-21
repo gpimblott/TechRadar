@@ -1,6 +1,7 @@
 var technology = require('../../dao/technology');
 var status = require('../../dao/status');
 var votes = require('../../dao/vote');
+var usedThisVotes = require('../../dao/usedThisTechnology');
 var project = require('../../dao/projects');
 var cache = require('../../dao/cache');
 
@@ -21,6 +22,21 @@ TechnologyApiHandler.addVote = function (req, res) {
     var statusValue = status.id;
 
     votes.add(tech, statusValue, userId, function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        if (error != null) {
+            res.end(JSON.stringify({success: false, error: error}));
+        } else {
+            res.end(JSON.stringify({success: true, vote: result}));
+        }
+    });
+};
+
+TechnologyApiHandler.addUsedThisTechnologyVote = function (req, res) {
+    var tech = sanitizer(req.params.technology);
+    var daysAgo = sanitizer(req.body.daysAgo);
+    var userId = sanitizer(req.user.id);
+
+    usedThisVotes.add(tech, daysAgo, userId, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
         if (error != null) {
             res.end(JSON.stringify({success: false, error: error}));
@@ -179,6 +195,32 @@ TechnologyApiHandler.addProject = function (req, res) {
     technology.addProject(technologyId, projectId, function (result, error) {
         apiutils.handleResultSet(res, result, error);
     })
+};
+
+TechnologyApiHandler.getUsersCountInLastDays = function (req, res) {
+    var technologyId = sanitizer(req.params.technology);
+    var daysAgo; 
+    if(typeof req.query.daysAgo != "undefined"){
+        daysAgo = sanitizer(req.query.daysAgo);
+    }
+
+    usedThisVotes.getUsersCountInLastDays(technologyId, daysAgo, function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
+TechnologyApiHandler.getUsers = function (req, res) {
+    var technologyId = sanitizer(req.params.technology);
+    var limit; // getUsersForTechnology can handle undefined limit
+    if(typeof req.query.limit != "undefined"){
+        limit = sanitizer(req.query.limit);
+    }
+
+    usedThisVotes.getUsersForTechnology(technologyId, limit, function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
 };
 
 TechnologyApiHandler.getProjects = function (req, res) {

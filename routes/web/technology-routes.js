@@ -49,6 +49,11 @@ TechnologyRoutes.createRoutes = function (self) {
     self.app.get('/technology/:id/projects', security.isAuthenticated, handler.addProject );
 
     /**
+     * Show the users of a specified technology
+     */
+    self.app.get('/technology/:id/users', security.isAuthenticated, handler.getUsers );
+
+    /**
      * Show a specific technology by id
      */
     self.app.get('/technology/:id', security.isAuthenticated, handler.getTechnology );
