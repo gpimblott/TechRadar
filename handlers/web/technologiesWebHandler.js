@@ -63,13 +63,13 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
             res.redirect('/error');
         } else {
             var statuses = cache.getStatuses();
+            var usedThisOptions = cache.getUsedThisTechOptions();
             res.render('pages/technology',
                 {
                     technology: value,
                     user: req.user,
                     statuses: statuses,
-                    // TODO: get the options from DB
-                    usedThisOptions: [{id: 1, name: "Last week", daysAgo: 7}, {id: 2, name: "Last month", daysAgo: 30}]
+                    usedThisOptions: usedThisOptions
                 });
         }
     });

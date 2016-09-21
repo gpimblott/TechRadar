@@ -50,7 +50,7 @@ getBreadcrumb = function () {
                         <li><a class="dropdown-item btn"
                                id="usedThisBtn_<%= usedThis.id %>"
                                href="javascript:void(0);"
-                               value="<%= usedThis.daysAgo %>"><%= usedThis.name %></a>
+                               value="<%= usedThis.daysago %>"><%= usedThis.name %></a>
                         </li>
                         <% }); %>
                     </ul>
@@ -171,7 +171,11 @@ getBreadcrumb = function () {
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div>Used by people</div>
+                    <div>Used by people
+                        <span class="pull-right">
+                            <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/users">View all</a>
+                        </span>
+                    </div>
                 </div>
 
                 <table class="table">
@@ -249,7 +253,7 @@ getBreadcrumb = function () {
             var output = "";
             result.forEach(function (user) {
                 output += "<tr>"
-                output += "<td>" + user.username + "</a>";
+                output += "<td>" + user.displayname + "</a>";
                 output += "<td>" + user.date + "</a>";
                 output += "</tr>"
             });

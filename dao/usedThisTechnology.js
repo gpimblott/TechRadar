@@ -5,13 +5,32 @@ var UsedThisTech = function () {
 };
 
 /**
- * Get all the used_this_technology votes for a technology
+ * Get all possible options to choose from: "today", "a week ago", etc.
+ * results also contain an integer field "daysAgo"
+ * @param done Function to call with the results
+ */
+UsedThisTech.getAllOptions = function (done) {
+    var sql = "SELECT * from used_this_technology_options";
+
+    dbhelper.query(sql, null,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+}
+
+
+/**
+ * Get users that used the technology along with dates of last use
  * @param techid ID of the technology
- * @param limit Maximum number of results to return (null==all)
+ * @param limit Maximum number of results to return (undefined || null==all)
  * @param done Function to call with the results
  */
 UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
-    var sql = "SELECT to_char(used.date, 'DD/MM/YY') as date,t.name as technology, u.username " +
+    var sql = "SELECT to_char(used.date, 'DD/MM/YY') as date,t.name as technology, u.username, u.displayname" +
         " FROM used_this_technology used" +
         " INNER JOIN technologies t on used.technology=t.id " +
         " INNER JOIN users u on used.userid=u.id " +
