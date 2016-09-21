@@ -36,6 +36,27 @@ getBreadcrumb = function () {
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav white-text nav-justified">
                 <% if(user.canComment) { %>
+
+                <%# #### I've used this technology #### #%>
+                <li class="dropdown">
+                    <a id="usedThisTechnologyPulldown" href="#" class="dropdown-toggle" data-toggle="dropdown">I've used this technology<b
+                                class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <% usedThisOptions.forEach( function(usedThis) {
+                            if (usedThis.id == 0) {
+                                return;
+                            }
+                        %>
+                        <li><a class="dropdown-item btn"
+                               id="usedThisBtn_<%= usedThis.id %>"
+                               href="javascript:void(0);"
+                               value="<%= usedThis.daysago %>"><%= usedThis.name %></a>
+                        </li>
+                        <% }); %>
+                    </ul>
+                </li>
+
+                <%# #### Votes #### #%>
                 <li class="dropdown">
                     <a id="votePulldown" href="#" class="dropdown-toggle" data-toggle="dropdown">Vote <b
                                 class="caret"></b></a>
@@ -146,6 +167,17 @@ getBreadcrumb = function () {
                     </tbody>
                 </table>
             </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                        <div>Used by <span id="users-count">0</span> user(s) last year
+                        <span class="pull-right">
+                            <a class="btn btn-default btn-xs" href="/technology/<%= technology.id %>/users">Details</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </row>
 </div>
@@ -203,6 +235,12 @@ getBreadcrumb = function () {
         });
     };
 
+    var refreshUsersCountInLastDays = function (daysAgo) {
+        $.get('/api/technology/<%= technology.id %>/usersCount?daysAgo='+daysAgo, null, function (result) {
+            $('#users-count').text(result[0].count);
+        });
+    };
+
 
     var refreshProjectUse = function () {
         $.get('/api/technology/<%= technology.id %>/projects', function (result) {
@@ -217,6 +255,36 @@ getBreadcrumb = function () {
 
     };
 
+    var usedThisClickedBtn = function () {
+        $("#usedThisTechnologyPulldown").addClass("disabled");
+        var daysAgo = this.getAttribute("value");
+        var btnId = this.getAttribute("id");
+        var data = {daysAgo: daysAgo};
+        $.post('/api/technology/<%= technology.id %>/usedThisTechnology',
+                data,
+                function (result) {
+                    if (result.success) {
+                        enableUsedThisButtons();
+                        refreshUsersCountInLastDays(365);
+                        $("#" + btnId).toggleClass('disabled', true);
+                    }
+                    ;
+                    $("#usedThisTechnologyPulldown").removeClass("disabled");
+                });
+        <% if (google_id != undefined) { %>
+        ga('send', 'event', 'Technology', 'usedThisTechnology', '<%= technology.name %> - ' + $(this).text());
+        <% } %>
+    };
+
+    <% usedThisOptions.forEach( function(usedThis) { %>
+        $('#usedThisBtn_<%= usedThis.id %>').click(usedThisClickedBtn);
+    <% }); %>
+
+    var enableUsedThisButtons = function() {
+        <% usedThisOptions.forEach( function(usedThis) { %>
+            $('#usedThisBtn_<%= usedThis.id %>').toggleClass('disabled', false);
+        <% }); %>
+    }
 
     var voteClickedBtn = function () {
         $("#votePulldown").addClass("disabled");
@@ -254,8 +322,10 @@ getBreadcrumb = function () {
     // Perform initial setup
     enableVoteButtons();
     $('#voteBtn_<%=technology.vote%>').toggleClass('disabled', true);
+    enableUsedThisButtons();
     refreshVotes();
     refreshProjectUse();
+    refreshUsersCountInLastDays(365);
 </script>
 
 </body>
