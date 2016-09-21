@@ -32,6 +32,13 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     self.app.get('/api/technology/:technology/users', security.isAuthenticated, jsonParser, handler.getUsers);
 
     /**
+     * Get the number of users who used this technology
+     * uses an optional param ?daysAgo=integer 
+     * which limits the count to any given number of days 
+     */
+    self.app.get('/api/technology/:technology/usersCount', security.isAuthenticated, jsonParser, handler.getUsersCountInLastDays);
+
+    /**
      * Get all technologies
      */
     self.app.get('/api/technology', security.isAuthenticated, jsonParser, handler.getTechnologies);

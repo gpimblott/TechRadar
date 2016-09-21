@@ -197,6 +197,19 @@ TechnologyApiHandler.addProject = function (req, res) {
     })
 };
 
+TechnologyApiHandler.getUsersCountInLastDays = function (req, res) {
+    var technologyId = sanitizer(req.params.technology);
+    var daysAgo; 
+    if(typeof req.query.daysAgo != "undefined"){
+        daysAgo = sanitizer(req.query.daysAgo);
+    }
+
+    usedThisVotes.getUsersCountInLastDays(technologyId, daysAgo, function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
 TechnologyApiHandler.getUsers = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
     var limit; // getUsersForTechnology can handle undefined limit

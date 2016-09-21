@@ -22,6 +22,24 @@ UsedThisTech.getAllOptions = function (done) {
         });
 }
 
+UsedThisTech.getUsersCountInLastDays = function (techid, daysAgo, done) {
+    var params = [techid];
+    var sql = "SELECT COUNT(*) FROM used_this_technology WHERE technology=$1";
+
+    if(daysAgo != undefined && isInt(daysAgo)) {
+        // can't use $2 param here, daysAgo is guaranteed to be an integer
+        sql += " AND date > current_date - interval '" + daysAgo + "'  day";
+    }
+
+    dbhelper.query(sql, params,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+    });
+}
 
 /**
  * Get users that used the technology along with dates of last use
@@ -95,6 +113,12 @@ UsedThisTech.add = function (technology, daysAgo, userId, done) {
         function (error) {
             done(null, error);
         });
+}
+
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
 }
 
 module.exports = UsedThisTech;
