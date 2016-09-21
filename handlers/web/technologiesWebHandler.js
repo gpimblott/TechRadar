@@ -3,6 +3,7 @@ var users = require('../../dao/users');
 var comments = require('../../dao/comments');
 var project = require('../../dao/projects');
 var technology = require('../../dao/technology');
+var usedThis = require('../../dao/usedThisTechnology');
 
 var TechnologiesWebHandler = function () {
 };
@@ -72,6 +73,34 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
                     usedThisOptions: usedThisOptions
                 });
         }
+    });
+};
+
+TechnologiesWebHandler.getUsers = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
+     
+    var num = req.params.id;
+
+    technology.getById(req.user.id, num, function (value) {
+        usedThis.getUsersForTechnology(num, null, function(users) {
+            if (value == null || value.length == 0 || value.length > 1) {
+                res.redirect('/error');
+            } else {
+                res.render('pages/technologyUsers',
+                    {
+                        technology: value,
+                        user: req.user,
+                        techUsers: users
+                    });
+            }
+        });
     });
 };
 

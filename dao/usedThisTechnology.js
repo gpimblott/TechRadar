@@ -48,7 +48,7 @@ UsedThisTech.getUsersCountInLastDays = function (techid, daysAgo, done) {
  * @param done Function to call with the results
  */
 UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
-    var sql = "SELECT to_char(used.date, 'DD/MM/YY') as date,t.name as technology, u.username, u.displayname" +
+    var sql = "SELECT to_char(used.date, 'DD/MM/YY') as date,t.name as technology, u.username, u.email, u.displayname" +
         " FROM used_this_technology used" +
         " INNER JOIN technologies t on used.technology=t.id " +
         " INNER JOIN users u on used.userid=u.id " +
