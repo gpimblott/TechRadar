@@ -109,7 +109,7 @@ getBreadcrumb = function () {
                 <div class="panel-heading">
                     <div>Status
                         <span class="pull-right">
-                            <% if(user.canEdit) { %>
+                            <% if(user.admin) { %>
                             <a class="btn btn-default btn-xs"
                                href="/technology/<%= technology.id %>/updatestatus">Change Status</a>
                             <% } %>
