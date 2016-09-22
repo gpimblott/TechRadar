@@ -22,6 +22,7 @@
     "npm": "2.15.5"
   },
   "dependencies": {
+    "bunyan": "^1.8.1",
     "console-stamp" : "latest",
     "express": "latest",
     "express-enforces-ssl":"latest",
@@ -41,6 +42,7 @@
     "sinon": "latest",
     "chai": "latest",
     "passport": "latest",
+    "passport-azure-ad": "latest",
     "passport-local": "latest",
     "sanitize-html": "latest",
     "db-migrate": "0.10.0-beta.12",

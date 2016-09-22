@@ -12,12 +12,14 @@ var Technology = function () {
  * @param website Website for the technology
  * @param category Category ID for the technology
  * @param description Textual description of the technology
+ * @param licence Type of licence
+ * @param licencelink Link to more licence info
  * @param done Function to call when stored
  * @returns ID of the row created
  */
-Technology.add = function (name, website, category, description, done) {
-    var sql = "INSERT INTO technologies ( name , website, category , description ) values ($1, $2, $3, $4 ) returning id";
-    var params = [name, website, category, description];
+Technology.add = function (name, website, category, description, licence, licencelink,  done) {
+    var sql = "INSERT INTO technologies ( name , website, category , description, licence, licencelink ) values ($1, $2, $3, $4, $5, $6 ) returning id";
+    var params = [name, website, category, description, licence, licencelink];
 
     dbhelper.insert(sql, params,
         function (result) {
@@ -27,7 +29,7 @@ Technology.add = function (name, website, category, description, done) {
             console.log(error);
             done(null, error);
         });
-}
+};
 
 /**
  * Add a new technology
@@ -36,12 +38,14 @@ Technology.add = function (name, website, category, description, done) {
  * @param website Website for the technology
  * @param category Category ID for the technology
  * @param description Textual description of the technology
+ * @param licence Type of licence
+ * @param licencelink Link to more licence info
  * @param done Function to call when stored
  * @returns true/false
  */
-Technology.update = function (id, name, website, category, description, done) {
-    var sql = "UPDATE technologies SET name=$1 , website=$2, category=$3 , description=$4 where id=$5";
-    var params = [name, website, category, description, id];
+Technology.update = function (id, name, website, category, description, licence, licencelink, done) {
+    var sql = "UPDATE technologies SET name=$1 , website=$2, category=$3, description=$4, licence=$6, licencelink=$7 where id=$5";
+    var params = [name, website, category, description, id, licence, licencelink];
 
 
     dbhelper.insert(sql, params,
@@ -52,7 +56,7 @@ Technology.update = function (id, name, website, category, description, done) {
             console.error(error);
             done(false, error);
         });
-}
+};
 
 /**
  * Delete a set of technologies using their ID numbers
@@ -76,7 +80,7 @@ Technology.delete = function (ids, done) {
             console.error(error);
             done(false, error);
         });
-}
+};
 
 /**
  * Update the status for a technology
@@ -98,7 +102,7 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
             console.error(error);
             done(null, error);
         });
-}
+};
 
 /**
  * Get a specific technology using its ID
@@ -131,14 +135,15 @@ Technology.getById = function (userid, id, done) {
             console.error(error);
             done(null);
         });
-}
+};
 
 /**
  * Get all technologies
  * @param done Function to call with the results
  */
 Technology.getAll = function (userid, done) {
-    var sql = "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category, " +
+    var sql = "SELECT t.id, t.name as name, t.website as website, t.description, t.licence, t.licencelink, " +
+        "s.name as status, c.name as category, " +
         "COALESCE( " +
         "(select s2.name from votes v " +
         "join status s2 on s2.id=v.status where userid=$1 and technology=t.id order by date desc limit 1), " +
@@ -157,7 +162,7 @@ Technology.getAll = function (userid, done) {
             console.error(error);
             done(null, error);
         });
-}
+};
 
 
 /**
@@ -167,7 +172,8 @@ Technology.getAll = function (userid, done) {
  */
 Technology.getAllForCategory = function (cname, done) {
 
-    var sql = "SELECT row_number() over (order by s) as num, t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+    var sql = "SELECT row_number() over (order by s) as num, t.id, t.name as name, t.website as website, t.description, " +
+        "t.licence, t.licencelink, s.name as status, c.name as category " +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
         " LEFT OUTER JOIN status s on s.id = " +
@@ -184,7 +190,7 @@ Technology.getAllForCategory = function (cname, done) {
             console.error(error);
             done(null);
         });
-}
+};
 
 /**
  * Get all of the technologies for a given project
@@ -210,7 +216,7 @@ Technology.getAllForProject = function (id, done) {
             console.error(error);
             done(error, null);
         });
-}
+};
 
 /**
  * Search for technologies
@@ -220,7 +226,8 @@ Technology.getAllForProject = function (id, done) {
 Technology.search = function (value, done) {
 
     var sql =
-        "SELECT t.id, t.name as name, t.website as website, t.description, s.name as status, c.name as category " +
+        "SELECT t.id, t.name as name, t.website as website, t.description, t.licence, t.licencelink, " +
+        "s.name as status, c.name as category " +
         " FROM technologies t" +
         " INNER JOIN categories c on t.category=c.id" +
         " LEFT OUTER JOIN status s on s.id = " +
@@ -235,7 +242,7 @@ Technology.search = function (value, done) {
             console.error(error);
             done(null);
         });
-}
+};
 
 /**
  * Add a project to a technology
@@ -305,6 +312,6 @@ Technology.getMostUsedTechnologies = function ( done ) {
             console.error(error);
             done(null);
         });
-}
+};
 
 module.exports = Technology;

@@ -2,3 +2,6 @@
 node_modules/
 uploads/
 /process.env
+.vscode/
+.eslintrc.json
+launch.json
