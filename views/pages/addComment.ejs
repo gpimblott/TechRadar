@@ -40,7 +40,7 @@ getBreadcrumb = function () {
                 <div class="form-group">
                     <label for="comment">Comment</label>
                     <textarea class="form-control" rows="3" id="comment" name="comment"
-                              placeholder="Comment"></textarea>
+                              placeholder="Comment" required></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-default">Add comment</button>
@@ -53,6 +53,9 @@ getBreadcrumb = function () {
 <% include ../partials/footer.ejs %>
 
 <script>
+    window.onbeforeunload = function(e) {
+        return "Please enter a comment.";
+    }
 
     $("form").submit(function (event) {
 
@@ -69,6 +72,7 @@ getBreadcrumb = function () {
             data: JSON.stringify(data),
             success: function (result) {
                 $(":submit").attr("disabled", false);
+                window.onbeforeunload = null; // disable the pop-up message 
                 if (result.success) {
                     location.href = "/technology/<%= technology.id %>";
                 } else {
