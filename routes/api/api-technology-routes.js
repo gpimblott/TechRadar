@@ -82,7 +82,7 @@ ApiTechnologyRoutes.createRoutes = function (self) {
     /**
      * Update the status of a technology
      */
-    self.app.post('/api/technology/:technology/status', security.canEdit, jsonParser, handler.updateStatus );
+    self.app.post('/api/technology/:technology/status', security.isAuthenticatedAdmin, jsonParser, handler.updateStatus );
 
     /**
      * Add a project to a technology

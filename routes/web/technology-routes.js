@@ -41,7 +41,7 @@ TechnologyRoutes.createRoutes = function (self) {
     /**
      * Show all of the status updates for a technology
      */
-    self.app.get('/technology/:id/updatestatus', security.canEdit, handler.updateStatus );
+    self.app.get('/technology/:id/updatestatus', security.isAuthenticatedAdmin, handler.updateStatus );
 
     /**
      * Show the projects for a specified technology
