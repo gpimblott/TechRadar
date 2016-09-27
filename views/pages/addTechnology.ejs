@@ -114,7 +114,7 @@
             data: JSON.stringify(frmdata),
             success: function (result) {
                 if (result.success) {
-                    location.href = "/technology/" + result.result;
+                    location.href = "/comments/add/" + result.result;
                 } else {
                     alert("There was an error adding the technology :)");
                 }
