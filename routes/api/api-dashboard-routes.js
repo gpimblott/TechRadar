@@ -39,7 +39,7 @@ ApiDashboardRoutes.createRoutes = function (self) {
     /**
      * Get all technologies with users count
      */
-    self.app.get('/api/dash/technology/usersCount', security.isAuthenticated, jsonParser, handler.getAllTechnologiesWithUsersCount);
+    self.app.get('/api/dash/technology/usersCount', security.isAuthenticated, jsonParser, handler.getTechnologiesWithUsersCount);
 
 };
 

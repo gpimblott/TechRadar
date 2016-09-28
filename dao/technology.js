@@ -168,7 +168,7 @@ Technology.getAll = function (userid, done) {
  * Selects technologies with names, category IDs, status IDs and the number of users
  * @param {integer} [limit=40] Maximum number of records to return (max: 40)
  */
-Technology.getAllTechnologiesWithUserCounts = function (limit, done) {
+Technology.getTechnologiesWithUserCounts = function (limit, done) {
     if (!(limit > 0) && !(limit < 40)) {
         limit = 40;
     }

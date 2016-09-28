@@ -56,9 +56,9 @@ DashboardApiHandler.getCommentsPerTechnology = function (req,res) {
     });
 };
 
-DashboardApiHandler.getAllTechnologiesWithUsersCount = function (req, res) {
+DashboardApiHandler.getTechnologiesWithUsersCount = function (req, res) {
     var limit = sanitizer(req.query.limit);
-    technologies.getAllTechnologiesWithUserCounts(limit, function (result, error) {
+    technologies.getTechnologiesWithUserCounts(limit, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
