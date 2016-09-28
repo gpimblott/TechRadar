@@ -210,6 +210,13 @@ TechnologyApiHandler.getUsersCountInLastDays = function (req, res) {
     });
 };
 
+TechnologyApiHandler.getAllTechnologiesWithUsersCount = function (req, res) {
+    technology.getAllTechnologiesWithUserCounts(function (result, error) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
 TechnologyApiHandler.getUsers = function (req, res) {
     var technologyId = sanitizer(req.params.technology);
     var limit; // getUsersForTechnology can handle undefined limit
