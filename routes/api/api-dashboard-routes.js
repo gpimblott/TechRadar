@@ -35,6 +35,12 @@ ApiDashboardRoutes.createRoutes = function (self) {
      * Get the number of votes cast by each user
      */
     self.app.get('/api/dash/votes/users' , security.isAuthenticated, handler.getVotesPerUserCount);
+
+    /**
+     * Get all technologies with users count
+     */
+    self.app.get('/api/dash/technology/usersCount', security.isAuthenticated, jsonParser, handler.getAllTechnologiesWithUsersCount);
+
 };
 
 module.exports = ApiDashboardRoutes;

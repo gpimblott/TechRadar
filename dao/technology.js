@@ -164,7 +164,15 @@ Technology.getAll = function (userid, done) {
         });
 };
 
-Technology.getAllTechnologiesWithUserCounts = function (done) {
+/**
+ * Selects technologies with names, category IDs, status IDs and the number of users
+ * @param {integer} [limit=40] Maximum number of records to return (max: 40)
+ */
+Technology.getAllTechnologiesWithUserCounts = function (limit, done) {
+    if (!(limit > 0) && !(limit < 40)) {
+        limit = 40;
+    }
+    var params = [limit];
     var sql = `
         SELECT t.name, t.category, s.id AS status_id, COUNT(used.*) 
             FROM technologies AS t
@@ -174,9 +182,11 @@ Technology.getAllTechnologiesWithUserCounts = function (done) {
             COALESCE( (select statusid from tech_status_link 
                 WHERE technologyid=t.id
                 ORDER BY date DESC LIMIT 1),0)
-        GROUP BY t.id, s.id`;
+        GROUP BY t.id, s.id
+        ORDER BY count DESC
+        LIMIT $1`;
 
-    dbhelper.query(sql, null,
+    dbhelper.query(sql, params,
         function (results) {
             done(results);
         },

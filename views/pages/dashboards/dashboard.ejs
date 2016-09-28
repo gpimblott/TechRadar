@@ -54,6 +54,11 @@
             <canvas id="barChart2" height="150"></canvas>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <canvas id="usersOfTechnology" height="150"></canvas>
+        </div>
+    </div>
 
 </div>
 
@@ -125,7 +130,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'Most used Technologies'
+                    text: 'Technologies used in the most projects'
                 },
                 scales: {
                     yAxes: [{
@@ -212,6 +217,77 @@
                         }
                     }]
                 }
+            }
+        });
+    });
+
+    $.get('/api/dash/technology/usersCount?limit=99', function (apiData) {
+        var ctx = document.getElementById("usersOfTechnology");
+        var usersCount = apiData.map(function(value, index){
+            return value.count;
+        });
+        var techNames = apiData.map(function(value, index){
+            return value.name;
+        });
+        var colors = {
+            TBD: 'rgba(100, 100, 100, 0.2)', 
+            Adopt: 'rgba(0, 255, 0, 0.2)',
+            Trial: 'rgba(0, 0, 200, 0.2)',
+            Discuss: 'rgba(200, 200, 0, 0.2)',
+            Avoid: 'rgba(255, 0, 0, 0.2)',
+            Unknown: 'rgba(0, 0, 0, 0.2)'
+        };
+        var statusColors = apiData.map(function(value, index){
+            switch(value.status_id){
+                case 0: return colors.TBD; 
+                case 1: return colors.Adopt;
+                case 2: return colors.Trial;
+                case 3: return colors.Discuss;
+                case 4: return colors.Avoid;
+                default: return colors.Unknown;
+            }
+        });
+        var statusBorderColors = statusColors.map(function(value, index){
+            return value.replace('0.2', '1.0'); // gets rid of transparency
+        });
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: techNames,      
+                datasets: [{
+                    label: 'Users',
+                    data: usersCount,
+                    backgroundColor: statusColors,
+                    borderColor: statusBorderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Technologies used by the most people'
+                },
+                legend: {
+                display: true,
+                labels: {
+                    generateLabels: function(){
+                        return [
+                        {text: 'TBD', fillStyle: colors.TBD}, 
+                        {text: 'Adopt', fillStyle: colors.Adopt},
+                        {text: 'Trial', fillStyle: colors.Trial},
+                        {text: 'Discuss', fillStyle: colors.Discuss},
+                        {text: 'Avoid', fillStyle: colors.Avoid},
+                        ];
+                    }
+                }
+                },
+            scales: {
+                yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                }
+                }]
+            }
             }
         });
     });

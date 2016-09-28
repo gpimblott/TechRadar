@@ -4,6 +4,8 @@ var votes = require('../../dao/vote');
 var technologies = require('../../dao/technology');
 var comments = require('../../dao/comments');
 
+var sanitizer = require('sanitize-html');
+
 var DashboardApiHandler = function () {
 };
 
@@ -49,6 +51,14 @@ DashboardApiHandler.getVotesPerUserCount = function (req,res) {
 
 DashboardApiHandler.getCommentsPerTechnology = function (req,res) {
     comments.getTotalNumberCommentsForTechnologies(function (result) {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(result));
+    });
+};
+
+DashboardApiHandler.getAllTechnologiesWithUsersCount = function (req, res) {
+    var limit = sanitizer(req.query.limit);
+    technologies.getAllTechnologiesWithUserCounts(limit, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
