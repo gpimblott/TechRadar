@@ -164,6 +164,37 @@ Technology.getAll = function (userid, done) {
         });
 };
 
+/**
+ * Selects technologies with names, category IDs, status IDs and the number of users
+ * @param {integer} [limit=40] Maximum number of records to return (max: 40)
+ */
+Technology.getTechnologiesWithUserCounts = function (limit, done) {
+    if (!(limit > 0) && !(limit < 40)) {
+        limit = 40;
+    }
+    var params = [limit];
+    var sql = `
+        SELECT t.name, t.category, s.id AS status_id, COUNT(used.*) 
+            FROM technologies AS t
+        INNER JOIN used_this_technology used
+            ON used.technology=t.id
+        LEFT OUTER JOIN status s on s.id =
+            COALESCE( (select statusid from tech_status_link 
+                WHERE technologyid=t.id
+                ORDER BY date DESC LIMIT 1),0)
+        GROUP BY t.id, s.id
+        ORDER BY count DESC
+        LIMIT $1`;
+
+    dbhelper.query(sql, params,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+    });
+}
 
 /**
  * Get all of the technologies in a category
