@@ -65,15 +65,17 @@ Projects.findByName = function (name, done) {
  *
  * @param projectId Project ID
  * @param technologyIds Array of Technology IDs
+ * @param softwareVersionIds Array of Version IDs - its indexes(placement) should correspond to those in technologyIds
  * @param callback Function to call when the update is finished
  */
-Projects.addTechnologies = function (projectId, technologyIds, callback) {
-    var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ";
+Projects.addTechnologies = function (projectId, technologyIds, softwareVersionIds, callback) {
+    var sql = "INSERT INTO technology_project_link (technologyid, projectid, software_version_id) VALUES ";
 
     var numRows = technologyIds.length;
-    for (var i = 1; i <= numRows; i++) {
-        sql += " ( $" + i + "," + projectId + ")";
-        if (i != numRows) {
+    for (var i = 0; i < numRows; i++) {
+        var optionalVersionId = getOptionalVersionId(softwareVersionIds[i]);
+        sql += " ( $" + (i+1) + "," + projectId + optionalVersionId + ")";
+        if (i != numRows - 1) {
             sql += ",";
         }
     }
@@ -196,6 +198,20 @@ Projects.getTechForProject = function (id, done) {
             console.log(error);
             done(null, error);
         });
+}
+
+/**
+ * Checks whether versionId can be used in an SQL query,
+ * if not - replaces the value with a null
+ * @param {string} versionId - value that will be verified 
+ * @returns ", null" or ", {integer}"
+ */
+function getOptionalVersionId(versionId) {
+    var optionalVersionId = ", null";
+    if(dbhelper.isInt(versionId)) {
+        optionalVersionId = "," + versionId;
+    }
+    return optionalVersionId;
 }
 
 module.exports = Projects;

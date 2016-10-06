@@ -75,8 +75,9 @@ ProjectsApiHandler.getTechnologiesForProject = function (req, res) {
 ProjectsApiHandler.addTechnologyToProject = function (req, res) {
     var projectId = sanitizer(req.params.projectId);
     var technologyIds = req.body.technologies;
+    var versionIds = req.body.versions;
 
-    projects.addTechnologies(projectId, technologyIds, function (result, error) {
+    projects.addTechnologies(projectId, technologyIds, versionIds, function (result, error) {
         apiutils.handleResultSet(res, result, error);
     });
 };

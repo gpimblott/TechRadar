@@ -26,7 +26,7 @@ UsedThisTech.getUsersCountInLastDays = function (techid, daysAgo, done) {
     var params = [techid];
     var sql = "SELECT COUNT(*) FROM used_this_technology WHERE technology=$1";
 
-    if(daysAgo != undefined && isInt(daysAgo)) {
+    if(daysAgo != undefined && dbhelper.isInt(daysAgo)) {
         // can't use $2 param here, daysAgo is guaranteed to be an integer
         sql += " AND date > current_date - interval '" + daysAgo + "'  day";
     }
@@ -115,10 +115,5 @@ UsedThisTech.add = function (technology, daysAgo, userId, done) {
         });
 }
 
-function isInt(value) {
-  return !isNaN(value) && 
-         parseInt(Number(value)) == value && 
-         !isNaN(parseInt(value, 10));
-}
 
 module.exports = UsedThisTech;

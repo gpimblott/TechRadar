@@ -18,7 +18,7 @@ ApiSoftwareVersionsRoutes.createRoutes = function (self) {
     /**
      * Add a new software version and assign it to a technology
      */
-    self.app.post('/api/technology/versions/add', security.isAuthenticated, handler.addVersion);
+    self.app.post('/api/technology/versions/add', security.canEdit, handler.addVersion);
 
 }
 
