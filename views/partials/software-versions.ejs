@@ -1,48 +1,8 @@
-<select name="version" class="version-dropdown">  
-  <option value="none">Select version</option>
-  <option><a href="#">example</a></option>
-  <option class="add-new-version">Add new</option>
-</select>
-
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">                      
-    <!-- Modal content-->
-    
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add a new version</h4>
-      </div>
-      <div class="modal-body">
-        <form id="add-version-form" action="javascript:void(0);" method="POST">
-          <div class="form-group">
-            <label for="name">Label</label>
-            <input type="text" class="form-control" id="name" name="name"
-                   placeholder="4.0.0-alpha.4" required="true">
-          </div>
-          <div class="form-group">
-            <label for="descriptioin">Release date</label>
-            <input type="date" class="form-control" name="release">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">                
-        <button type="submit" class="btn btn-default" form="add-version-form">Submit</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-
-  </div>
+<div class="form-group">
+  <select name="software_version_id" class="form-control version-dropdown">  
+    <%# empty value tells our backend to omit this field %>
+    <option value="">Select version</option>
+    <option value="1">1</option>
+    <option class="add-new-version">Add new</option>
+  </select>
 </div>
-
-<script>
-$(".version-dropdown").change(function(e){
-  var selectedOption = $(this).find('option:selected');
-  if(selectedOption.hasClass("add-new-version")){
-		$('#myModal').modal('toggle');
-    // switch back to the default dropdown option, 
-    // so "Add new" option can fire this event again when selected
-    $(this).val("none");
-  }
-});    
-</script>

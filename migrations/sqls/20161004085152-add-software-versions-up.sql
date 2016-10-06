@@ -1,8 +1,7 @@
 CREATE TABLE software_versions (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(32),
     technology integer references technologies(id) ON DELETE CASCADE,
-    release_date TIMESTAMP without time zone
+    name VARCHAR(32)
 );
 
 ALTER TABLE comments ADD COLUMN 
