@@ -1,0 +1,78 @@
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">                      
+    <!-- Modal content-->
+    
+    <div class="modal-content">
+      <form id="addVersionForm" action="javascript:void(0);" method="POST">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add a new version</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Label</label>
+            <input name="name" id="new-version-name" type="text" class="form-control"
+                    placeholder="4.0.0-alpha.4">
+          </div>
+          <input id="new-version-technology" name="technology" type="hidden" class="form-control">
+        </div>
+        <div class="modal-footer">                
+          <button id="submit-version-btn" type="submit" class="btn btn-default">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+
+<script>
+setupVersionsModal();
+
+// sometimes needs to be called by other things like bootstrap-table onPostBody
+function setupVersionsModal(){
+  $(".version-dropdown").change(function(e){
+    var selectedOption = $(this).find('option:selected');
+    var techId = $(this).attr("data-technology");
+    $("#new-version-technology").val(techId);
+    console.log(techId);
+    if(selectedOption.hasClass("add-new-version")){
+      $('#myModal').modal('toggle');
+      // switch back to the default dropdown option, 
+      // so "Add new" option can fire this event again when selected
+      $(this).val("");
+    }
+  });    
+
+  $("#submit-version-btn").click(function(){
+    $('#myModal').modal('hide');
+  });
+
+  $("#addVersionForm").unbind('submit').submit(function (event) {
+      var frm = $("#addVersionForm");
+      var data = serialiseForm(frm);
+
+      $.ajax({
+          type: "POST",
+          url: '/api/technology/versions/add',
+          contentType: "application/json",
+          data: JSON.stringify(data),
+          error: function(a, b, c) {
+            console.log(a);
+            console.log(b);
+            console.log(c);
+          },
+          success: function (result) {
+            console.log(result);
+              if (result.success) {
+                alert("success");
+              } else {
+                  alert("There was an error adding the version");
+              }
+          }
+      });
+  });
+}
+</script>
