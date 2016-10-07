@@ -30,6 +30,7 @@
 
 <script>
 setupVersionsModal();
+setupVersionDropdowns();
 
 // sometimes needs to be called by other things like bootstrap-table onPostBody
 function setupVersionsModal(){
@@ -37,7 +38,6 @@ function setupVersionsModal(){
     var selectedOption = $(this).find('option:selected');
     var techId = $(this).attr("data-technology");
     $("#new-version-technology").val(techId);
-    console.log(techId);
     if(selectedOption.hasClass("add-new-version")){
       $('#myModal').modal('toggle');
       // switch back to the default dropdown option, 
@@ -51,28 +51,42 @@ function setupVersionsModal(){
   });
 
   $("#addVersionForm").unbind('submit').submit(function (event) {
-      var frm = $("#addVersionForm");
-      var data = serialiseForm(frm);
+    postNewVersion(serialiseForm($("#addVersionForm")));
+  });
+}
 
-      $.ajax({
-          type: "POST",
-          url: '/api/technology/versions/add',
-          contentType: "application/json",
-          data: JSON.stringify(data),
-          error: function(a, b, c) {
-            console.log(a);
-            console.log(b);
-            console.log(c);
-          },
-          success: function (result) {
-            console.log(result);
-              if (result.success) {
-                alert("success");
-              } else {
-                  alert("There was an error adding the version");
-              }
-          }
+function postNewVersion(serializedFormData){
+  $.ajax({
+    method: "POST",
+    url: "/api/technology/versions/add",
+    data: serializedFormData,
+  }).done(function( msg   ) {
+      console.log( msg );
+    });
+}
+
+function setupVersionDropdowns(){
+    $(".version-dropdown").each(function(){
+      var dropdown = $(this);
+      var technologyId = dropdown.attr("data-technology");
+      getVersions(technologyId, function(versions) {
+        versions.forEach(function(version) {
+          addVersionOptions(dropdown, version.id, version.name);
+        });
       });
+    });
+}
+
+function addVersionOptions(targetDropdown, value, text){
+  targetDropdown.append($("<option/>", {
+        value: value,
+        text: text
+    }));
+}
+
+function getVersions(technologyId, callback) {
+  $.get("/api/technology/" + technologyId + "/versions", function(data, status) {
+    callback(data);
   });
 }
 </script>

@@ -61,7 +61,8 @@ getBreadcrumb = function () {
 
         $(":submit").attr("disabled", true);
 
-        var frm = $('form');
+        var frm = $(this);
+        
         var data = serialiseForm(frm);
 
         $.ajax({
