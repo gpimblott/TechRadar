@@ -25,4 +25,12 @@ SoftwareVersionsApiHandler.addVersion = function (req, res) {
     })
 };
 
+SoftwareVersionsApiHandler.deleteVersions = function (req, res) {
+    var versions = req.body.versions;
+
+    versionsDao.delete(versions, function (result, error) {
+        apiutils.handleResultSet(res, result, error);
+    })
+};
+
 module.exports = SoftwareVersionsApiHandler;

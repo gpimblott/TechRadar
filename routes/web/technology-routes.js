@@ -29,6 +29,11 @@ TechnologyRoutes.createRoutes = function (self) {
     self.app.get('/technology/:id/edit', security.canEdit, handler.edit );
 
     /**
+     * Edit the software versions for a technology 
+     */
+    self.app.get('/technology/:id/versions', security.canEdit, handler.getVersions );
+
+    /**
      * Show the status history for a technology
      */
     self.app.get('/technology/:id/statushistory', security.isAuthenticated, handler.getStatusHistory );

@@ -15,7 +15,7 @@
                     placeholder="4.0.0-alpha.4" autofocus required>
           </div>
           <input id="new-version-technology" name="technology" type="hidden" class="form-control">
-          <a href="#">Manage versions for this technology</a>
+          <a id="manage-version-link" href="#">Manage versions for this technology</a>
         </div>
         <div class="modal-footer">                
           <button id="submit-version-btn" type="submit" class="btn btn-default">Submit</button>
@@ -39,6 +39,7 @@ function setupVersionsModal(){
     var selectedOption = $(this).find('option:selected');
     var techId = $(this).attr("data-technology");
     $("#new-version-technology").val(techId);
+    $("#manage-version-link").attr("href", "/technology/"+techId+"/versions");
     if(selectedOption.hasClass("add-new-version")){
       addVersionOptionClicked($(this));
     }

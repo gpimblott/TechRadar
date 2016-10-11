@@ -41,4 +41,13 @@ SoftwareVersions.add = function (technology, name, done) {
         });
 }
 
+/**
+ * Remove a set of versions using their ID numbers
+ * @param versions An array of version IDs
+ * @param done
+ */
+SoftwareVersions.delete = function (versions, done) {
+    dbhelper.deleteByIds("software_versions" , versions, done );
+}
+
 module.exports = SoftwareVersions;

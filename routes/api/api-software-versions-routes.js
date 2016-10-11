@@ -19,6 +19,11 @@ ApiSoftwareVersionsRoutes.createRoutes = function (self) {
      */
     self.app.post('/api/versions', security.canEdit, jsonParser, handler.addVersion);
 
+    /**
+     * Delete software versions
+     */
+    self.app.delete('/api/versions', security.canEdit, jsonParser, handler.deleteVersions);
+
 }
 
 module.exports = ApiSoftwareVersionsRoutes;
