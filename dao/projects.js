@@ -97,14 +97,14 @@ Projects.addTechnologies = function (projectId, technologyIds, softwareVersionId
  * @param ids
  * @param done
  */
-Projects.deleteTechnologies = function (projectid, ids, done) {
+Projects.deleteTechnologies = function (ids, done) {
 
     var params = [];
     for (var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " ) and projectid=" + projectid;
+    var sql = "DELETE FROM technology_project_link WHERE id IN (" + params.join(',') + " )";
 
     dbhelper.query(sql, ids,
         function (result) {

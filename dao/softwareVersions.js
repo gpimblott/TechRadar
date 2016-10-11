@@ -28,7 +28,7 @@ SoftwareVersions.getAllForTechnology = function (technology, done) {
  */
 SoftwareVersions.add = function (technology, name, done) {
     var sql = `INSERT INTO software_versions(technology, name)
-        VALUES($1, $2)`;
+        VALUES($1, $2) RETURNING id`;
     var params = [technology, name];
 
     dbhelper.insert(sql, params,

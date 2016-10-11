@@ -54,10 +54,9 @@ ProjectsApiHandler.deleteProject = function (req, res) {
 };
 
 ProjectsApiHandler.deleteTechnologiesFromProject = function (req, res) {
-    var projectId = sanitizer(req.params.projectId);
-    var technologyIds = req.body.technologies;
+    var linkIds = req.body.links;
 
-    projects.deleteTechnologies(projectId, technologyIds, function (result, error) {
+    projects.deleteTechnologies(linkIds, function (result, error) {
         apiutils.handleResultSet(res, result, error);
     });
 };
