@@ -42,7 +42,7 @@ getBreadcrumb = function () {
                     <textarea class="form-control" rows="3" id="comment" name="comment"
                               placeholder="Comment" required></textarea>
                 </div>
-
+                <div><% include ../partials/software-versions.ejs %></div>
                 <button type="submit" class="btn btn-default">Add comment</button>
             </form>
         </div>
@@ -61,8 +61,8 @@ getBreadcrumb = function () {
 
         $(":submit").attr("disabled", true);
 
-
-        var frm = $('form');
+        var frm = $(this);
+        
         var data = serialiseForm(frm);
 
         $.ajax({
@@ -87,6 +87,8 @@ getBreadcrumb = function () {
     });
 
 </script>
+
+<% include ../partials/software-versions-footer.ejs %>
 
 </body>
 </html>

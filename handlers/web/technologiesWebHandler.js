@@ -47,6 +47,31 @@ TechnologiesWebHandler.edit = function (req, res) {
     });
 };
 
+TechnologiesWebHandler.getVersions = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
+    var num = req.params.id;
+    technology.getById(req.user.id, num, function (value) {
+        if (value == null || value.length == 0 || value.length > 1) {
+            res.redirect('/error');
+            return;
+        } else {
+
+            res.render('pages/editVersions',
+                {
+                    technology: value,
+                    user: req.user,
+                });
+        }
+    });
+};
+
 TechnologiesWebHandler.getTechnology = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 

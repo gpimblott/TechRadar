@@ -18,11 +18,14 @@ var Comments = function () {
  * @param done function to call with the results
  */
 Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
-    var sql = "SELECT comments.*, users.displayName, users.username, users.avatar FROM comments " +
-        " inner join users on comments.userid=users.id" +
-        " where technology=$1" +
-        " order by date desc" +
-        " LIMIT $2 OFFSET $3";
+    var sql = `SELECT comments.*, users.displayName, 
+        users.username, users.avatar, software_versions.name AS version
+        FROM comments 
+        left outer join software_versions on comments.software_version_id=software_versions.id
+        inner join users on comments.userid=users.id
+        where comments.technology=$1
+        order by date desc
+        LIMIT $2 OFFSET $3`;
 
     var limit = pageSize || DEFAULT_PAGE_SIZE;
     var offset = pageNum ? pageNum * limit : 0;
@@ -87,9 +90,20 @@ Comments.getTotalNumberCommentsForTechnologies = function (done) {
  * @param userid User ID adding the comment
  * @param done function to call with the results
  */
-Comments.add = function (technology, text, userid, done) {
-    var sql = "INSERT INTO comments ( technology , text , userid) values ( $1 , $2 , $3 ) returning id";
+Comments.add = function (technology, text, userid, software_version_id, done) {
+    var versionColumn = "";
+    var versionParam = "";
     var params = [technology, text, userid];
+
+    // add the optional software_version_id param if it's not empty
+    if(software_version_id != null && software_version_id.length > 0) {
+        versionColumn = ", software_version_id";
+        versionParam = ", $4";
+        params.push(software_version_id);
+    }
+
+    var sql = "INSERT INTO comments ( technology , text , userid" + versionColumn + " ) " +
+    " VALUES ( $1 , $2 , $3 " + versionParam + " ) RETURNING id";
 
     dbhelper.insert(sql, params,
         function (result) {

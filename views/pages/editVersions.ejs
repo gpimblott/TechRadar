@@ -10,32 +10,19 @@
 
     <% include ../partials/head.ejs %>
 
-    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css">
-
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 </head>
 
 <body>
 
 <% include ../partials/menu.ejs %>
 
-<div tabindex="-1" id="content" class="site-header" style="margin-bottom: 10px">
-    <div class="container">
-        <row>
-            <div class="col-md-12">
-                <h1><%=project.name%></h1>
-                <p>Remove Technologies</p>
-            </div>
-        </row>
-
-    </div>
-</div>
-
 <div class="container bs-docs-container">
     <div class="col-md-12">
         <ol class="breadcrumb" style="margin-top: 10px;">
             <li><a href="/">Home</a></li>
-            <li><a href="/project/<%=project.id%>"><%=project.name%></a></li>
-            <li class="active">Remove Technology</li>
+            <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
+            <li class="active">Versions</li>
         </ol>
     </div>
 
@@ -43,9 +30,13 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="custom-toolbar">
                 <div class="form-inline" role="form">
-                    <button id="removeBtn" class="btn btn-danger" disabled="">
+                    <a href="#" onclick="$('#myModal').modal('show');"  class="btn btn-success">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add
+                    </a>
+                    <button id="deleteBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
-                        Remove selected
+                        Delete
                     </button>
                 </div>
             </div>
@@ -53,24 +44,18 @@
         </div>
     </div>
 
-</div>
-
+</div><!-- /.container -->
 <% include ../partials/footer.ejs %>
-
+<% include ../partials/software-versions-footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
-
     $table = $('#results');
-
-    $removeBtn = $('#removeBtn')
-
-    // Disabled by default
-    $removeBtn.prop('disabled', 1);
+    $deleteBtn = $('#deleteBtn')
 
     $table.bootstrapTable( {
         method: 'get',
-        url: '/api/project/<%=project.id%>/technologies',
+        url: '/api/technology/<%= technology.id %>/versions',
         cache: false,
         striped: true,
         escape: true,
@@ -83,7 +68,7 @@
         columns: [{
             field:'state',
             checkbox:'true'
-        }, {
+        },   {
             field: 'id',
             title: 'ID',
             visible: false
@@ -91,68 +76,55 @@
             field: 'name',
             title: 'Name',
             sortable: true,
-            formatter: operateFormatter
-        }, {
-            field: 'status',
-            title: 'Status',
-            align: 'center',
-            sortable: true,
-            editable : true
-        }, {
-            field: 'website',
-            title: 'Website',
-            align: 'center',
-            sortable: true
-        }, {
-            field: 'version',
-            title: 'Version',
-            align: 'center',
-            sortable: true
         }]
     });
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-        $removeBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
     });
 
-    $removeBtn.click( function() {
-        var r = confirm("Are you sure you want to remove the selected technology from the project ?");
+    $deleteBtn.click( function() {
+        var r = confirm("Are you sure you want to delete the selected Categories");
         if (r == false) {
             return;
         }
-        $removeBtn.addClass("disabled");
 
         var data = {};
-        data.links = getIdSelections();
+        data.versions = getIdSelections();
 
         $.ajax({
             type: "DELETE",
-            url: '/api/project/<%= project.id %>/technology',
+            url: '/api/versions',
             contentType: "application/json",
             data: JSON.stringify(data),
             complete: function(result){
                 if (result.success) {
-                    location.href = "/project/<%=project.id%>";
+                    $table.bootstrapTable('refresh' );
+                    $deleteBtn.prop('disabled', true );
                 } else {
-                    alert("There was an error adding Technologies");
+                    alert("There was an error deleting category");
                 }
-                $removeBtn.removeClass("disabled");
             }
         });
-    });
+    });;
+
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
-            return row.linkid
+            return row.id
         });
     }
 
-    function operateFormatter(value, row, index) {
-        return [
-            '<a href="/technology/' + row['id'] +'">' + value + '</a>'
-        ].join('');
-    }
+</script>
 
+<script>
+    // assign a technology id to the "Add a new version" modal/form
+    $('#new-version-technology').val("<%= technology.id %>");
+
+    // refresh the versions table when the "Add new version" modal is closed
+    $('#myModal').on('hidden.bs.modal', function () {
+        $table.bootstrapTable('refresh');
+    });
 </script>
 
 </body>
