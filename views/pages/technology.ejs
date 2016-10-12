@@ -84,6 +84,9 @@ getBreadcrumb = function () {
                 <% if(user.canEdit) { %>
                 <li><a href="/technology/<%= technology.id %>/edit">Edit</a></li>
                 <% } %>
+                <% if(user.canEdit) { %>
+                <li><a href="/technology/<%= technology.id %>/versions">Versions</a></li>
+                <% } %>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container -->
