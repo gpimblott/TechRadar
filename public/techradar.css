@@ -199,6 +199,10 @@ span.glyphicon-arrow-left {
     margin-top: 6px;
 }
 
+.top-buffer {
+    margin-top: 10px;
+}
+
 form[role=login] {
     color: #5d5d5d;
     background: #f2f2f2;

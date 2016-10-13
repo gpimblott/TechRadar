@@ -43,6 +43,7 @@
             <ul class="nav navbar-nav white-text nav-justified">
                 <li><a href="/project/<%= project.id %>/technology/add">Add Technology</a></li>
                 <li><a href="/project/<%= project.id %>/technology/remove">Remove Technology</a></li>
+                <li><a id="assign-versions-btn" href="#" onclick="reassignVersions()">Reassign versions</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container -->
@@ -57,7 +58,10 @@
             <li class="active"><%= project.name %></li>
         </ol>
     </div>
-    <div class="row">
+    
+    <% include ../partials/apply-changes-btn.ejs %>
+
+    <div class="row top-buffer">
         <div class="col-sm-6">
 
             <%
@@ -106,9 +110,13 @@
                     <span class="badge"><%= technology.num %></span>
                     <%- link_to(technology.name, '/technology/' + technology.id) %>
                     <% if(technology.version) { %>
-                        <mark><small><%= technology.version %></small></mark>
+                        <mark class="version-mark"><small><%= technology.version %></small></mark>
                     <% } %>
-
+                    
+                    <% if(technology.id) { %>
+                        <% include ../partials/software-versions.ejs %>
+                    <% } %>
+                    
                 </li>
 
                 <% }
@@ -127,6 +135,31 @@
 </div>
 
 <% include ../partials/footer.ejs %>
+<% include ../partials/software-versions-footer.ejs %>
+<script type="text/javascript">
+    $('div.version-dropdown').hide();
+    
+    function reassignVersions(){
+        toggleReassignControls();
+        return false;    
+    }
+
+    function confirmVersions(){
+        toggleReassignControls();
+        return false;    
+    }
+
+    /**
+     * Shows / hides elements used to reassign versions
+     */
+    function toggleReassignControls(){
+        $('a.confirm-version').toggle();
+        $('div.version-dropdown').toggle();
+        $('#reasign-versions-btn').toggle();
+        $('mark.version-mark').toggle(); 
+    }
+    
+</script>
 
 </body>
 </html>
