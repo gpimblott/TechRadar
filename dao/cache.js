@@ -6,14 +6,17 @@
  * Currently:
  *  Statuses
  *  Categories
+ *  "I've used this tech" options
  */
 var categoryDao = require('./category.js');
 var statusDao = require('./status.js');
 var roleDao = require('./role.js');
+var usedThisTechnologyDao = require('./usedThisTechnology.js');
 
 var categories = null;
 var statuses = null;
 var roles = null;
+var usedThisTechOptions = null;
 
 
 var Cache = function () {
@@ -35,6 +38,11 @@ Cache.refresh = function ( app ) {
         roles = results;
         app.locals.roles = results;
     })
+
+    usedThisTechnologyDao.getAllOptions( function (results ) {
+        usedThisTechOptions = results;
+        app.locals.usedThisTechOptions = results;
+    });
 }
 
 Cache.getCategories = function() {
@@ -65,6 +73,10 @@ Cache.getStatus= function( value ) {
         }
     };
     return null;
+}
+
+Cache.getUsedThisTechOptions = function() {
+    return usedThisTechOptions;
 }
 
 module.exports = Cache;

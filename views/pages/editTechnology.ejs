@@ -64,11 +64,27 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="technologyLicence">Technology licence type</label>
+                <input type="text" class="form-control" id="technologyLicence"
+                       value="<%= technology.licence %>"
+                       name="technologyLicence" placeholder="Licence" maxlength="40">
+            </div>
+            <div class="form-group">
+                <label for="technologyLicenceLink">Licence details</label>
+                <input type="url" class="form-control" id="technologyLicenceLink"
+                       name="technologyLicenceLink" placeholder="Licence info link"
+                       value="<%= (technology.licencelink == null ? "http://" : technology.licencelink) %>"
+                       maxlength="200">
+            </div>
+            <div class="form-group">
                 <label for="technologyDescription">Description</label>
                     <textarea class="form-control" rows="3" id="description"
                               name="description" placeholder="Description"
                               required><%= technology.description %></textarea>
 
+            </div>
+            <div class="form-group">
+                <a href="/technology/<%= technology.id %>/versions" class="form-control btn btn-link">Click to manage versions for this technology</a>
             </div>
 
             <button type="submit" class="btn btn-default">Submit</button>
@@ -85,9 +101,11 @@
 
         var technologyName = $("form [name=name]").val();
         var technologyWebsite = $("form [name=website]").val();
+        var technologyLicenceLink = $("form [name=technologyLicenceLink]").val();
 
         var validationResult = TechnologyValidator.validateTechnologyName(technologyName);
-        validateResult = validationResult.valid ? TechnologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+        validationResult = validationResult.valid ? TechnologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
+        validationResult = validationResult.valid ? TechnologyValidator.validateTechnologyLicenceWebsite(technologyLicenceLink) : validationResult;
         if (!validationResult.valid) {
             alert(validationResult.message);
             return;

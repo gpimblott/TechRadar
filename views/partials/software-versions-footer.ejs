@@ -1,0 +1,137 @@
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">                      
+    <!-- Modal content-->
+    
+    <div class="modal-content">
+      <form id="addVersionForm" action="javascript:void(0);" method="POST">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add a new version</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Label</label>
+            <input name="name" id="new-version-name" type="text" class="form-control"
+                    placeholder="4.0.0-alpha.4" autofocus required>
+          </div>
+          <input id="new-version-technology" name="technology" type="hidden" class="form-control">
+          <a id="manage-version-link" href="#">Manage versions for this technology</a>
+        </div>
+        <div class="modal-footer">                
+          <button id="submit-version-btn" type="submit" class="btn btn-default">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+
+<script>
+setupVersionsModal();
+setupVersionDropdowns();
+
+// sometimes needs to be called by other things like bootstrap-table onPostBody
+function setupVersionsModal(){
+  $(".version-dropdown").change(function(e){
+    var selectedOption = $(this).find('option:selected');
+    var techId = $(this).attr("data-technology");
+    $("#new-version-technology").val(techId);
+    $("#manage-version-link").attr("href", "/technology/"+techId+"/versions");
+    if(selectedOption.hasClass("add-new-version")){
+      addVersionOptionClicked($(this));
+    }
+  });    
+
+  $("#submit-version-btn").click(function(){
+    if(isNewVersionFormValid()){
+      $('#myModal').modal('hide');
+    }
+  });
+
+  $("#addVersionForm").unbind('submit').submit(function (event) {
+    postNewVersion($("#addVersionForm"));
+  });
+}
+
+function addVersionOptionClicked(clickedDropdown){
+  $('#myModal').modal('show');
+  // switch back to the default dropdown option, 
+  // so "Add new" option can fire this event again when selected
+  clickedDropdown.val("");
+}
+
+function postNewVersion(targetForm){
+  var techId = $('#new-version-technology').val();
+  var targetDropdown = $('.version-dropdown[data-technology="' + techId + '"]');
+  var serializedFormData = serialiseForm(targetForm);
+  var stringData = JSON.stringify(serializedFormData);
+
+  $.ajax({
+    method: "POST",
+    contentType: "application/json",
+    url: "/api/versions",
+    data: stringData
+  }).done(function( msg ) {
+    if (msg.success) {
+      var newVersionId = msg.result.rows[0].id;
+      addVersionOption(targetDropdown, newVersionId, serializedFormData.name);
+      targetDropdown.val(newVersionId); // select the added version
+    } else {
+      alert("Unable to add this version. Perhaps the same version already exists.");
+    }
+  }).fail(function() {
+      alert('There was an error adding version.');
+  });
+}
+
+/**
+ * Fills each .version-dropdown with versions for its technology
+ */
+function setupVersionDropdowns(){
+    $(".version-dropdown").each(function(){
+      var dropdown = $(this);
+      var technologyId = dropdown.attr("data-technology");
+      getVersions(technologyId, function(versions) {
+        versions.forEach(function(version) {
+          addVersionOption(dropdown, version.id, version.name);
+        });
+      });
+    });
+}
+
+/**
+ * Adds a new option to a dropdown
+ * @param targetDropdown An HTML <select> element returned by jQuery
+ * @param value The value attribute for a new <option> element
+ * @param text Text that will be displayed in the new dropdown <option> 
+ */
+function addVersionOption(targetDropdown, value, text){
+  targetDropdown.append($("<option/>", {
+        value: value,
+        text: text
+    }));
+}
+
+/**
+ * Reads all versions for a technology
+ * @param technologyId ID of a technology
+ * @param callback Callback funtion - 1st argument contains API response (versions data)
+ */
+function getVersions(technologyId, callback) {
+  $.get("/api/technology/" + technologyId + "/versions", function(data, status) {
+    callback(data);
+  });
+}
+
+/**
+ * Checks if the new version form data is valid
+ * @returns {boolean} True if data is valid
+ */
+function isNewVersionFormValid(){
+  var nameInput = $('#new-version-name').val();
+  return (nameInput.length > 0);
+}
+</script>

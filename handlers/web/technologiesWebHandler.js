@@ -3,6 +3,7 @@ var users = require('../../dao/users');
 var comments = require('../../dao/comments');
 var project = require('../../dao/projects');
 var technology = require('../../dao/technology');
+var usedThis = require('../../dao/usedThisTechnology');
 
 var TechnologiesWebHandler = function () {
 };
@@ -46,6 +47,31 @@ TechnologiesWebHandler.edit = function (req, res) {
     });
 };
 
+TechnologiesWebHandler.getVersions = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
+    var num = req.params.id;
+    technology.getById(req.user.id, num, function (value) {
+        if (value == null || value.length == 0 || value.length > 1) {
+            res.redirect('/error');
+            return;
+        } else {
+
+            res.render('pages/editVersions',
+                {
+                    technology: value,
+                    user: req.user,
+                });
+        }
+    });
+};
+
 TechnologiesWebHandler.getTechnology = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
@@ -63,13 +89,43 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
             res.redirect('/error');
         } else {
             var statuses = cache.getStatuses();
+            var usedThisOptions = cache.getUsedThisTechOptions();
             res.render('pages/technology',
                 {
                     technology: value,
                     user: req.user,
-                    statuses: statuses
+                    statuses: statuses,
+                    usedThisOptions: usedThisOptions
                 });
         }
+    });
+};
+
+TechnologiesWebHandler.getUsers = function (req, res) {
+    req.checkParams('id', 'Invalid technology id').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.redirect('/error');
+        return;
+    }
+
+     
+    var num = req.params.id;
+
+    technology.getById(req.user.id, num, function (value) {
+        usedThis.getUsersForTechnology(num, null, function(users) {
+            if (value == null || value.length == 0 || value.length > 1) {
+                res.redirect('/error');
+            } else {
+                res.render('pages/technologyUsers',
+                    {
+                        technology: value,
+                        user: req.user,
+                        techUsers: users
+                    });
+            }
+        });
     });
 };
 
