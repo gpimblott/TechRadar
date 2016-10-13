@@ -1,4 +1,5 @@
 var users = require('../../dao/users.js');
+var User = require('../../models/User');
 
 var security = require('../../utils/security.js');
 
@@ -40,13 +41,8 @@ UsersApiHandler.addUser = function (req, res) {
     }
 
     users.add(
-        username,
-        email,
-        sanitizer(req.body.displayName),
-        password,
-        sanitizer(req.body.role),
-        enabled,
-
+        new User(null, username, email, sanitizer(req.body.displayName),
+            password, null, sanitizer(req.body.role), enabled),
         function (result, error) {
             apiutils.handleResultSet(res, result, error);
         });
@@ -95,8 +91,9 @@ UsersApiHandler.updateProfile = function (req, res) {
                         .update(password).digest('base64')
                 }
 
-                users.update(req.user.id, email, displayName, passwordHash, avatarData, userFromDb.role, userFromDb.enabled, function (result, error) {
-                    apiutils.handleResultSet(res, result , error);
+                users.update(new User(req.user.id, userFromDb.username, email, displayName, passwordHash, avatarData, userFromDb.role, userFromDb.enabled), 
+                    function (result, error) {
+                        apiutils.handleResultSet(res, result , error);
                 });
             }
         }
@@ -142,7 +139,7 @@ UsersApiHandler.updateUser = function (req, res) {
                 email = userFromDb.email;
             }
 
-            users.update(userId, email, displayName, passwordHash, avatarData, role, enabled, function (result, error) {
+            users.update(new User(userId, userFromDb.username, email, displayName, passwordHash, avatarData, role, enabled), function (result, error) {
                 apiutils.handleResultSet(res, result, error);
             });
         }

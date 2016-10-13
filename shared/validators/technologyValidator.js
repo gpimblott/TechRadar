@@ -9,7 +9,8 @@
             return { valid: false, message: "Technology Name too long" };
         }
 
-        var pattern =  /[A-Za-z0-9][A-Za-z0-9 -]*$/
+        var pattern = /^[A-Za-z0-9]{1}[A-Za-z0-9 -]*$/;
+
         if(!pattern.test(name)) {
             return { valid: false, message: "Technology name must start with a character/digit"};
         }
@@ -23,8 +24,20 @@
             return { valid: false, message: "Technology website too short" };
         }
 
-        if( name.length > 100) {
+        if(name.length > 100) {
             return { valid: false, message: "Technology website too long" };
+        }
+
+        return { valid: true };
+    };
+
+    exports.validateTechnologyLicenceWebsite = function (link) {
+        if(link && link.length < 4 && link.length !== 0) {
+            return { valid: false, message: "Technology licence website link too short" };
+        }
+
+        if(link && link.length > 200) {
+            return { valid: false, message: "Technology licence website link too long" };
         }
 
         return { valid: true };

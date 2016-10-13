@@ -12,6 +12,7 @@ CommentApiHandler.addComment = function (req, res) {
         sanitizer(req.body.technology),
         sanitizer(req.body.comment),
         sanitizer(req.user.id),
+        sanitizer(req.body.software_version_id),
 
         function (result, error) {
             apiutils.handleResultSet(res, result, error);

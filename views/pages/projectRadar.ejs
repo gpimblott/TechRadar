@@ -105,6 +105,10 @@
                 <li class="list-group-item" id="tech<%= technology.num %>">
                     <span class="badge"><%= technology.num %></span>
                     <%- link_to(technology.name, '/technology/' + technology.id) %>
+                    <% if(technology.version) { %>
+                        <mark><small><%= technology.version %></small></mark>
+                    <% } %>
+
                 </li>
 
                 <% }
