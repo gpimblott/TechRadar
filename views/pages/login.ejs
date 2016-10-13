@@ -33,14 +33,21 @@
 
     <row>
         <div class="col-md-4 col-md-offset-4" >
+            <% if (process.env.AZURE_IDENTITY_METADATA) { %>
             <form class="form-signin" action="/loginAzureAD" method="get" role="login">
             <img src="radar.png"  width="75px">
             <h4 class="form-signin-heading">Sign in using: </h4>
                 <button class="btn btn-sm btn-primary btn-block" type="submit">ADFS</button>
             </form>
             <br/>
+            <% } %>
+
             <form class="form-signin" action="/login" method="post" role="login">
-                <h5 class="form-signin-heading">Or with registered user:</h5>
+                <% if (process.env.AZURE_IDENTITY_METADATA) { %>
+                    <h5 class="form-signin-heading">Or with registered user:</h5>
+                <% } else { %>
+                    <h5 class="form-signin-heading">Login:</h5>
+                <% } %>
                 <% if(messages.length>0) {%>
                 <label class="warning"><%=messages[0]%></label>
                 <%}%>
