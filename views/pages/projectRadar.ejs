@@ -144,8 +144,15 @@
         return false;    
     }
 
-    function confirmVersions(){
+    function updateVersions(){
         toggleReassignControls();
+        $('select.version-dropdown').each(function(){
+            var linkId = $(this).attr("data-selected-linkid");
+            var versionId = $(this).val();
+            if(versionId != ""){
+                requestVersionUpdate(linkId, versionId);
+            }
+        });
         return false;    
     }
 
@@ -157,6 +164,24 @@
         $('div.version-dropdown').toggle();
         $('#reasign-versions-btn').toggle();
         $('mark.version-mark').toggle(); 
+    }
+
+    function requestVersionUpdate(linkId, versionId){
+        console.log("linkid=" + linkId + ", versionId=" + versionId);
+        $.ajax({
+            type: "PUT",
+            url: "/api/link/" + linkId + "/version",
+            contentType: "application/json",
+            data: JSON.stringify({version: versionId}),
+            success: function(result) {
+                if( result.success) {
+                    console.log(result);
+                } else {
+                    console.error("Version update failed for linkid=" + linkId + ", versionId=" + versionId);
+                    alert(`There was an error updating a version.`);
+                }
+            }
+        });
     }
     
 </script>

@@ -116,6 +116,21 @@ Projects.deleteTechnologies = function (ids, done) {
         });
 }
 
+Projects.updateTechnologyVersion = function (versionId, linkId, done) {
+
+    var params = [versionId, linkId];
+    var sql = `UPDATE technology_project_link SET software_version_id=$1 where id=$2;`;
+
+    dbhelper.query(sql, params,
+        function (result) {
+            done(result)
+        },
+        function (error) {
+            console.log(error);
+            done(false, error);
+        })
+}
+
 /**
  * Add a new project
  * @param name Name of the project to add

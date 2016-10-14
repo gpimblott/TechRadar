@@ -37,6 +37,11 @@ ApiProjectRoutes.createRoutes = function (self) {
         handler.deleteTechnologiesFromProject);
 
     /**
+     * Update software version in a technology - project link
+     */
+    self.app.put('/api/link/:linkId/version', security.canEdit, jsonParser, handler.updateTechnologyVersion);
+
+    /**
      * Get all technologies associated with projects
      */
     self.app.get('/api/project/:projectId/technologies', security.canEdit,  handler.getTechnologiesForProject );

@@ -250,6 +250,19 @@ Technology.getAllForProject = function (id, done) {
         });
 };
 
+Technology.isProjectLinkUnique = function (linkId, versionId, done){
+    /* check if other technology-project links use the same technology version */
+    var sql = `SELECT * from technology_project_link WHERE id!=$1 AND software_version_id=$2`;
+    dbhelper.query(sql, [linkId, versionId],
+        function (results) {
+            done(null, results);
+        },
+        function (error) {
+            console.error(error);
+            done(error, null);
+        });
+}
+
 /**
  * Search for technologies
  * @param value String to search for
