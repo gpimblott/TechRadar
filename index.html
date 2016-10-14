@@ -20,7 +20,7 @@
 <header>
     <div class="inner">
         <h1>Tech Radar</h1>
-        <h2>Community technology management and visualisation tool</h2>
+        <h2>Community technology management tool</h2>
         <a href="https://github.com/gpimblott/TechRadar" class="button">
             <small>View project on</small>
             GitHub</a>
@@ -36,42 +36,99 @@
                 </a>Tech Radar
             </h1>
 
+            <p>Web Application enabling community technology management</p>
+            <centre>
+                <img src="images/Tech-radar-login.png" alt="Login screen" width="250px" border="1px"
+                     style="border: 1px outset gray;" align="middle">
+                <img src="images/techradar-radar.png" alt="Login screen" width="250px" border="1px"
+                     style="border: 1px outset gray;" align="middle">
+            </centre>
 
-            <p>Web Application to enable community technology management within your organisation.</p>
-
-
+            <br>
+            <p>It started with a few simple aims</p>
             <ul>
-                <li>Add technologies that you are interested in and associate with categories and projects</li>
-                <li>Get your users to comment on the technologies they have experience in</li>
-                <li>Vote on whether they think they should be adopted, trialed or avoided.<br>
-                </li>
-                <li>Users with the correct permissions can then set the 'offical' status with a rationale for each
-                    technology
-                </li>
+                <li>Enable the sharing of experiences with technology</li>
+                <li>Record the technologies used on projects</li>
+                <li>Promote a common view of technologies</li>
             </ul>
 
+            <p>But has grown a bit beyond that...</p>
+
+            <h2>Quick start</h2>
+            <p>The quickest way to get started is to use the 'Deploy to Heroku' button below. When it finished
+                you will have a fully working instance in Heroku to test (it's free).
+            <ul>
+                <li>Username : admin</li>
+                <li>Password : letmein</li>
+            </ul>
+            </p>
             <a href="https://heroku.com/deploy?template=https://github.com/gpimblott/TechRadar/tree/master">
                 <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
             </a>
-            <p>Default credentials</p>
-            <p>Username : admin</p>
-            <p>Password : letmein</p>
-
             <p/>
-            <img src="images/Tech-radar-login.png" alt="Login screen" width="250px" border="1px" style="border: 1px outset gray;">
-            <img src="images/techradar-homepage.png" alt="Login screen" width="250px" border="1px" style="border: 1px outset gray;">
-            <img src="images/techradar-radar.png" alt="Login screen" width="250px" border="1px" style="border: 1px outset gray;">
 
-            <h2>
-                <a id="planned-future-features" class="anchor" href="#planned-future-features" aria-hidden="true"><span
-                        aria-hidden="true" class="octicon octicon-link"></span></a>Planned future features</h2>
+            <h2>What does it do ?</h2>
+
+            <b>It's a catalogue of technologies</b>
+            <ul>
+                <li>Add technologies, descriptions, license information</li>
+                <li>Group technologies into categories</li>
+                <li>Assign technologies to projects</li>
+                <li>Visualise the result as a Tech radar</li>
+            </ul>
+
+            <b>It gathers your users opinions on technology</b>
+            <ul>
+                <li>Users comment on technologies</li>
+                <li>Vote on whether they think they should be adopted, trialed or avoided.</li>
+                <li>Set an 'official' status with a rationale for each technology</li>
+            </ul>
+
+            <b>It tracks your users skills</b>
+            <ul>
+                <li>Users indicate they have used a technology</li>
+            </ul>
+
+
+            <h2>How do I use it ?</h2>
+
+            <img src="images/techradar-homepage.png" alt="Login screen" width="250px" border="1px"
+                 style="border: 1px outset gray;">
+
+            <p>Login - credentials provided by your admin</p>
+
+            <p>Once logged in all operations are available from the toolbar.</p>
+
+            <h3>Categories</h3>
+
+            <p>Categories can be added using the admin menu to suite your environment.  Once a new category has
+            been added you can assign technologies to it.  TYhis </p>
+
+            <h3>Technologies</h3>
+            <p>Add technologies (Technology->Add Technology),
+                or add projects (Projects->Add Project) - it doesn't matter</p>
+
+            <p>To start a new installation you will have to spend some time adding technologies, this will
+            then allow youn to add them to projects.  As soon as technologies are added they are available for
+            users to comment/vote.</p>
+
+            <h3>Projects</h3>
+
+            <p>Once you have a core set of technologies, adding a new project is easy and technologies can be
+                added in bulk from the projects page, using the 'Add Technology' button</p>
+
+            <p>On a technology page, users can Vote, Comment and Edit the information from the sub-toolbar,
+                below the main header.  Users can also indicate that they have used the technology before.</p>
+
+
+            <h2>Possible enhancements</h2>
 
             <ul>
                 <li>
                     <p>Stack builder</p>
 
                     <ul>
-                        <li>Associate a number of trechnologies into a 'stack'</li>
+                        <li>Associate a number of technologies into a 'stack'</li>
                         <li>View reports/comments for each technology in one place</li>
                         <li>Add comments on the 'stack' as a whole</li>
                     </ul>
@@ -82,70 +139,14 @@
                     <ul>
                         <li>Show the status of technologies over time</li>
                         <li>Status changes</li>
-                        <li>When did users vote and the status</li>
+                        <li>When did users vote</li>
                         <li>When did projects adopt</li>
                     </ul>
                 </li>
-                <li>
-                    <p>Supplier index</p>
 
-                    <ul>
-                        <li>Which suppliers have we used and our verdict</li>
-                    </ul>
-                </li>
             </ul>
 
-            <h2>
-                <a id="design" class="anchor" href="#design" aria-hidden="true"><span aria-hidden="true"
-                                                                                      class="octicon octicon-link"></span></a>Design
-            </h2>
-
-            <p>TechRadar is a Web Application devleoped using NodeJS, Passport, Bootstrap and PostgreSQL.<br>
-                It consists of two layers:</p>
-
-            <ol>
-                <li>Web Layers</li>
-                <li>API REST Services</li>
-            </ol>
-
-            <p>The web application calls the API REST services using ajax.</p>
-
-            <h2>
-                <a id="pre-requisites" class="anchor" href="#pre-requisites" aria-hidden="true"><span aria-hidden="true"
-                                                                                                      class="octicon octicon-link"></span></a>Pre-requisites
-            </h2>
-
-            <ul>
-                <li>NodeJS</li>
-                <li>PostgreSQL database (other databases are available and will probably work with small changes to the
-                    schema)
-                </li>
-            </ul>
-
-            <h2>
-                <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true"
-                                                                                                  class="octicon octicon-link"></span></a>Installation
-            </h2>
-
-            <p>Installation is as follows:</p>
-
-            <ol>
-                <li>Provision a node environment and PostgreSQL database</li>
-                <li>Define the following environment variables; either by creating a process.env in the root directory
-                    or defining standard environment variables
-
-                    <ul>
-                        <li>DATABASE_URL</li>
-                    </ul>
-                </li>
-                <li>Deploy code to target environment</li>
-                <li>Run 'database/runMigrations.js up' to create all the required tables</li>
-                <li>Run 'database/dbtestdata.js' to create some test data if required</li>
-                <li>Run 'npm test' to run unit tests</li>
-                <li>Run 'server.js' :)</li>
-            </ol>
-
-            <p>Deploying the code to your preferred NodeJS environment (personally I use OpenShift and Heroku)</p>
+            <p>For more information and installation details see the project <a href="https://github.com/gpimblott/TechRadar">readme.md</a></p>
         </section>
 
         <aside id="sidebar">
