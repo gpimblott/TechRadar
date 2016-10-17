@@ -65,10 +65,18 @@ ProjectsApiHandler.updateTechnologyVersion = function (req, res) {
     var versionId = sanitizer(req.body.version);
     var linkId = sanitizer(req.params.linkId);
 
-    // if(isTechnologyLinkUnique(versionId, linkId)){
-        projects.updateTechnologyVersion(versionId, linkId, function (result, error) {
-            apiutils.handleResultSet(res, result, error);
-        });
+    if(versionId == "undefined" || versionId == ""){
+        apiutils.handleResultSet(res, null, new Error("Invalid version: " + versionId));
+        return;
+    }
+    if(linkId == "undefined" || linkId == ""){
+        apiutils.handleResultSet(res, null, new Error("Invalid linkId: " + versionId));
+        return;
+    }
+
+    projects.updateTechnologyVersion(versionId, linkId, function (result, error) {
+        apiutils.handleResultSet(res, result, error);
+    });
 };
 
 ProjectsApiHandler.getTechnologiesForProject = function (req, res) {
@@ -101,16 +109,5 @@ ProjectsApiHandler.updateProject = function (req, res) {
         });
 
 };
-
-function isTechnologyLinkUnique(linkId, versionId){
-    technology.isProjectLinkUnique(linkId, versionId, function(result){
-        return result;
-    });
-}
-
-function aaa(){
-    console.log("AAA");
-    return "ret";
-}
 
 module.exports = ProjectsApiHandler;

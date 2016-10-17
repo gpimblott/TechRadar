@@ -116,10 +116,23 @@ Projects.deleteTechnologies = function (ids, done) {
         });
 }
 
+/**
+ * Changes the version assigned to a technology used in a project
+ * @param versionId corresponds to the software_version_id column
+ * @param linkId id of a technology_project_link record
+ * @param done 
+ */
 Projects.updateTechnologyVersion = function (versionId, linkId, done) {
 
     var params = [versionId, linkId];
-    var sql = `UPDATE technology_project_link SET software_version_id=$1 where id=$2;`;
+    var sql = `UPDATE technology_project_link SET software_version_id =
+    	COALESCE(
+            (SELECT $1::integer WHERE NOT EXISTS (SELECT 1 FROM technology_project_link WHERE software_version_id = $1 AND projectid =
+                -- look for duplicates only in the same project
+                (SELECT projectid FROM technology_project_link WHERE id=$2))),
+            -- use the original value if the nested SELECT finds a duplicate 
+            software_version_id)
+        WHERE id=$2`;
 
     dbhelper.query(sql, params,
         function (result) {

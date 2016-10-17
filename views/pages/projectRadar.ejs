@@ -137,9 +137,13 @@
 <% include ../partials/footer.ejs %>
 <% include ../partials/software-versions-footer.ejs %>
 <script type="text/javascript">
+
+    var originalVersionIds = [];
+
     $('div.version-dropdown').hide();
     
     function reassignVersions(){
+        originalVersionIds = getCurrentVersionIds();
         toggleReassignControls();
         return false;    
     }
@@ -149,10 +153,11 @@
         $('select.version-dropdown').each(function(){
             var linkId = $(this).attr("data-selected-linkid");
             var versionId = $(this).val();
-            if(versionId != ""){
+            if(originalVersionIds[linkId] != versionId){
                 requestVersionUpdate(linkId, versionId);
             }
         });
+        location.reload();
         return false;    
     }
 
@@ -178,10 +183,24 @@
                     console.log(result);
                 } else {
                     console.error("Version update failed for linkid=" + linkId + ", versionId=" + versionId);
-                    alert(`There was an error updating a version.`);
+                    alert(`There was an error updating a version to versionId = [` + versionId + "]");
                 }
             }
         });
+    }
+
+    /**
+     * Reads values from version-dropdowns
+     * @returns array of version IDs, indexes are equal to technology-project link IDs
+     */
+    function getCurrentVersionIds(){
+        var currentVersionIds = [];
+        $('select.version-dropdown').each(function(){
+            var linkId = $(this).attr("data-selected-linkid");
+            var versionId = $(this).val();
+            currentVersionIds[linkId] = versionId;
+        })
+        return currentVersionIds;
     }
     
 </script>
