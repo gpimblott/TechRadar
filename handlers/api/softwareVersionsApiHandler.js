@@ -25,6 +25,20 @@ SoftwareVersionsApiHandler.addVersion = function (req, res) {
     })
 };
 
+SoftwareVersionsApiHandler.updateVersion = function (req, res) {
+    var versionId = sanitizer(req.body.version);
+    var name = sanitizer(req.body.name);
+
+    if(name == "undefined" || name == ""){
+        apiutils.handleResultSet(res, null, new Error("Invalid name: " + name));
+        return;
+    }
+
+    versionsDao.update(versionId, name, function (result, error) {
+        apiutils.handleResultSet(res, result, error);
+    })
+};
+
 SoftwareVersionsApiHandler.deleteVersions = function (req, res) {
     var versions = req.body.versions;
 
