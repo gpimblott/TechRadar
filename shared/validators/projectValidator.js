@@ -17,4 +17,5 @@
         return { valid: true };
     };
 
+
 })(typeof exports === 'undefined'? this['ProjectValidator']={}: exports);
