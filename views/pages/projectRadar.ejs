@@ -150,13 +150,27 @@
 
     function updateVersions(){
         toggleReassignControls();
+
+        var reassignedVersions = [];
+
         $('select.version-dropdown').each(function(){
             var linkId = $(this).attr("data-selected-linkid");
             var versionId = $(this).val();
-            if(originalVersionIds[linkId] != versionId){
+
+            // if the version was reassigned and is not a duplicate reassignment
+            if(originalVersionIds[linkId] != versionId && 
+                reassignedVersions.indexOf(versionId) == -1) {
+
+                reassignedVersions[linkId] = versionId;
+            }
+        });
+
+        $.each(reassignedVersions, function(linkId, versionId){
+            if(versionId) { // skip empty elements of this array
                 requestVersionUpdate(linkId, versionId);
             }
         });
+
         location.reload();
         return false;    
     }
@@ -172,7 +186,6 @@
     }
 
     function requestVersionUpdate(linkId, versionId){
-        console.log("linkid=" + linkId + ", versionId=" + versionId);
         $.ajax({
             type: "PUT",
             url: "/api/link/" + linkId + "/version",

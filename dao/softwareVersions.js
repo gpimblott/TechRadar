@@ -48,8 +48,13 @@ SoftwareVersions.add = function (technology, name, done) {
  * @param done Function to call with the results
  */
 SoftwareVersions.update = function (version, name, done) {
-    var params = [name, version];
-    var sql = `UPDATE software_versions SET name=$1 WHERE id=$2`;
+    var params = [version, name];
+    var sql = `UPDATE software_versions SET name=
+        COALESCE(
+            (SELECT $2::varchar WHERE NOT EXISTS (SELECT 1 FROM software_versions WHERE name = $2)),
+            -- use the original name if the new name is a duplicate
+            name)
+        WHERE id=$1`;
 
     dbhelper.query(sql, params,
         function (results) {
