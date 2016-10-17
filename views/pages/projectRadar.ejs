@@ -76,11 +76,11 @@
 
                 <%
                 for (var i = 0, len = technologies.length; i < len; i++) {
-                    var technology = technologies[i];
+                    var technology = technologies[ i ];
                 if( technology.status != heading) {
                     heading = technology.status;
                 %>
-                <li class="<%- (i === 0 ) ? 'active' : ''%>" >
+                <li class="<%- (i === 0 ) ? 'active' : '' %>">
                     <a href="#<%= technology.status %>" data-toggle="tab"><%= technology.status %></a>
                 </li>
                 <%
@@ -91,9 +91,12 @@
 
             <div class="tab-content">
                 <%
-                    var heading = "";
+                var heading = "";
+                var lastTechId = -1;
+                var lastTechNum=-1;
+
                 for (var i = 0, len = technologies.length; i < len; i++) {
-                    var technology = technologies[i];
+                    var technology = technologies[ i ];
 
                 if( technology.status != heading) {
                     heading = technology.status;
@@ -102,12 +105,23 @@
             </div>
             <% } %>
 
-            <div class="tab-pane <%- (i === 0 ) ? 'active' : ''%>" id="<%= heading %>">
+            <div class="tab-pane <%- (i === 0 ) ? 'active' : '' %>" id="<%= heading %>">
 
                 <% } %>
 
                 <li class="list-group-item" id="tech<%= technology.num %>">
-                    <span class="badge"><%= technology.num %></span>
+                    <%
+                        var techNum;
+                        if(technology.id===lastTechId) {
+                            techNum = lastTechNum;
+                        } else {
+                            techNum = technology.num;
+                            lastTechNum = technology.num;
+                        }
+
+                        lastTechId=technology.id;
+                     %>
+                    <span class="badge"><%= techNum %></span>
                     <%- link_to(technology.name, '/technology/' + technology.id) %>
                     <% if(technology.version) { %>
                         <mark class="version-mark"><small><%= technology.version %></small></mark>

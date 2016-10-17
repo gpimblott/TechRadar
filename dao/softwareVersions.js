@@ -9,7 +9,10 @@ var SoftwareVersions = function () {
  * @param done Function to call with the results
  */
 SoftwareVersions.getAllForTechnology = function (technology, done) {
-    var sql = "SELECT * from software_versions WHERE technology=$1";
+    var sql = `SELECT sv.id, sv.name, sv.technology, COUNT(tpl.projectid) AS projects_count from software_versions AS sv         
+        LEFT OUTER JOIN technology_project_link tpl ON tpl.software_version_id = sv.id
+        WHERE sv.technology=$1
+        GROUP BY sv.id, sv.name, sv.technology`;
     var params = [technology];
 
     dbhelper.query(sql, params,

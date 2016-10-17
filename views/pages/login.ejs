@@ -33,9 +33,14 @@
 
     <row>
         <div class="col-md-4 col-md-offset-4" >
+            <form class="form-signin" action="/loginAzureAD" method="get" role="login">
+            <img src="radar.png"  width="75px">
+            <h4 class="form-signin-heading">Sign in using: </h4>
+                <button class="btn btn-sm btn-primary btn-block" type="submit">ADFS</button>
+            </form>
+            <br/>
             <form class="form-signin" action="/login" method="post" role="login">
-                <img src="radar.png"  width="75px">
-                <h4 class="form-signin-heading">Sign in</h4>
+                <h5 class="form-signin-heading">Or with registered user:</h5>
                 <% if(messages.length>0) {%>
                 <label class="warning"><%=messages[0]%></label>
                 <%}%>
@@ -47,11 +52,6 @@
                 <p class="text-center">No account? <a href="/signup">Sign up</a></p>
             </form>
 
-            <br/>
-            <form class="form-signin" action="/loginAzureAD" method="get" role="login">
-            <h5 class="form-signin-heading">Or log in using:</h5>
-                <button class="btn btn-sm btn-primary btn-block" type="submit">ADFS</button>
-            </form>
          </div>
     </row>
 </div>
