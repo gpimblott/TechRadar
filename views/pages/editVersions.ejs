@@ -34,6 +34,10 @@
                         <i class="glyphicon glyphicon-plus"></i>
                         Add
                     </a>
+                    <button id="editBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Edit
+                    </button>
                     <button id="deleteBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
                         Delete
@@ -52,6 +56,7 @@
 <script>
     $table = $('#results');
     $deleteBtn = $('#deleteBtn')
+    $editBtn = $('#editBtn');
 
     $table.bootstrapTable( {
         method: 'get',
@@ -85,6 +90,7 @@
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        $editBtn.prop('disabled', $table.bootstrapTable('getSelections').length != 1);
     });
 
     $deleteBtn.click( function() {
@@ -112,10 +118,43 @@
         });
     });;
 
+    $editBtn.click(function () {
+        var data = {};
+        var name = 
+        data.version = getIdSelections()[0];
+        data.name = prompt("Please enter a new name for this version. " +
+            "Note that the name will change for all projects that already use this version of technology.", 
+            getNameSelections()[0]);
+
+        if(data.name == null){
+            return false;
+        }
+        
+        $.ajax({
+            method: "PUT",
+            contentType: "application/json",
+            url: "/api/versions",
+            data: JSON.stringify(data)
+        }).done(function( msg ) {
+            if(msg.success) {
+                location.reload();
+            } else {
+                alert("Unable to update this version. Perhaps the same version already exists.");
+            }
+        }).fail(function() {
+            alert('There was an error updating version.');
+        });
+    });
 
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.id
+        });
+    }
+
+    function getNameSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.name
         });
     }
 

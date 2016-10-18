@@ -230,7 +230,7 @@ Technology.getAllForCategory = function (cname, done) {
  */
 Technology.getAllForProject = function (id, done) {
     var sql = "SELECT row_number() over (order by s) AS num,t.*," + 
-        " s.name as status, ver.name AS version, tpl.id AS linkid" +
+        " s.name as status, ver.id AS versionid, ver.name AS version, tpl.id AS linkid" +
         " FROM technologies t" +
         " INNER JOIN technology_project_link tpl on t.id=tpl.technologyid" +
         " LEFT OUTER JOIN software_versions ver on ver.id=tpl.software_version_id" +
