@@ -36,27 +36,26 @@
     </div>
 
     <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <canvas id="usersOfTechnology" height="200"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <canvas id="statusChangesChart" height="200"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <canvas id="mostUsedTechChart" height="200"></canvas>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-5 col-md-offset-1" height="300">
-            <canvas id="userChart" height="150"></canvas>
+            <canvas id="userChart" height="300"></canvas>
         </div>
         <div class="col-md-5" height="300">
-            <canvas id="commentsChart" height="150"></canvas>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <canvas id="barChart" height="150"></canvas>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <canvas id="barChart2" height="150"></canvas>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <canvas id="usersOfTechnology" height="150"></canvas>
+            <canvas id="commentsChart" height="300"></canvas>
         </div>
     </div>
 
@@ -66,7 +65,64 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>
 
 <script>
+    var graphColorTransparency = 0.2; // should be > 0 and < 1.0 
 
+    var colors = {
+        TBD: 'rgba(100, 100, 100, ' + graphColorTransparency + ')', 
+        Adopt: 'rgba(0, 255, 0, ' + graphColorTransparency + ')',
+        Trial: 'rgba(0, 0, 200, ' + graphColorTransparency + ')',
+        Discuss: 'rgba(200, 200, 0, ' + graphColorTransparency + ')',
+        Avoid: 'rgba(255, 0, 0, ' + graphColorTransparency + ')',
+        Unknown: 'rgba(0, 0, 0, ' + graphColorTransparency + ')'
+    };
+
+    var statusLabels = [
+        {text: 'TBD', fillStyle: colors.TBD}, 
+        {text: 'Adopt', fillStyle: colors.Adopt},
+        {text: 'Trial', fillStyle: colors.Trial},
+        {text: 'Discuss', fillStyle: colors.Discuss},
+        {text: 'Avoid', fillStyle: colors.Avoid},
+    ];
+
+    function assignColorsToData(apiData){
+        return apiData.map(function(value, index){
+            switch(value.status_id){
+                case 0: return colors.TBD; 
+                case 1: return colors.Adopt;
+                case 2: return colors.Trial;
+                case 3: return colors.Discuss;
+                case 4: return colors.Avoid;
+                default: return colors.Unknown;
+            }
+        });
+    }
+
+    function removeColorTransparency(dataColors){
+        return dataColors.map(function(value, index){
+            return value.replace(graphColorTransparency, '1.0'); // get rid of transparency
+        });
+    }
+
+    function createLegend(labels){
+        return {
+            display: true,
+            labels: {
+                generateLabels: function(){
+                    return labels;
+                }
+            }
+        }
+    }
+
+    function defaultScalesSetup(){
+        return { 
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    min: 0
+                }
+        }]};
+    }
 
     $.get('/api/dash/votes/month', function (result) {
 
@@ -76,15 +132,21 @@
             labels.push(item.name);
             data.push(item.total);
         });
+        
+        var backgroundColor = assignColorsToData(result);
+        var borderColor = removeColorTransparency(backgroundColor);
 
-        var statusVoteElement = document.getElementById("barChart");
+        var statusVoteElement = document.getElementById("statusChangesChart");
         var statusVoteChart = new Chart(statusVoteElement, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
                     label: '# of Votes',
-                    data: data
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -92,15 +154,8 @@
                     display: true,
                     text: 'Votes for status change in last 3 months'
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            stepSize: 1
-                        }
-                    }]
-                }
+                legend: createLegend(statusLabels),
+                scales: defaultScalesSetup()
             }
         });
     });
@@ -113,14 +168,21 @@
             data.push(item.total);
         });
 
-        var barCtx2 = document.getElementById("barChart2");
+        var barCtx2 = document.getElementById("mostUsedTechChart");
+
+        var backgroundColor = assignColorsToData(result);
+        var borderColor = removeColorTransparency(backgroundColor);
+
         var myBarChart2 = new Chart(barCtx2, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
                     label: '# of uses',
-                    data: data
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -128,19 +190,12 @@
                     var segment = myBarChart2.getElementsAtEvent(evt);
                     console.log(segment);
                 },
+                legend: createLegend(statusLabels),
                 title: {
                     display: true,
                     text: 'Technologies used in the most projects'
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            stepSize: 1
-                        }
-                    }]
-                }
+                scales: defaultScalesSetup()
             }
         });
     });
@@ -161,7 +216,9 @@
                 labels: labels,
                 datasets: [{
                     label: '# of Votes',
-                    data: data
+                    data: data,
+                    borderColor: 'black',
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -169,15 +226,7 @@
                     display: true,
                     text: 'Top 10 voting users'
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            stepSize: 5
-                        }
-                    }]
-                }
+                scales: defaultScalesSetup()
             }
         });
     });
@@ -193,6 +242,9 @@
             data.push(item.total);
         });
 
+        var backgroundColor = assignColorsToData(result);
+        var borderColor = removeColorTransparency(backgroundColor);
+
         var commentChartElement = document.getElementById("commentsChart");
         var commentChart = new Chart(commentChartElement, {
             type: 'bar',
@@ -200,7 +252,11 @@
                 labels: labels,
                 datasets: [{
                     label: '# of Comments',
-                    data: data
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1
+
                 }]
             },
             options: {
@@ -208,15 +264,8 @@
                     display: true,
                     text: 'Top 10 Technologies with comments'
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            stepSize: 5
-                        }
-                    }]
-                }
+                legend: createLegend(statusLabels),
+                scales: defaultScalesSetup()
             }
         });
     });
@@ -229,27 +278,10 @@
         var techNames = apiData.map(function(value, index){
             return value.name;
         });
-        var colors = {
-            TBD: 'rgba(100, 100, 100, 0.2)', 
-            Adopt: 'rgba(0, 255, 0, 0.2)',
-            Trial: 'rgba(0, 0, 200, 0.2)',
-            Discuss: 'rgba(200, 200, 0, 0.2)',
-            Avoid: 'rgba(255, 0, 0, 0.2)',
-            Unknown: 'rgba(0, 0, 0, 0.2)'
-        };
-        var statusColors = apiData.map(function(value, index){
-            switch(value.status_id){
-                case 0: return colors.TBD; 
-                case 1: return colors.Adopt;
-                case 2: return colors.Trial;
-                case 3: return colors.Discuss;
-                case 4: return colors.Avoid;
-                default: return colors.Unknown;
-            }
-        });
-        var statusBorderColors = statusColors.map(function(value, index){
-            return value.replace('0.2', '1.0'); // gets rid of transparency
-        });
+
+        var backgroundColor = assignColorsToData(apiData);
+        var borderColor = removeColorTransparency(backgroundColor);
+
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -257,8 +289,8 @@
                 datasets: [{
                     label: 'Users',
                     data: usersCount,
-                    backgroundColor: statusColors,
-                    borderColor: statusBorderColors,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
                     borderWidth: 1
                 }]
             },
@@ -267,27 +299,8 @@
                     display: true,
                     text: 'Technologies used by the most people'
                 },
-                legend: {
-                display: true,
-                labels: {
-                    generateLabels: function(){
-                        return [
-                        {text: 'TBD', fillStyle: colors.TBD}, 
-                        {text: 'Adopt', fillStyle: colors.Adopt},
-                        {text: 'Trial', fillStyle: colors.Trial},
-                        {text: 'Discuss', fillStyle: colors.Discuss},
-                        {text: 'Avoid', fillStyle: colors.Avoid},
-                        ];
-                    }
-                }
-                },
-            scales: {
-                yAxes: [{
-                ticks: {
-                    beginAtZero:true,
-                }
-                }]
-            }
+                legend: createLegend(statusLabels),
+                scales: defaultScalesSetup()
             }
         });
     });

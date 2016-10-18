@@ -329,12 +329,17 @@ Technology.removeProjects = function (technologyId, projectIds, done) {
 };
 
 Technology.getMostUsedTechnologies = function ( done ) {
-    var sql = "SELECT t.name, count(technologyid) as total " +
-            "FROM technology_project_link tpl " +
-            "JOIN technologies t on tpl.technologyid=t.id " +
-            "GROUP BY t.name " +
-            "ORDER BY total DESC " +
-            "LIMIT 40";
+    var sql = `SELECT t.name, count(technologyid) as total, s.id AS status_id 
+            FROM technology_project_link tpl 
+            JOIN technologies t on tpl.technologyid=t.id 
+            -- status_id is used by dashboard graphs
+            LEFT OUTER JOIN status s on s.id =
+                COALESCE( (select statusid from tech_status_link 
+                    WHERE technologyid=t.id
+                    ORDER BY date DESC LIMIT 1),0)
+            GROUP BY t.name, s.id
+            ORDER BY total DESC 
+            LIMIT 40`;
 
     dbhelper.query(sql, [],
         function (results) {
