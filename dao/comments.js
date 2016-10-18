@@ -65,11 +65,16 @@ Comments.getCountForTechnology = function (technology, done) {
  * @param done
  */
 Comments.getTotalNumberCommentsForTechnologies = function (done) {
-    var sql = "select count(*) total, t.name technology " +
-        "FROM comments c " +
-        "JOIN technologies t on c.technology=t.id " +
-        "GROUP BY t.name " +
-        "ORDER BY total DESC limit 10";
+    var sql = `select count(*) total, t.name technology, s.id AS status_id
+        FROM comments c
+        JOIN technologies t on c.technology=t.id 
+        -- status_id is used by dashboard graphs
+        LEFT OUTER JOIN status s on s.id =
+            COALESCE( (select statusid from tech_status_link 
+                WHERE technologyid=t.id
+                ORDER BY date DESC LIMIT 1),0)
+        GROUP BY t.name, s.id 
+        ORDER BY total DESC limit 10`;
 
     console.log(sql);
     dbhelper.query(sql, [],
