@@ -48,7 +48,7 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/login', function (req, res) {
         if (req.isAuthenticated()) {
-            res.render('pages/index')
+            res.render('pages/index', { user: req.user });
         } else {
             var messages = req.flash('error');
             res.render('pages/login', {messages: messages});
@@ -60,7 +60,7 @@ Routes.createRoutes = function (self) {
      */
     self.app.get('/signup', function (req, res) {
         if (req.isAuthenticated()) {
-            res.render('pages/index');
+            res.render('pages/index', { user: req.user });
         } else {
             res.render('pages/signup');
         }
