@@ -64,13 +64,13 @@ ProjectsApiHandler.deleteTechnologiesFromProject = function (req, res) {
 ProjectsApiHandler.updateTechnologyVersion = function (req, res) {
     var versionId = sanitizer(req.body.version);
     var linkId = sanitizer(req.params.linkId);
+    
+    req.checkParams('linkId', 'Invalid technology-project link ID').isInt();
+    req.checkBody('versionId', 'Invalid version ID').isInt();
 
-    if(versionId == "undefined" || versionId == ""){
-        apiutils.handleResultSet(res, null, new Error("Invalid version: " + versionId));
-        return;
-    }
-    if(linkId == "undefined" || linkId == ""){
-        apiutils.handleResultSet(res, null, new Error("Invalid linkId: " + versionId));
+    var errors = req.validationErrors();
+    if (errors) {
+        res.end(JSON.stringify({success: false, error: errors}));
         return;
     }
 

@@ -29,8 +29,12 @@ SoftwareVersionsApiHandler.updateVersion = function (req, res) {
     var versionId = sanitizer(req.body.version);
     var name = sanitizer(req.body.name);
 
-    if(name == "undefined" || name == ""){
-        apiutils.handleResultSet(res, null, new Error("Invalid name: " + name));
+    req.checkBody('versionId', 'Invalid version ID').isInt();
+    req.checkBody('name', 'Empty name').notEmpty();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.end(JSON.stringify({success: false, error: errors}));
         return;
     }
 
