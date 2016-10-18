@@ -1,6 +1,9 @@
-<div class="form-group">
+<div class="form-group version-dropdown">
   <select name="software_version_id" class="form-control version-dropdown"
-  data-technology=<%= technology.id %>>  
+    data-technology=<%= technology.id %> 
+    data-selected-versionid="<%= technology.versionid %>"
+    data-selected-linkid="<%= technology.linkid %>"
+  >
     <%# empty value tells our backend to omit this field %>
     <option value="">Select version</option>
     <option class="add-new-version">Add new</option>

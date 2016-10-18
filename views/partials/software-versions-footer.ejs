@@ -30,12 +30,12 @@
 <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
 
 <script>
-setupVersionsModal();
 setupVersionDropdowns();
+setupVersionsModal();
 
 // sometimes needs to be called by other things like bootstrap-table onPostBody
 function setupVersionsModal(){
-  $(".version-dropdown").change(function(e){
+  $("select.version-dropdown").change(function(e){
     var selectedOption = $(this).find('option:selected');
     var techId = $(this).attr("data-technology");
     $("#new-version-technology").val(techId);
@@ -57,15 +57,32 @@ function setupVersionsModal(){
 }
 
 function addVersionOptionClicked(clickedDropdown){
+  $('#myModal').attr("data-selected-linkid", clickedDropdown.attr("data-selected-linkid"))
   $('#myModal').modal('show');
   // switch back to the default dropdown option, 
   // so "Add new" option can fire this event again when selected
   clickedDropdown.val("");
 }
 
+function getDropdownThatOpenedTheModal(){
+  var modal = $('#myModal');
+  var dropdownLinkId = modal.attr("data-selected-linkid");
+  var targetDropdown = null;
+
+  //if there are multiple dropdowns for the same technology, find them by their technology - project linkid
+  if(dropdownLinkId){
+    targetDropdown = $('select.version-dropdown[data-selected-linkid="' + dropdownLinkId + '"]');
+  } else {
+    var techId = $('#new-version-technology').val();
+    targetDropdown = $('select.version-dropdown[data-technology="' + techId + '"]');
+  }
+  return targetDropdown;
+  
+}
+
 function postNewVersion(targetForm){
   var techId = $('#new-version-technology').val();
-  var targetDropdown = $('.version-dropdown[data-technology="' + techId + '"]');
+  var targetDropdown = getDropdownThatOpenedTheModal();
   var serializedFormData = serialiseForm(targetForm);
   var stringData = JSON.stringify(serializedFormData);
 
@@ -91,7 +108,7 @@ function postNewVersion(targetForm){
  * Fills each .version-dropdown with versions for its technology
  */
 function setupVersionDropdowns(){
-    $(".version-dropdown").each(function(){
+    $("select.version-dropdown").each(function(){
       var dropdown = $(this);
       var technologyId = dropdown.attr("data-technology");
       getVersions(technologyId, function(versions) {
@@ -109,9 +126,14 @@ function setupVersionDropdowns(){
  * @param text Text that will be displayed in the new dropdown <option> 
  */
 function addVersionOption(targetDropdown, value, text){
+  var isSelected = false;
+  if (targetDropdown.attr("data-selected-versionid") == value){
+    isSelected = true;
+  }
   targetDropdown.append($("<option/>", {
         value: value,
-        text: text
+        text: text,
+        selected: isSelected
     }));
 }
 
@@ -121,6 +143,10 @@ function addVersionOption(targetDropdown, value, text){
  * @param callback Callback funtion - 1st argument contains API response (versions data)
  */
 function getVersions(technologyId, callback) {
+  if(typeof technologyId == "undefined"){
+    console.error("technologyId is undefinded. Cannot get versions.");
+    return;
+  }
   $.get("/api/technology/" + technologyId + "/versions", function(data, status) {
     callback(data);
   });

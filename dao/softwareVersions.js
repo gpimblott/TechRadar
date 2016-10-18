@@ -45,6 +45,31 @@ SoftwareVersions.add = function (technology, name, done) {
 }
 
 /**
+ * Update a version
+ * @param version ID of the version to update
+ * @param name New name for this version
+ * @param done Function to call with the results
+ */
+SoftwareVersions.update = function (version, name, done) {
+    var params = [version, name];
+    var sql = `UPDATE software_versions SET name=
+        COALESCE(
+            (SELECT $2::varchar WHERE NOT EXISTS (SELECT 1 FROM software_versions WHERE name = $2)),
+            -- use the original name if the new name is a duplicate
+            name)
+        WHERE id=$1`;
+
+    dbhelper.query(sql, params,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.log(error);
+            done(null);
+        });
+}
+
+/**
  * Remove a set of versions using their ID numbers
  * @param versions An array of version IDs
  * @param done

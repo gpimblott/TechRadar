@@ -127,7 +127,7 @@ var TechRadar = function () {
             extended: true
         }));
 
-        self.app.use(expressValidator([]));
+        self.app.use(expressValidator());
         self.app.use(flash());
 
         self.app.use(function(err, req, res, next) {

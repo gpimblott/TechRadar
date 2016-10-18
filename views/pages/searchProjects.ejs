@@ -90,10 +90,14 @@
         searchOnEnterKey: true,
         showPaginationSwitch: true,
         pagination: true,
-        columns: [{
-            field: 'state',
-            checkbox: 'true'
-        }, {
+        columns: [
+        <% if(user.admin) { %>
+            {
+                field: 'state',
+                checkbox: 'true'
+            }, 
+        <% } %>
+        {
             field: 'id',
             title: 'ID',
             visible: false
