@@ -29,7 +29,7 @@ SoftwareVersionsApiHandler.updateVersion = function (req, res) {
     var versionId = sanitizer(req.body.version);
     var name = sanitizer(req.body.name);
 
-    req.checkBody('versionId', 'Invalid version ID').isInt();
+    req.checkBody('version', 'Invalid version ID').isInt();
     req.checkBody('name', 'Empty name').notEmpty();
 
     var errors = req.validationErrors();
