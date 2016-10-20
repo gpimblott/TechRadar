@@ -17,7 +17,7 @@ var Routes = function () {
 Routes.createRoutes = function (self) {
 
     /**
-     * Homw page
+     * Home page
      */
     self.app.get('/', security.isAuthenticated,
         function (req, res) {
@@ -119,9 +119,8 @@ Routes.createRoutes = function (self) {
     /* Logout */
     self.app.get('/logout', function (req, res) {
         req.session.destroy(function(err) {
-            var postLogoutRedirectUri = req.protocol + "://" + req.get('host');
             req.logOut();
-            res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='+postLogoutRedirectUri);
+            res.redirect('/login');
         });
     });
 
