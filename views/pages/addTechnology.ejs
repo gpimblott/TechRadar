@@ -116,7 +116,7 @@
                 if (result.success) {
                     location.href = "/comments/add/" + result.result;
                 } else {
-                    alert("There was an error adding the technology :)");
+                    alert("There was an error adding the technology. Perhaps a technology with the same name already exists.");
                 }
 
                 $(":submit").attr("disabled", false);
