@@ -50,6 +50,8 @@ getBreadcrumb = function () {
 
 <script>
 
+<% include ../partials/sticky-table-page-size.ejs %> // contains the page_size variable
+
 $('#results').bootstrapTable({
     method: 'get',
     url: '/api/technology/<%= technology.id %>/users',
@@ -64,6 +66,7 @@ $('#results').bootstrapTable({
     searchOnEnterKey: true,
     showPaginationSwitch: true,
     pagination: true,
+    pageSize: page_size, // declared and set in sticky-table-page-size.ejs
     columns: [{
         field: 'displayname',
         title: 'Name',
