@@ -48,6 +48,7 @@
 
 <% include ../partials/footer.ejs %>
 
+<script src="/lib/cookie.js"></script>
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script>
 
@@ -68,6 +69,13 @@
     };
     <% } %>
 
+    var page_size = 10; //Default size
+
+    if (Cookies.get('technology_search_page_size') != null ) {
+        page_size = Cookies.get('technology_search_page_size');
+        $('#inpost-users-table').data('page-size', page_size);
+    }
+    
     $('#results').bootstrapTable({
         method: 'get',
         url: '/api/technology',
@@ -82,6 +90,7 @@
         searchOnEnterKey: true,
         showPaginationSwitch: true,
         pagination: true,
+        pageSize: page_size,
         columns: [{
             field: 'id',
             title: 'Item ID',
@@ -167,6 +176,14 @@
             '</a>'
         ].join('');
     }
+
+    // Set a cookie to remember the chosen number of records per page 
+    $(document).on('click', '.dropdown-menu', function() {
+        var size_selected = $('.pagination-detail .page-size').text();
+        if (Cookies.get('cookieconsent_dismissed') == 'yes') {
+            Cookies.set('technology_search_page_size', size_selected);
+        }
+    }); 
 
 </script>
 
