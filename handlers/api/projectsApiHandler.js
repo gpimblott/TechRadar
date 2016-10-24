@@ -66,7 +66,7 @@ ProjectsApiHandler.updateTechnologyVersion = function (req, res) {
     var linkId = sanitizer(req.params.linkId);
     
     req.checkParams('linkId', 'Invalid technology-project link ID').isInt();
-    req.checkBody('versionId', 'Invalid version ID').isInt();
+    req.checkBody('version', 'Invalid version ID').isInt();
 
     var errors = req.validationErrors();
     if (errors) {
