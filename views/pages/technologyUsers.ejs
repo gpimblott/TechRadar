@@ -47,10 +47,10 @@ getBreadcrumb = function () {
 <% include ../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/stickyTablePageSize.js"></script>
 
 <script>
 
-<% include ../partials/sticky-table-page-size.ejs %> // contains the page_size variable
 
 $('#results').bootstrapTable({
     method: 'get',
@@ -66,7 +66,7 @@ $('#results').bootstrapTable({
     searchOnEnterKey: true,
     showPaginationSwitch: true,
     pagination: true,
-    pageSize: page_size, // declared and set in sticky-table-page-size.ejs
+    pageSize: page_size, // declared and set in stickyTablePageSize.js
     columns: [{
         field: 'displayname',
         title: 'Name',

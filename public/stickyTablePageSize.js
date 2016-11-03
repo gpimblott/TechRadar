@@ -2,7 +2,6 @@ var page_size = 10; //Default size
 
 if (Cookies.get('page_size') != null ) {
     page_size = Cookies.get('page_size');
-    $('#inpost-users-table').data('page-size', page_size);
 }
 
 // Set a cookie to remember the chosen number of records per page 
