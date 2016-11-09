@@ -35,6 +35,6 @@
 </article>
 <script>
     $(function() {
-        TechRadar.setAvatar("<%= comment.username %>", $(".avatar-<%= comment.username %>"));
+        TechRadar.setAvatar("<%= comment.username %>", $(".avatar-<%= comment.username.replace(/([:|\.@'"?#;])/g, "\\\\$1"); %>"));
     });
 </script>
