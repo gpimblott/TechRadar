@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Prototype Tech Radar",
   "scripts": {
-    "test": "mocha"
+    "test": "DATABASE_URL=postgres://username:password@hostname:5432/databasename mocha"
   },
   "keywords": [
     "Node.js",
