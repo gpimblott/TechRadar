@@ -1,0 +1,44 @@
+version: "3"
+services:
+  postgres:
+    image: postgres
+    deploy:
+      restart_policy:
+        condition: any
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=pg
+
+  migrations:
+    build:
+      context: .
+      dockerfile: DockerfileRunMigrations
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 5
+    links:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://pg:pw@postgres/pg
+    depends_on:
+      - "postgres"
+
+  techradar:
+    build: .
+    deploy:
+      restart_policy:
+        condition: on_failure
+        delay: 5s
+        max_attempts: 5
+    ports:
+      - 8090:8090
+    links:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://pg:pw@postgres/pg
+    command: ["./compose-startServer.sh"]
+    depends_on:
+      - "migrations"
