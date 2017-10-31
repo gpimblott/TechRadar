@@ -49,6 +49,7 @@
 <% include ../partials/footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/stickyTablePageSize.js"></script>
 <script>
 
     <% if(user.canComment) { %>
@@ -82,6 +83,7 @@
         searchOnEnterKey: true,
         showPaginationSwitch: true,
         pagination: true,
+        pageSize: page_size, // declared and set in stickyTablePageSize.js 
         columns: [{
             field: 'id',
             title: 'Item ID',

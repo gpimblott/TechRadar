@@ -15,6 +15,7 @@ describe("Categories web handler", function() {
     beforeEach(function() {
         req = res = {};
         res.render = sinon.spy();
+        res.redirect = sinon.spy();
     });
 
     describe("listCategories", function() {
@@ -36,14 +37,14 @@ describe("Categories web handler", function() {
     });
 
     describe("technologiesForCategory", function() {
-        var addCategorySpy,
+        var getAllForCategorySpy,
             testData = "test",
             cacheSpy;
 
         beforeEach(function() {
             req.params = {category: "test category"};
 
-            addCategorySpy = sinon.stub(technology, 'getAllForCategory', function(data, cb) {
+            getAllForCategorySpy = sinon.stub(technology, 'getAllForCategory', function(data, cb) {
                 cb(testData);
             });
             cacheSpy = sinon.stub(cache, 'getCategory', function(value) {
@@ -66,7 +67,19 @@ describe("Categories web handler", function() {
             webCategories.technologiesForCategory(req, res);
 
             sinon.assert.calledOnce(technology.getAllForCategory);
-            expect(addCategorySpy.getCalls()[0].args[0]).that.is.a('string').to.equal(req.params.category);
+            expect(getAllForCategorySpy.getCalls()[0].args[0]).that.is.a('string').to.equal(req.params.category);
+        });
+
+        it("should redirect to error page when error on retrieving technologies", function() {
+            technology.getAllForCategory.restore();
+            getAllForCategorySpy = sinon.stub(technology, 'getAllForCategory', function(data, cb) {
+                cb(null);
+            });
+
+            webCategories.technologiesForCategory(req, res);
+
+            sinon.assert.calledOnce(res.redirect);
+            expect(res.redirect.args[0][0]).that.is.a('string').to.contain('error');
         });
 
         it("should decode URI encoded category name", function() {
@@ -75,7 +88,7 @@ describe("Categories web handler", function() {
             webCategories.technologiesForCategory(req, res);
 
             sinon.assert.calledOnce(technology.getAllForCategory);
-            expect(addCategorySpy.getCalls()[0].args[0]).that.is.a('string').to.equal(categoryDecoded);
+            expect(getAllForCategorySpy.getCalls()[0].args[0]).that.is.a('string').to.equal(categoryDecoded);
         });
 
         it("should retrieve cached category object", function() {

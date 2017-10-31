@@ -1,0 +1,1 @@
+ALTER TABLE technologies DROP CONSTRAINT technology_name_constr;

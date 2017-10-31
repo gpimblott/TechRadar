@@ -73,8 +73,10 @@
 
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/stickyTablePageSize.js"></script>
 <script>
 
+    
     $('#results').bootstrapTable( {
         method: 'get',
         url: '/api/technology/<%=technology.id%>/status/history',
@@ -87,6 +89,7 @@
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
+        pageSize: page_size, // declared and set in stickyTablePageSize.js
         columns: [ {
             field: 'id',
             title: 'ID',

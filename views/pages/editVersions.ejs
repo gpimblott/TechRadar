@@ -53,7 +53,10 @@
 <% include ../partials/software-versions-footer.ejs %>
 
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/stickyTablePageSize.js"></script>
 <script>
+    
+    
     $table = $('#results');
     $deleteBtn = $('#deleteBtn')
     $editBtn = $('#editBtn');
@@ -70,6 +73,7 @@
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
+        pageSize: page_size, // declared and set in stickyTablePageSize.js 
         columns: [{
             field:'state',
             checkbox:'true'

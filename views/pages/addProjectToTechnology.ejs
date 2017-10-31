@@ -73,9 +73,11 @@ getBreadcrumb = function() {
 
 <% include ../partials/footer.ejs %>
 
-
 <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/stickyTablePageSize.js"></script>
 <script>
+
+    
     $table = $('#linkedProjects');
     $deleteBtn = $('#deleteBtn');
 
@@ -91,6 +93,7 @@ getBreadcrumb = function() {
         showRefresh: true,
         showPaginationSwitch: true,
         pagination: true,
+        pageSize: page_size, // declared and set in stickyTablePageSize.js
         columns: [{
             field:'state',
             checkbox:'true'

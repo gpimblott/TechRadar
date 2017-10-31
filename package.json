@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Prototype Tech Radar",
   "scripts": {
-    "test": "mocha"
+    "test": "DATABASE_URL=postgres://username:password@hostname:5432/databasename mocha"
   },
   "keywords": [
     "Node.js",
@@ -18,8 +18,8 @@
     "url": "https://git.heroku.com/techradar-demo.git"
   },
   "engines": {
-    "node": "4.4.6",
-    "npm": "2.15.5"
+    "node": "6.9.1",
+    "npm": "3.10.8"
   },
   "dependencies": {
     "bunyan": "^1.8.1",
@@ -31,7 +31,7 @@
     "body-parser":"latest",
     "ejs": "2.4.2",
     "helmet": "latest",
-    "pg" : "4.1.1",
+    "pg" : "6.1.0",
     "pg-large-object": "latest",
     "async": "latest",
     "chart.js": "^2.1.3",
