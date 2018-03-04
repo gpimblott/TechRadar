@@ -40,6 +40,7 @@ var commentRoutes = require('./routes/web/comment-routes');
 // Load the API routes
 var apiStack = require('./routes/api/api-stacks-routes.js');
 var apiTechnologies = require('./routes/api/api-technology-routes.js');
+var apiSoftwareVersions = require('./routes/api/api-software-versions-routes.js');
 var apiUsers = require('./routes/api/api-users-routes.js');
 var apiComments = require('./routes/api/api-comments-routes.js');
 var apiProjects = require('./routes/api/api-projects-routes.js');
@@ -126,7 +127,7 @@ var TechRadar = function () {
             extended: true
         }));
 
-        self.app.use(expressValidator([]));
+        self.app.use(expressValidator());
         self.app.use(flash());
 
         self.app.use(function(err, req, res, next) {
@@ -183,6 +184,7 @@ var TechRadar = function () {
         // // API routes
         apiStack.createRoutes(self);
         apiTechnologies.createRoutes(self);
+        apiSoftwareVersions.createRoutes(self);
         apiUsers.createRoutes(self);
         apiComments.createRoutes(self);
         apiProjects.createRoutes(self);

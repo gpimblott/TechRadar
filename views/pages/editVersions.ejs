@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <% include ../partials/head.ejs %>
+
+    <script type="text/javascript" src="/utils.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+<% include ../partials/menu.ejs %>
+
+<div class="container bs-docs-container">
+    <div class="col-md-12">
+        <ol class="breadcrumb" style="margin-top: 10px;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/technology/<%= technology.id %>"><%= technology.name %></a></li>
+            <li class="active">Versions</li>
+        </ol>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div id="custom-toolbar">
+                <div class="form-inline" role="form">
+                    <a href="#" onclick="$('#myModal').modal('show');"  class="btn btn-success">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add
+                    </a>
+                    <button id="editBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Edit
+                    </button>
+                    <button id="deleteBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <table id="results"></table>
+        </div>
+    </div>
+
+</div><!-- /.container -->
+<% include ../partials/footer.ejs %>
+<% include ../partials/software-versions-footer.ejs %>
+
+<script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+<script>
+    $table = $('#results');
+    $deleteBtn = $('#deleteBtn')
+    $editBtn = $('#editBtn');
+
+    $table.bootstrapTable( {
+        method: 'get',
+        url: '/api/technology/<%= technology.id %>/versions',
+        cache: false,
+        striped: true,
+        escape: true,
+        idField: 'id',
+        search: true,
+        showColumns: true,
+        showRefresh: true,
+        showPaginationSwitch: true,
+        pagination: true,
+        columns: [{
+            field:'state',
+            checkbox:'true'
+        },   {
+            field: 'id',
+            title: 'ID',
+            visible: false
+        }, {
+            field: 'name',
+            title: 'Name',
+            sortable: true,
+        }, {
+            field: 'projects_count',
+            title: '# of projects using it',
+            sortable: true,
+        }]
+    });
+
+    $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        $editBtn.prop('disabled', $table.bootstrapTable('getSelections').length != 1);
+    });
+
+    $deleteBtn.click( function() {
+        var r = confirm("Are you sure you want to delete the selected Categories");
+        if (r == false) {
+            return;
+        }
+
+        var data = {};
+        data.versions = getIdSelections();
+
+        $.ajax({
+            type: "DELETE",
+            url: '/api/versions',
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            complete: function(result){
+                if (result.success) {
+                    $table.bootstrapTable('refresh' );
+                    $deleteBtn.prop('disabled', true );
+                } else {
+                    alert("There was an error deleting category");
+                }
+            }
+        });
+    });;
+
+    $editBtn.click(function () {
+        var data = {};
+        var name = 
+        data.version = getIdSelections()[0];
+        data.name = prompt("Please enter a new name for this version. " +
+            "Note that the name will change for all projects that already use this version of technology.", 
+            getNameSelections()[0]);
+
+        if(data.name == null){
+            return false;
+        }
+        
+        $.ajax({
+            method: "PUT",
+            contentType: "application/json",
+            url: "/api/versions",
+            data: JSON.stringify(data)
+        }).done(function( msg ) {
+            if(msg.success) {
+                location.reload();
+            } else {
+                alert("Unable to update this version. Perhaps the same version already exists.");
+            }
+        }).fail(function() {
+            alert('There was an error updating version.');
+        });
+    });
+
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
+
+    function getNameSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.name
+        });
+    }
+
+</script>
+
+<script>
+    // assign a technology id to the "Add a new version" modal/form
+    $('#new-version-technology').val("<%= technology.id %>");
+
+    // refresh the versions table when the "Add new version" modal is closed
+    $('#myModal').on('hidden.bs.modal', function () {
+        $table.bootstrapTable('refresh');
+    });
+</script>
+
+</body>
+</html>

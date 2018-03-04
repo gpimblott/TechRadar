@@ -54,10 +54,27 @@ ProjectsApiHandler.deleteProject = function (req, res) {
 };
 
 ProjectsApiHandler.deleteTechnologiesFromProject = function (req, res) {
-    var projectId = sanitizer(req.params.projectId);
-    var technologyIds = req.body.technologies;
+    var linkIds = req.body.links;
 
-    projects.deleteTechnologies(projectId, technologyIds, function (result, error) {
+    projects.deleteTechnologies(linkIds, function (result, error) {
+        apiutils.handleResultSet(res, result, error);
+    });
+};
+
+ProjectsApiHandler.updateTechnologyVersion = function (req, res) {
+    var versionId = sanitizer(req.body.version);
+    var linkId = sanitizer(req.params.linkId);
+    
+    req.checkParams('linkId', 'Invalid technology-project link ID').isInt();
+    req.checkBody('versionId', 'Invalid version ID').isInt();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.end(JSON.stringify({success: false, error: errors}));
+        return;
+    }
+
+    projects.updateTechnologyVersion(versionId, linkId, function (result, error) {
         apiutils.handleResultSet(res, result, error);
     });
 };
@@ -75,8 +92,9 @@ ProjectsApiHandler.getTechnologiesForProject = function (req, res) {
 ProjectsApiHandler.addTechnologyToProject = function (req, res) {
     var projectId = sanitizer(req.params.projectId);
     var technologyIds = req.body.technologies;
+    var versionIds = req.body.versions;
 
-    projects.addTechnologies(projectId, technologyIds, function (result, error) {
+    projects.addTechnologies(projectId, technologyIds, versionIds, function (result, error) {
         apiutils.handleResultSet(res, result, error);
     });
 };

@@ -17,7 +17,6 @@ function init(h, w, data) {
     var colours = ["#e6ccff", "#cc99ff", "#a64dff", "#6f5499"];
 
 
-
     var radar = new pv.Panel()
         .width(w)
         .height(h)
@@ -72,12 +71,18 @@ function init(h, w, data) {
         .strokeStyle("#900");
 
     for( var s = 3;s>=0;s--) {
-      
+
+        /**
+         * Create a list of items for this sector,
+         * remove duplicates due to versions.
+         * It relies on the fact that the items are ordered
+         */
         var items = [];
-        
+        var lastId=-1;
         for( var l=0;l<data.length;l++) {
-            if( data[l].status==labels[s] ) {
+            if( data[l].status==labels[s] && data[l].id!=lastId) {
                 items.push(data[l]);
+                lastId=data[l].id;
             }
         }
 

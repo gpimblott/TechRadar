@@ -65,15 +65,17 @@ Projects.findByName = function (name, done) {
  *
  * @param projectId Project ID
  * @param technologyIds Array of Technology IDs
+ * @param softwareVersionIds Array of Version IDs - its indexes(placement) should correspond to those in technologyIds
  * @param callback Function to call when the update is finished
  */
-Projects.addTechnologies = function (projectId, technologyIds, callback) {
-    var sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ";
+Projects.addTechnologies = function (projectId, technologyIds, softwareVersionIds, callback) {
+    var sql = "INSERT INTO technology_project_link (technologyid, projectid, software_version_id) VALUES ";
 
     var numRows = technologyIds.length;
-    for (var i = 1; i <= numRows; i++) {
-        sql += " ( $" + i + "," + projectId + ")";
-        if (i != numRows) {
+    for (var i = 0; i < numRows; i++) {
+        var optionalVersionId = getOptionalVersionId(softwareVersionIds[i]);
+        sql += " ( $" + (i+1) + "," + projectId + optionalVersionId + ")";
+        if (i != numRows - 1) {
             sql += ",";
         }
     }
@@ -95,14 +97,14 @@ Projects.addTechnologies = function (projectId, technologyIds, callback) {
  * @param ids
  * @param done
  */
-Projects.deleteTechnologies = function (projectid, ids, done) {
+Projects.deleteTechnologies = function (ids, done) {
 
     var params = [];
     for (var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM technology_project_link WHERE technologyid IN (" + params.join(',') + " ) and projectid=" + projectid;
+    var sql = "DELETE FROM technology_project_link WHERE id IN (" + params.join(',') + " )";
 
     dbhelper.query(sql, ids,
         function (result) {
@@ -112,6 +114,34 @@ Projects.deleteTechnologies = function (projectid, ids, done) {
             console.log(error);
             done(false, error);
         });
+}
+
+/**
+ * Changes the version assigned to a technology used in a project
+ * @param versionId corresponds to the software_version_id column
+ * @param linkId id of a technology_project_link record
+ * @param done 
+ */
+Projects.updateTechnologyVersion = function (versionId, linkId, done) {
+
+    var params = [versionId, linkId];
+    var sql = `UPDATE technology_project_link SET software_version_id =
+    	COALESCE(
+            (SELECT $1::integer WHERE NOT EXISTS (SELECT 1 FROM technology_project_link WHERE software_version_id = $1 AND projectid =
+                -- look for duplicates only in the same project
+                (SELECT projectid FROM technology_project_link WHERE id=$2))),
+            -- use the original value if the nested SELECT finds a duplicate 
+            software_version_id)
+        WHERE id=$2`;
+
+    dbhelper.query(sql, params,
+        function (result) {
+            done(result)
+        },
+        function (error) {
+            console.log(error);
+            done(false, error);
+        })
 }
 
 /**
@@ -196,6 +226,20 @@ Projects.getTechForProject = function (id, done) {
             console.log(error);
             done(null, error);
         });
+}
+
+/**
+ * Checks whether versionId can be used in an SQL query,
+ * if not - replaces the value with a null
+ * @param {string} versionId - value that will be verified 
+ * @returns ", null" or ", {integer}"
+ */
+function getOptionalVersionId(versionId) {
+    var optionalVersionId = ", null";
+    if(dbhelper.isInt(versionId)) {
+        optionalVersionId = "," + versionId;
+    }
+    return optionalVersionId;
 }
 
 module.exports = Projects;

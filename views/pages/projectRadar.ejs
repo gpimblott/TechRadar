@@ -43,6 +43,7 @@
             <ul class="nav navbar-nav white-text nav-justified">
                 <li><a href="/project/<%= project.id %>/technology/add">Add Technology</a></li>
                 <li><a href="/project/<%= project.id %>/technology/remove">Remove Technology</a></li>
+                <li><a id="assign-versions-btn" href="#" onclick="reassignVersions()">Reassign versions</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container -->
@@ -57,7 +58,10 @@
             <li class="active"><%= project.name %></li>
         </ol>
     </div>
-    <div class="row">
+    
+    <% include ../partials/apply-changes-btn.ejs %>
+
+    <div class="row top-buffer">
         <div class="col-sm-6">
 
             <%
@@ -72,11 +76,11 @@
 
                 <%
                 for (var i = 0, len = technologies.length; i < len; i++) {
-                    var technology = technologies[i];
+                    var technology = technologies[ i ];
                 if( technology.status != heading) {
                     heading = technology.status;
                 %>
-                <li class="<%- (i === 0 ) ? 'active' : ''%>" >
+                <li class="<%- (i === 0 ) ? 'active' : '' %>">
                     <a href="#<%= technology.status %>" data-toggle="tab"><%= technology.status %></a>
                 </li>
                 <%
@@ -87,9 +91,12 @@
 
             <div class="tab-content">
                 <%
-                    var heading = "";
+                var heading = "";
+                var lastTechId = -1;
+                var lastTechNum=-1;
+
                 for (var i = 0, len = technologies.length; i < len; i++) {
-                    var technology = technologies[i];
+                    var technology = technologies[ i ];
 
                 if( technology.status != heading) {
                     heading = technology.status;
@@ -98,13 +105,32 @@
             </div>
             <% } %>
 
-            <div class="tab-pane <%- (i === 0 ) ? 'active' : ''%>" id="<%= heading %>">
+            <div class="tab-pane <%- (i === 0 ) ? 'active' : '' %>" id="<%= heading %>">
 
                 <% } %>
 
                 <li class="list-group-item" id="tech<%= technology.num %>">
-                    <span class="badge"><%= technology.num %></span>
+                    <%
+                        var techNum;
+                        if(technology.id===lastTechId) {
+                            techNum = lastTechNum;
+                        } else {
+                            techNum = technology.num;
+                            lastTechNum = technology.num;
+                        }
+
+                        lastTechId=technology.id;
+                     %>
+                    <span class="badge"><%= techNum %></span>
                     <%- link_to(technology.name, '/technology/' + technology.id) %>
+                    <% if(technology.version) { %>
+                        <mark class="version-mark"><small><%= technology.version %></small></mark>
+                    <% } %>
+                    
+                    <% if(technology.id) { %>
+                        <% include ../partials/software-versions.ejs %>
+                    <% } %>
+                    
                 </li>
 
                 <% }
@@ -123,6 +149,88 @@
 </div>
 
 <% include ../partials/footer.ejs %>
+<% include ../partials/software-versions-footer.ejs %>
+<script type="text/javascript">
+
+    var originalVersionIds = [];
+
+    $('div.version-dropdown').hide();
+    
+    function reassignVersions(){
+        originalVersionIds = getCurrentVersionIds();
+        toggleReassignControls();
+        return false;    
+    }
+
+    function updateVersions(){
+        toggleReassignControls();
+
+        var reassignedVersions = [];
+
+        $('select.version-dropdown').each(function(){
+            var linkId = $(this).attr("data-selected-linkid");
+            var versionId = $(this).val();
+
+            // if the version was reassigned and is not a duplicate reassignment
+            if(originalVersionIds[linkId] != versionId && 
+                reassignedVersions.indexOf(versionId) == -1) {
+
+                reassignedVersions[linkId] = versionId;
+            }
+        });
+
+        $.each(reassignedVersions, function(linkId, versionId){
+            if(versionId) { // skip empty elements of this array
+                requestVersionUpdate(linkId, versionId);
+            }
+        });
+
+        location.reload();
+        return false;    
+    }
+
+    /**
+     * Shows / hides elements used to reassign versions
+     */
+    function toggleReassignControls(){
+        $('a.confirm-version').toggle();
+        $('div.version-dropdown').toggle();
+        $('#reasign-versions-btn').toggle();
+        $('mark.version-mark').toggle(); 
+    }
+
+    function requestVersionUpdate(linkId, versionId){
+        $.ajax({
+            type: "PUT",
+            url: "/api/link/" + linkId + "/version",
+            contentType: "application/json",
+            data: JSON.stringify({version: versionId}),
+            success: function(result) {
+                if( result.success) {
+                    console.log(result);
+                } else {
+                    console.error("Version update failed for linkid=" + linkId + ", versionId=" + versionId);
+                    alert(`There was an error updating a version to versionId = [` + versionId + "]");
+                }
+            }
+        });
+    }
+
+    /**
+     * Reads values from version-dropdowns
+     * @returns array of version IDs, indexes are equal to technology-project link IDs
+     */
+    function getCurrentVersionIds(){
+        var currentVersionIds = [];
+        $('select.version-dropdown').each(function(){
+            var linkId = $(this).attr("data-selected-linkid");
+            var versionId = $(this).val();
+            currentVersionIds[linkId] = versionId;
+        })
+        return currentVersionIds;
+    }
+    
+</script>
 
 </body>
 </html>

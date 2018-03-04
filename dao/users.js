@@ -1,5 +1,6 @@
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
+var User = require('../models/User');
 
 var Users = function () {
 };
@@ -45,6 +46,7 @@ Users.findById = function(id, done) {
         });
 };
 
+
 /**
  * Get a user by username
  * @param username Username of the user to search for
@@ -83,18 +85,16 @@ Users.findByEmail = function(email, done) {
 
 /**
  * Add a new user
- * @param username Username to insert
- * @param displayName Full name of the user
- * @param password Password for the user
- * @param admin Is the user an admin (boolean)
+ * @param user User to insert
  * @param done Function to call when complete
  */
-Users.add = function (username, email, displayName, password, admin, enabled, done) {
+Users.add = function (user, done) {
 
-    var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
+    var userHash = require('crypto').createHash('sha256').update(user.password).digest('base64');
 
-    var sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $5, $2, $3, $4, $6) returning id";
-    var params = [username, displayName, userHash, admin, email, enabled];
+    var sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $2, $3, $4, $5, $6) returning id";
+    
+    var params = [user.username, user.email, user.displayName, userHash, user.role, user.enabled];
 
     dbhelper.insert( sql, params ,
         function( result ) {
@@ -133,20 +133,16 @@ Users.delete = function (ids, done) {
 /**
  * Update user data
  *
- * @param id Target users ID
- * @param displayName New display name
- * @param password New password
- * @param avatarData Avatar image buffer, empty - no avatar update
- * @param role User role
+ * @param user User with updated fields
  * @param done Callback
  */
-Users.update = function (id, email, displayName, passwordHash, avatarData, role, enabled, done) {
-    var params = [displayName, passwordHash, role, id, email, enabled];
+Users.update = function (user, done) {
+    var params = [user.displayName, user.password, user.role, user.id, user.email, user.enabled];
 
     var avatarUpdate = '';
-    if(avatarData) {
+    if(user.avatar) {
         avatarUpdate = ', avatar=$7';
-        params.push('\\x' + avatarData.toString('hex'));
+        params.push('\\x' + user.avatar.toString('hex'));
     }
     var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3, email=$5, enabled=$6 where id=$4";
 
