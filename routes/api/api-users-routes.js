@@ -49,6 +49,16 @@ ApiUserRoutes.createRoutes = function (self) {
      * Get user avatar
      */
     self.app.get('/api/user/avatar', security.isAuthenticated, handler.getAvatar);
+
+    /**
+     * Reset a users password
+     */
+    self.app.post('/api/user/resetpassword', handler.resetPassword);
+
+    /**
+     * Generates a reset password code and sends it by email
+     */
+    self.app.post('/api/user/generateresetcode', handler.generateResetPasswordCode);
 };
 
 module.exports = ApiUserRoutes;

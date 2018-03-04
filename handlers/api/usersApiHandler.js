@@ -8,6 +8,7 @@ var apiutils = require('./apiUtils.js');
 var sanitizer = require('sanitize-html');
 var crypto = require('crypto');
 var userValidator  = require('../../shared/validators/userValidator.js');
+var mailer = require('../../mailer/mailer');
 
 
 var UsersApiHandler = function () {
@@ -182,6 +183,85 @@ UsersApiHandler.getAvatar = function (req, res) {
             "Content-Type": "application/json"
         });
         res.end(JSON.stringify(data));
+    });
+};
+
+UsersApiHandler.generateResetPasswordCode = function (req, res) {
+    var email = sanitizer(req.body.email);
+
+    var validationResult = userValidator.validateEmail(email);
+    if(!validationResult.valid) {
+        apiutils.handleResultSet(res, null, validationResult.message);
+        return;
+    }
+
+    var findByEmailCallback = function(error, user) {
+        if(!user) {
+            apiutils.handleResultSet(res, null, "Email not found");
+        } else {
+            crypto.randomBytes(48, function(err, buffer) {
+                var token = buffer.toString('hex');
+                var expireDate = new Date();
+                expireDate.setHours(expireDate.getHours() + 1);
+
+                users.addPasswordResetCode(user.id, token, expireDate, function(result, error) {
+                    if(error) {
+                        apiutils.handleResultSet(res, null, error);
+                    } else {
+                        var resetUrl = 'https://' + req.headers.host + "/user/resetpassword?resetCode=" + token;
+
+                        mailer.sendEmail({
+                            from: process.env.MAIL_FROM,
+                            to: user.email,
+                            subject: "TechRadar password reset request",
+                            html: "<p>Hello <strong>" + (user.displayName || user.username) + "</strong>,</p>" +
+                                "\n<p>We have received a request to reset your password. You can reset your password by following this link:</p>" +
+                                "<p><a href='"+ resetUrl +"'>" + resetUrl + "</a></p>"
+                        }, function (err, info) {
+                            apiutils.handleResultSet(res, info, err);
+                        });
+                    }
+                });
+            });
+        }
+    };
+
+    users.findByEmail(email, findByEmailCallback);
+};
+
+UsersApiHandler.resetPassword = function (req, res) {
+    var resetCode = sanitizer(req.body.resetCode);
+    var password = sanitizer(req.body.password);
+    var confirmPassword = sanitizer(req.body.confirmPassword);
+
+    var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+    if(!validationResult.valid) {
+        apiutils.handleResultSet(res, null, validationResult.message);
+        return;
+    }
+
+    var passwordHash = crypto.createHash('sha256').update(password).digest('base64');
+
+    users.getUserByPasswordResetCode(resetCode, function(user, error) {
+        if(!user) {
+            apiutils.handleResultSet(res, null, "Invalid reset code");
+        } else {
+            users.update(user.id, user.email, user.displayName, passwordHash, null, user.role, user.enabled, function(result, error) {
+                if(error) {
+                    apiutils.handleResultSet(res, null, error);
+                } else {
+                    users.deleteResetCode(resetCode, function (delRes, error) {
+                        if(delRes) {
+                            console.log("Reset code " + resetCode + " deleted");
+                        } else {
+                            console.log("Cannot delete reset code");
+                            console.log(error);
+                        }
+                        apiutils.handleResultSet(res, result, null);
+                    });
+                }
+            });
+        }
     });
 };
 

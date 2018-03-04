@@ -32,7 +32,14 @@ UsersWebHandler.editUser = function (req, res) {
             res.render('pages/admin/user/editUser', {user: req.user, editUser: editUser});
         }
     });
+};
 
+UsersWebHandler.resetPassword = function (req, res) {
+    res.render('pages/resetPassword');
+};
+
+UsersWebHandler.generateResetPasswordCode = function (req, res) {
+    res.render('pages/generateResetPasswordCode');
 };
 
 
