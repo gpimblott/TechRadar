@@ -1,8 +1,8 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+const pg = require('pg');
+const dbhelper = require('../utils/dbhelper.js');
 
 
-var Status = function () {
+const Status = function () {
 };
 
 /**
@@ -10,7 +10,7 @@ var Status = function () {
  * @param done Function to call with the results
  */
 Status.getAll = function (done) {
-    var sql = "SELECT * FROM status ORDER BY id ASC";
+    let sql = "SELECT * FROM status ORDER BY id ASC";
 
     dbhelper.query(sql, [],
         function (results) {
@@ -30,7 +30,7 @@ Status.getAll = function (done) {
  */
 Status.getHistoryForTechnology = function( technologyid , limit, done)
 {
-    var sql = "SELECT s.name, tsl.reason as reason , u.username, to_char(tsl.date, 'DD/MM/YY') as date  " +
+    let sql = "SELECT s.name, tsl.reason as reason , u.username, to_char(tsl.date, 'DD/MM/YY') as date  " +
         " FROM tech_status_link tsl" +
         " JOIN STATUS s on tsl.statusid=s.id " +
             " JOIN users u on u.id=tsl.userid" + 
@@ -38,7 +38,7 @@ Status.getHistoryForTechnology = function( technologyid , limit, done)
         " ORDER BY tsl.date DESC";
 
 
-    var params = [technologyid];
+    let params = [technologyid];
 
     if( null !=limit ) {
         sql += " LIMIT $2";

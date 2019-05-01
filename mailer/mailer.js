@@ -15,7 +15,7 @@
  * @constructor
  */
 var Mailer = function() {
-    var type = process.env.MAILER || '';
+    let type = process.env.MAILER || '';
 
     if (type.toLowerCase() === 'stub') {
         return require('./stubMailer');

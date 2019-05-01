@@ -31,7 +31,7 @@ if (process.env.AZURE_IDENTITY_METADATA) {
 }
 
 var log = bunyan.createLogger({
-  name: 'AnswerIt - passport.js',
+  name: 'TechRadar - passport.js',
   streams: [ {
     stream: process.stderr,
     level: "error",
@@ -63,7 +63,7 @@ passport.use(new LocalStrategy(
         });
       }
 
-      var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
+      let userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
       if (user.password != userHash) {
         return cb(null, false, { message: 'Incorrect login' });

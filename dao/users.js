@@ -1,8 +1,8 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
-var User = require('../models/User');
+const pg = require('pg');
+const dbhelper = require('../utils/dbhelper.js');
+const User = require('../models/User');
 
-var Users = function () {
+const Users = function () {
 };
 
 
@@ -11,7 +11,7 @@ var Users = function () {
  * @param done Function to call with the results
  */
 Users.getAll = function(done) {
-    var sql = "SELECT users.*,roles.admin as isAdmin ,roles.name as rolename" +
+    const sql = "SELECT users.*,roles.admin as isAdmin ,roles.name as rolename" +
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id";
 
@@ -31,7 +31,7 @@ Users.getAll = function(done) {
  * @param done Function to call with the result
  */
 Users.findById = function(id, done) {
-    var sql = "SELECT users.*,roles.admin,roles.name as rolename" +
+    const sql = "SELECT users.*,roles.admin,roles.name as rolename" +
             " FROM users " +
             " INNER JOIN roles on users.role=roles.id" +
             " where users.id=$1 ";
@@ -53,8 +53,8 @@ Users.findById = function(id, done) {
  * @param done Function to call with the result
  */
 Users.findByUsername = function(username, done) {
-    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role, u.enabled, u.email FROM users u where u.username=$1";
-    var params = [username];
+    const sql = "SELECT u.id, u.username, u.displayName, u.password, u.role, u.enabled, u.email FROM users u where u.username=$1";
+    const params = [username];
     dbhelper.query(sql, params,
         function (results) {
             done(null , results[0]);
@@ -71,8 +71,8 @@ Users.findByUsername = function(username, done) {
  * @param done Function to call with the result
  */
 Users.findByEmail = function(email, done) {
-    var sql = "SELECT u.* FROM users u where u.email=$1";
-    var params = [email];
+    const sql = "SELECT u.* FROM users u where u.email=$1";
+    const params = [email];
     dbhelper.query(sql, params,
         function (results) {
             done(null , results[0]);
@@ -90,11 +90,9 @@ Users.findByEmail = function(email, done) {
  */
 Users.add = function (user, done) {
 
-    var userHash = require('crypto').createHash('sha256').update(user.password).digest('base64');
-
-    var sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $2, $3, $4, $5, $6) returning id";
-    
-    var params = [user.username, user.email, user.displayName, userHash, user.role, user.enabled];
+    const userHash = require('crypto').createHash('sha256').update(user.password).digest('base64');
+    const sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $2, $3, $4, $5, $6) returning id";
+    const params = [user.username, user.email, user.displayName, userHash, user.role, user.enabled];
 
     dbhelper.insert( sql, params ,
         function( result ) {
@@ -113,12 +111,12 @@ Users.add = function (user, done) {
  */
 Users.delete = function (ids, done) {
 
-    var params = [];
+    let params = [];
     for(var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
+    const sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
 
     dbhelper.query( sql, ids ,
         function( result ) {
@@ -137,9 +135,9 @@ Users.delete = function (ids, done) {
  * @param done Callback
  */
 Users.update = function (user, done) {
-    var params = [user.displayName, user.password, user.role, user.id, user.email, user.enabled];
+    const params = [user.displayName, user.password, user.role, user.id, user.email, user.enabled];
 
-    var avatarUpdate = '';
+    let avatarUpdate = '';
     if(user.avatar) {
         avatarUpdate = ', avatar=$7';
         params.push('\\x' + user.avatar.toString('hex'));
@@ -163,7 +161,7 @@ Users.update = function (user, done) {
  * @param done Callback
  */
 Users.getAvatar = function (username, done) {
-    var sql = "SELECT u.avatar FROM users u where u.username=$1";
+    const sql = "SELECT u.avatar FROM users u where u.username=$1";
 
     dbhelper.query(sql, [username],
         function (results) {
@@ -189,8 +187,8 @@ Users.getAvatar = function (username, done) {
  */
 Users.addPasswordResetCode = function (userId, resetCode, expiresDate, callback) {
 
-    var sql = "INSERT INTO reset_codes (\"userId\", \"resetCode\", \"resetCodeExpires\") values ($1, $2, $3) returning id";
-    var params = [userId, resetCode, expiresDate];
+    const sql = "INSERT INTO reset_codes (\"userId\", \"resetCode\", \"resetCodeExpires\") values ($1, $2, $3) returning id";
+    const params = [userId, resetCode, expiresDate];
 
     dbhelper.insert(sql, params,
         function(result) {
@@ -210,10 +208,10 @@ Users.addPasswordResetCode = function (userId, resetCode, expiresDate, callback)
  */
 Users.getUserByPasswordResetCode = function (resetCode, callback) {
 
-    var sql = "SELECT u.* FROM users u " +
+    const sql = "SELECT u.* FROM users u " +
         "inner join reset_codes rc on u.id = rc.\"userId\" where rc.\"resetCode\"=$1";
 
-    var params = [resetCode];
+    const params = [resetCode];
     dbhelper.query(sql, params,
         function (results) {
             callback(results[0], null);
@@ -232,8 +230,8 @@ Users.getUserByPasswordResetCode = function (resetCode, callback) {
  */
 Users.deleteResetCode = function (resetCode, callback) {
 
-    var params = [resetCode];
-    var sql = "DELETE FROM reset_codes WHERE \"resetCode\"=$1";
+    const params = [resetCode];
+    const sql = "DELETE FROM reset_codes WHERE \"resetCode\"=$1";
 
     dbhelper.query(sql, params,
         function(result) {

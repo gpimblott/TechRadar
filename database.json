@@ -1,6 +1,9 @@
 {
-    "defaultEnv": "pgEnv",
     "pgEnv": {
+        "driver": "pg",
+        "ENV": "DATABASE_URL"
+    },
+    "dev": {
         "driver": "pg",
         "ENV": "DATABASE_URL"
     }

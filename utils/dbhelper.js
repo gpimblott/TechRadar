@@ -1,10 +1,13 @@
 /**
  * Helper function to perform base database operations (e.g. query, insert)
  */
-var pg = require('pg');
+const { Pool } = require('pg');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+})
 
 
-var DBHelper = function () {
+const DBHelper = function () {
 };
 
 
@@ -20,31 +23,23 @@ DBHelper.query = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
-    pg.defaults.poolSize=50;
-
+    //pg.defaults.poolSize=50;
     //console.log("query:" + sql);
-    pg.connect(process.env.DATABASE_URL, function (err, client) {
-        var results = [];
+    pool.connect(  (err, client, pdone) => {
 
         // Handle connection errors
         if (err) {
             if (client) {
-                client.end();
+                client.release();
+                pdone();
             }
             error(err);
             return;
         }
         
-        var query = client.query(sql, parameters);
-
-        query.on('row', function (row) {
-            results.push(row);
-        });
-
-        // After all data is returned, close connection and return results
-        query.on('end', function () {
-            client.end();
-            done(results);
+        client.query(sql, parameters , (err,res)=> {
+            pdone();
+            done( res.rows );
         });
 
     });
@@ -62,22 +57,22 @@ DBHelper.insert = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
-    pg.connect(process.env.DATABASE_URL, function (err, client) {
+    pool.connect( function (err, client, pdone) {
         // Handle connection errors
         if (err) {
             if (client) {
-                client.end();
+                client.release();
             }
             error(err);
             return;
         }
 
-        client.query(sql, parameters,
-            function (err, result) {
+        client.query(sql, parameters, (err, result) => {
+            pdone();
                 if (err) {
                     error(err)
                 } else {
-                    client.end();
+                    client.release();
                     done(result);
                 }
             });
@@ -92,12 +87,12 @@ DBHelper.insert = function (sql, parameters, done, error) {
  */
 DBHelper.deleteByIds = function (tableName, ids, done) {
 
-    var params = [];
-    for (var i = 1; i <= ids.length; i++) {
+    let params = [];
+    for (let i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM " + tableName + " WHERE id IN (" + params.join(',') + "  )";
+    let sql = "DELETE FROM " + tableName + " WHERE id IN (" + params.join(',') + "  )";
     
     DBHelper.query(sql, ids,
         function (result) {
@@ -111,8 +106,8 @@ DBHelper.deleteByIds = function (tableName, ids, done) {
 }
 
 DBHelper.getAllFromTable = function( tableName , done , order ) {
-    var sql = "SELECT * FROM " + tableName;
-    var params = [];
+    let sql = "SELECT * FROM " + tableName;
+    let params = [];
 
     if( order != null) {
         sql = sql + " ORDER BY $1";

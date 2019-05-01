@@ -1,7 +1,7 @@
 /**
  * Migration runner, which loads process.env vars via dotenv before running the migrations
  */
-require('dotenv').config({path: 'process.env', silent: true});
+require('dotenv').config({path: 'process.env', silent: false});
 var DBMigrate = require('db-migrate');
 
 var migrateInstance = DBMigrate.getInstance();
