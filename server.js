@@ -10,51 +10,51 @@ require('console-stamp')(console, '[ddd mmm dd HH:MM:ss]]');
 require('dotenv').config({path: 'process.env'});
 
 // Express
-var express = require('express');
-var helmet = require('helmet');
-var express_enforces_ssl = require('express-enforces-ssl');
-var helpers = require('express-helpers')();
-var expressValidator = require('express-validator');
-var flash = require('connect-flash');
-var session = require('express-session');
-var bodyParser = require('body-parser');
+const express = require('express');
+const helmet = require('helmet');
+const express_enforces_ssl = require('express-enforces-ssl');
+const helpers = require('express-helpers')();
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+const bodyParser = require('body-parser');
 
 // Caching to remove some frequent db operations
-var cache = require('./dao/cache.js');
+const cache = require('./dao/cache.js');
 
 // Authentication
-var users = require('./dao/users');
-var passport = require('passport');
+const users = require('./dao/users');
+const passport = require('passport');
 require('./utils/passport.js');
 
 
 // Load the routes for the web Application and API REST services
-var routes = require('./routes/web/routes.js');
-var technologyRoutes = require('./routes/web/technology-routes');
-var stackRoutes = require('./routes/web/stack-routes');
-var categoryRoutes = require('./routes/web/category-routes');
-var projectRoutes = require('./routes/web/project-routes');
-var userRoutes = require('./routes/web/user-routes');
-var commentRoutes = require('./routes/web/comment-routes');
+const routes = require('./routes/web/routes.js');
+const technologyRoutes = require('./routes/web/technology-routes');
+const stackRoutes = require('./routes/web/stack-routes');
+const categoryRoutes = require('./routes/web/category-routes');
+const projectRoutes = require('./routes/web/project-routes');
+const userRoutes = require('./routes/web/user-routes');
+const commentRoutes = require('./routes/web/comment-routes');
 
 // Load the API routes
-var apiStack = require('./routes/api/api-stacks-routes.js');
-var apiTechnologies = require('./routes/api/api-technology-routes.js');
-var apiSoftwareVersions = require('./routes/api/api-software-versions-routes.js');
-var apiUsers = require('./routes/api/api-users-routes.js');
-var apiComments = require('./routes/api/api-comments-routes.js');
-var apiProjects = require('./routes/api/api-projects-routes.js');
-var apiCategories = require('./routes/api/api-categories-routes.js');
-var apiDashboard = require('./routes/api/api-dashboard-routes.js');
+const apiStack = require('./routes/api/api-stacks-routes.js');
+const apiTechnologies = require('./routes/api/api-technology-routes.js');
+const apiSoftwareVersions = require('./routes/api/api-software-versions-routes.js');
+const apiUsers = require('./routes/api/api-users-routes.js');
+const apiComments = require('./routes/api/api-comments-routes.js');
+const apiProjects = require('./routes/api/api-projects-routes.js');
+const apiCategories = require('./routes/api/api-categories-routes.js');
+const apiDashboard = require('./routes/api/api-dashboard-routes.js');
 
 
 /**
  *  Define the application.
  */
-var TechRadar = function () {
+const TechRadar = function () {
 
     //  Scope.
-    var self = this;
+    let self = this;
     
     /**
      *  Set up server IP address and port # using env variables/defaults.
@@ -136,8 +136,8 @@ var TechRadar = function () {
         });
 
         // Setup the secret cookie key
-        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
-        var sess = {
+        const cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
+        const sess = {
             secret: cookie_key,
             cookie: {}
          }
@@ -158,7 +158,7 @@ var TechRadar = function () {
         console.log("Cookie key:" + cookie_key);
         
         // Browser Cache
-        var oneDay = 86400000;
+        const oneDay = 86400000;
         self.app.use('/', express.static('public', {maxAge: oneDay}));
         self.app.use('/shared', express.static('shared', {maxAge: oneDay}));
 
@@ -210,6 +210,6 @@ var TechRadar = function () {
 /**
  *  main():  Main code.
  */
-var radarApp = new TechRadar();
+const radarApp = new TechRadar();
 radarApp.initialize();
 radarApp.start();

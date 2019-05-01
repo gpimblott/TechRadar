@@ -5,6 +5,10 @@
     "postdeploy": "bash ./heroku_post_deploy.sh"
   },
   "env": {
+    "MAILER": {
+      "description": "The service to use to send emails",
+      "value": "stub"
+    }
   },
   "formation": {
     "web": {
