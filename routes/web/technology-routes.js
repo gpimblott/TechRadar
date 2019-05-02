@@ -1,12 +1,12 @@
-var handler = require('../../handlers/web/technologiesWebHandler');
+const handler = require('../../handlers/web/technologiesWebHandler');
 
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
-var passport = require('passport');
-var security = require('../../utils/security.js');
+const passport = require('passport');
+const security = require('../../utils/security.js');
 
-var TechnologyRoutes = function () {
+const TechnologyRoutes = function () {
 };
 
 
