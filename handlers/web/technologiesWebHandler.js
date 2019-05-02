@@ -75,21 +75,21 @@ TechnologiesWebHandler.getVersions = function (req, res) {
 TechnologiesWebHandler.getTechnology = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
      
-    var num = req.params.id;
+    const num = req.params.id;
 
     technology.getById(req.user.id, num, function (value) {
         if (value == null || value.length == 0 || value.length > 1) {
             res.redirect('/error');
         } else {
-            var statuses = cache.getStatuses();
-            var usedThisOptions = cache.getUsedThisTechOptions();
+            const statuses = cache.getStatuses();
+            const usedThisOptions = cache.getUsedThisTechOptions();
             res.render('pages/technology',
                 {
                     technology: value,

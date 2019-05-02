@@ -40,6 +40,7 @@
     "express-session": "latest",
     "express-validator": "latest",
     "helmet": "latest",
+    "markdown": "latest",
     "mocha": "latest",
     "multer": "latest",
     "nodemailer": "2.5.0",
