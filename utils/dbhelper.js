@@ -23,14 +23,12 @@ DBHelper.query = function (sql, parameters, done, error) {
         pg.defaults.ssl = true;
     }
 
-    //pg.defaults.poolSize=50;
     //console.log("query:" + sql);
     pool.connect(  (err, client, pdone) => {
 
         // Handle connection errors
         if (err) {
             if (client) {
-                client.release();
                 pdone();
             }
             error(err);
@@ -61,7 +59,7 @@ DBHelper.insert = function (sql, parameters, done, error) {
         // Handle connection errors
         if (err) {
             if (client) {
-                client.release();
+                pdone();
             }
             error(err);
             return;
@@ -72,7 +70,6 @@ DBHelper.insert = function (sql, parameters, done, error) {
                 if (err) {
                     error(err)
                 } else {
-                    client.release();
                     done(result);
                 }
             });

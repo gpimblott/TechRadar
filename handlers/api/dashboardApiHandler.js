@@ -1,19 +1,19 @@
-var cache = require('../../dao/cache');
-var projects = require('../../dao/projects');
-var votes = require('../../dao/vote');
-var technologies = require('../../dao/technology');
-var comments = require('../../dao/comments');
+const cache = require('../../dao/cache');
+const projects = require('../../dao/projects');
+const votes = require('../../dao/vote');
+const technologies = require('../../dao/technology');
+const comments = require('../../dao/comments');
 
-var sanitizer = require('sanitize-html');
+const sanitizer = require('sanitize-html');
 
-var DashboardApiHandler = function () {
+const DashboardApiHandler = function () {
 };
 
 /**
  * Get all
  */
 DashboardApiHandler.getTechnologyForProject = function (req, res) {
-    var projectId = req.params.project;
+    const projectId = req.params.project;
 
     projects.getTechForProject(function (projectId, result) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -57,7 +57,7 @@ DashboardApiHandler.getCommentsPerTechnology = function (req,res) {
 };
 
 DashboardApiHandler.getTechnologiesWithUsersCount = function (req, res) {
-    var limit = sanitizer(req.query.limit);
+    const limit = sanitizer(req.query.limit);
     technologies.getTechnologiesWithUserCounts(limit, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));

@@ -1,12 +1,12 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+const pg = require('pg');
+const dbhelper = require('../utils/dbhelper.js');
 
-var DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 10;
 
 /**
  * Database routines for 'Comments'
  */
-var Comments = function () {
+const Comments = function () {
 };
 
 /**
@@ -18,7 +18,7 @@ var Comments = function () {
  * @param done function to call with the results
  */
 Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
-    var sql = `SELECT comments.*, users.displayName, 
+    const sql = `SELECT comments.*, users.displayName, 
         users.username, users.avatar, software_versions.name AS version
         FROM comments 
         left outer join software_versions on comments.software_version_id=software_versions.id
@@ -27,8 +27,8 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
         order by date desc
         LIMIT $2 OFFSET $3`;
 
-    var limit = pageSize || DEFAULT_PAGE_SIZE;
-    var offset = pageNum ? pageNum * limit : 0;
+    const limit = pageSize || DEFAULT_PAGE_SIZE;
+    const offset = pageNum ? pageNum * limit : 0;
 
     dbhelper.query(sql, [technology, limit, offset],
         function (results) {
@@ -47,7 +47,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
  * @param done function to call with the results
  */
 Comments.getCountForTechnology = function (technology, done) {
-    var sql = "SELECT count(*) FROM comments where technology=$1";
+    const sql = "SELECT count(*) FROM comments where technology=$1";
 
     dbhelper.query(sql, [technology],
         function (results) {
@@ -65,7 +65,7 @@ Comments.getCountForTechnology = function (technology, done) {
  * @param done
  */
 Comments.getTotalNumberCommentsForTechnologies = function (done) {
-    var sql = `select count(*) total, t.name technology, s.id AS status_id
+    const sql = `select count(*) total, t.name technology, s.id AS status_id
         FROM comments c
         JOIN technologies t on c.technology=t.id 
         -- status_id is used by dashboard graphs
@@ -76,7 +76,6 @@ Comments.getTotalNumberCommentsForTechnologies = function (done) {
         GROUP BY t.name, s.id 
         ORDER BY total DESC limit 10`;
 
-    console.log(sql);
     dbhelper.query(sql, [],
         function (results) {
             done(results, null);
@@ -96,9 +95,9 @@ Comments.getTotalNumberCommentsForTechnologies = function (done) {
  * @param done function to call with the results
  */
 Comments.add = function (technology, text, userid, software_version_id, done) {
-    var versionColumn = "";
-    var versionParam = "";
-    var params = [technology, text, userid];
+    let versionColumn = "";
+    let versionParam = "";
+    let params = [technology, text, userid];
 
     // add the optional software_version_id param if it's not empty
     if(software_version_id != null && software_version_id.length > 0) {
@@ -107,7 +106,7 @@ Comments.add = function (technology, text, userid, software_version_id, done) {
         params.push(software_version_id);
     }
 
-    var sql = "INSERT INTO comments ( technology , text , userid" + versionColumn + " ) " +
+    const sql = "INSERT INTO comments ( technology , text , userid" + versionColumn + " ) " +
     " VALUES ( $1 , $2 , $3 " + versionParam + " ) RETURNING id";
 
     dbhelper.insert(sql, params,
@@ -127,12 +126,12 @@ Comments.add = function (technology, text, userid, software_version_id, done) {
  */
 Comments.delete = function (ids, done) {
 
-    var params = [];
-    for (var i = 1; i <= ids.length; i++) {
+    let params = [];
+    for (let i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM COMMENTS WHERE id IN (" + params.join(',') + "  )";
+    const sql = "DELETE FROM COMMENTS WHERE id IN (" + params.join(',') + "  )";
 
 
     dbhelper.query(sql, ids,

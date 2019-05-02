@@ -1,11 +1,11 @@
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
-var security = require('../../utils/security.js');
+const security = require('../../utils/security.js');
 
-var handler = require('../../handlers/api/dashboardApiHandler.js');
+const handler = require('../../handlers/api/dashboardApiHandler.js');
 
-var ApiDashboardRoutes = function () {
+const ApiDashboardRoutes = function () {
 };
 
 ApiDashboardRoutes.createRoutes = function (self) {
