@@ -120,6 +120,7 @@ Routes.createRoutes = function (self) {
     self.app.get('/logout', function (req, res) {
         req.session.destroy(function(err) {
             req.logOut();
+            res.redirect('/');
             // Need to determine if this is needed for Azure AD login
             //let postLogoutRedirectUri = req.protocol + "://" + req.get('host');
             // res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='+postLogoutRedirectUri);
