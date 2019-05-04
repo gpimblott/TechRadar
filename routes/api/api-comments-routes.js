@@ -1,10 +1,12 @@
-var comments = require('../../dao/comments.js');
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
-var security = require('../../utils/security.js');
-var handler = require('../../handlers/api/commentApiHandler.js');
+"use strict";
 
-var ApiCommentRoutes = function () {
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+
+const security = require('../../utils/security.js');
+const handler = require('../../handlers/api/commentApiHandler.js');
+
+const ApiCommentRoutes = function () {
 };
 
 ApiCommentRoutes.createRoutes = function (self) {
@@ -18,7 +20,6 @@ ApiCommentRoutes.createRoutes = function (self) {
      * Delete comments
      */
     self.app.delete('/api/comments', security.isAuthenticatedAdmin, jsonParser, handler.deleteComment );
-
 
 };
 

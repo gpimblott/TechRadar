@@ -1,15 +1,12 @@
-var projects = require('../../dao/projects');
-var technologies = require('../../dao/technology');
+"use strict";
 
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
-var passport = require('passport');
-var security = require('../../utils/security.js');
+const security = require('../../utils/security.js');
+const handler = require('../../handlers/api/projectsApiHandler');
 
-var handler = require('../../handlers/api/projectsApiHandler');
-
-var ApiProjectRoutes = function () {
+const ApiProjectRoutes = function () {
 };
 
 ApiProjectRoutes.createRoutes = function (self) {
@@ -27,8 +24,7 @@ ApiProjectRoutes.createRoutes = function (self) {
     /**
      * Delete projects from the database
      */
-    self.app.delete('/api/project', security.isAuthenticatedAdmin, jsonParser, 
-        handler.deleteProject );
+    self.app.delete('/api/project', security.isAuthenticatedAdmin, jsonParser,handler.deleteProject );
 
     /**
      * Delete a set of technologies from a project
@@ -56,6 +52,6 @@ ApiProjectRoutes.createRoutes = function (self) {
      */
     self.app.put('/api/project', security.canEdit, handler.updateProject );
 
-}
+};
 
 module.exports = ApiProjectRoutes;

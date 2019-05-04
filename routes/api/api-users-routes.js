@@ -1,16 +1,18 @@
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+"use strict";
 
-var security = require('../../utils/security.js');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
-var multer  = require('multer');
-var storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+const security = require('../../utils/security.js');
 
-var handler = require('../../handlers/api/usersApiHandler.js');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+const handler = require('../../handlers/api/usersApiHandler.js');
 
 
-var ApiUserRoutes = function () {
+const ApiUserRoutes = function () {
 };
 
 ApiUserRoutes.createRoutes = function (self) {

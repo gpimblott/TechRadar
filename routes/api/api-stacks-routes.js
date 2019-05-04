@@ -1,21 +1,18 @@
+"use strict";
+
 /**
  *  These are the routes implement the REST API services
  */
 
-var stacks = require('../../dao/stacks.js');
+const stacks = require('../../dao/stacks.js');
 
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+const security = require('../../utils/security.js');
+const sanitizer = require('sanitize-html');
+const apiUtils = require('./apiUtils.js');
 
-var passport = require('passport');
-
-var security = require('../../utils/security.js');
-
-var sanitizer = require('sanitize-html');
-
-var apiutils = require('./apiUtils.js');
-
-var ApiStackRoutes = function () {
+const ApiStackRoutes = function () {
 };
 
 /*****************************************************
@@ -46,7 +43,7 @@ ApiStackRoutes.createRoutes = function (self) {
                 sanitizer( req.body.description ),
 
                 function ( result , error ) {
-                    apiutils.handleResultSet( res, result , error );
+                    apiUtils.handleResultSet( res, result , error );
                 });
         });
 
@@ -55,10 +52,10 @@ ApiStackRoutes.createRoutes = function (self) {
      */
     self.app.delete('/api/stack', security.isAuthenticatedAdmin, jsonParser,
         function (req, res) {
-            var data = req.body.id ;
+            const data = req.body.id ;
 
             stacks.delete( data , function( result , error ) {
-                apiutils.handleResultSet( res, result , error );
+                apiUtils.handleResultSet( res, result , error );
             })
         });
 

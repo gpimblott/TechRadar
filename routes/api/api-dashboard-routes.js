@@ -1,8 +1,9 @@
+"use strict";
+
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const security = require('../../utils/security.js');
-
 const handler = require('../../handlers/api/dashboardApiHandler.js');
 
 const ApiDashboardRoutes = function () {
