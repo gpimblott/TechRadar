@@ -1,14 +1,14 @@
+"use strict";
+
 /**
  *  Main routes for the Application
  */
-
-var technology = require('../../dao/technology.js');
-
-var passport = require('passport');
-var security = require('../../utils/security');
+const technology = require('../../dao/technology.js');
+const passport = require('passport');
+const security = require('../../utils/security');
 
 
-var Routes = function () {
+const Routes = function () {
 };
 
 /**
@@ -17,12 +17,12 @@ var Routes = function () {
 Routes.createRoutes = function (self) {
 
     /**
-     * Homw page
+     * Home page
      */
     self.app.get('/', security.isAuthenticated,
         function (req, res) {
-            var url = req.session.redirect_to;
-            if (url != undefined) {
+            const url = req.session.redirect_to;
+            if (url !== undefined) {
                 delete req.session.redirect_to;
                 res.redirect(url);
             }
@@ -50,7 +50,7 @@ Routes.createRoutes = function (self) {
         if (req.isAuthenticated()) {
             res.render('pages/index')
         } else {
-            var messages = req.flash('error');
+            const messages = req.flash('error');
             res.render('pages/login', {messages: messages});
         }
     });
@@ -73,13 +73,13 @@ Routes.createRoutes = function (self) {
     self.app.get('/mindmap/project/:project', security.isAuthenticated, function (req, res) {
         req.checkParams('project', 'Invalid project name').isAlpha();
 
-        var errors = req.validationErrors();
+        const errors = req.validationErrors();
         if (errors) {
             res.redirect('/error');
             return;
         }
 
-        var pid = req.params.project;
+        const pid = req.params.project;
 
         technology.getAllForProject(pid, function (error, result) {
             if (error) {
@@ -119,9 +119,11 @@ Routes.createRoutes = function (self) {
     /* Logout */
     self.app.get('/logout', function (req, res) {
         req.session.destroy(function(err) {
-            var postLogoutRedirectUri = req.protocol + "://" + req.get('host');
             req.logOut();
-            res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='+postLogoutRedirectUri);
+            res.redirect('/');
+            // Need to determine if this is needed for Azure AD login
+            //let postLogoutRedirectUri = req.protocol + "://" + req.get('host');
+            // res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='+postLogoutRedirectUri);
         });
     });
 

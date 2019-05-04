@@ -1,9 +1,11 @@
-var comments = require('../../dao/comments.js');
-var apiutils = require('./apiUtils.js');
-var sanitizer = require('sanitize-html');
+"use strict";
+
+const comments = require('../../dao/comments.js');
+const apiutils = require('./apiUtils.js');
+const sanitizer = require('sanitize-html');
 
 
-var CommentApiHandler = function () {
+const CommentApiHandler = function () {
 };
 
 CommentApiHandler.addComment = function (req, res) {
@@ -20,7 +22,7 @@ CommentApiHandler.addComment = function (req, res) {
 };
 
 CommentApiHandler.deleteComment = function (req, res) {
-    var data = req.body.id;
+    const data = req.body.id;
 
     comments.delete(data, function (result, error) {
         apiutils.handleResultSet(res, result, error);

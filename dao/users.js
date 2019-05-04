@@ -1,10 +1,9 @@
-const pg = require('pg');
-const dbhelper = require('../utils/dbhelper.js');
-const User = require('../models/User');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 const Users = function () {
 };
-
 
 /**
  * Get all users 
@@ -15,7 +14,7 @@ Users.getAll = function(done) {
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id";
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done( results);
         },
@@ -36,7 +35,7 @@ Users.findById = function(id, done) {
             " INNER JOIN roles on users.role=roles.id" +
             " where users.id=$1 ";
 
-    dbhelper.query( sql, [id],
+    dbHelper.query( sql, [id],
         function (results) {
             done(null , results[0]);
         },
@@ -55,7 +54,7 @@ Users.findById = function(id, done) {
 Users.findByUsername = function(username, done) {
     const sql = "SELECT u.id, u.username, u.displayName, u.password, u.role, u.enabled, u.email FROM users u where u.username=$1";
     const params = [username];
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(null , results[0]);
         },
@@ -73,7 +72,7 @@ Users.findByUsername = function(username, done) {
 Users.findByEmail = function(email, done) {
     const sql = "SELECT u.* FROM users u where u.email=$1";
     const params = [email];
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(null , results[0]);
         },
@@ -94,7 +93,7 @@ Users.add = function (user, done) {
     const sql = "INSERT INTO users (username, email, displayName, password, role, enabled) values ($1, $2, $3, $4, $5, $6) returning id";
     const params = [user.username, user.email, user.displayName, userHash, user.role, user.enabled];
 
-    dbhelper.insert( sql, params ,
+    dbHelper.insert( sql, params ,
         function( result ) {
             done( result.rows[0].id , null );
         },
@@ -118,7 +117,7 @@ Users.delete = function (ids, done) {
 
     const sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
 
-    dbhelper.query( sql, ids ,
+    dbHelper.query( sql, ids ,
         function( result ) {
             done( true );
         },
@@ -142,9 +141,9 @@ Users.update = function (user, done) {
         avatarUpdate = ', avatar=$7';
         params.push('\\x' + user.avatar.toString('hex'));
     }
-    var sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3, email=$5, enabled=$6 where id=$4";
+    const sql = "UPDATE users SET displayName=$1, password=$2" + avatarUpdate + ", role=$3, email=$5, enabled=$6 where id=$4";
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function(result) {
             done(true);
         },
@@ -163,7 +162,7 @@ Users.update = function (user, done) {
 Users.getAvatar = function (username, done) {
     const sql = "SELECT u.avatar FROM users u where u.username=$1";
 
-    dbhelper.query(sql, [username],
+    dbHelper.query(sql, [username],
         function (results) {
             if(results[0].avatar) {
                 done(new Buffer(results[0].avatar));
@@ -190,7 +189,7 @@ Users.addPasswordResetCode = function (userId, resetCode, expiresDate, callback)
     const sql = "INSERT INTO reset_codes (\"userId\", \"resetCode\", \"resetCodeExpires\") values ($1, $2, $3) returning id";
     const params = [userId, resetCode, expiresDate];
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function(result) {
             callback(result.rows[0].id, null);
         },
@@ -212,7 +211,7 @@ Users.getUserByPasswordResetCode = function (resetCode, callback) {
         "inner join reset_codes rc on u.id = rc.\"userId\" where rc.\"resetCode\"=$1";
 
     const params = [resetCode];
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             callback(results[0], null);
         },
@@ -233,7 +232,7 @@ Users.deleteResetCode = function (resetCode, callback) {
     const params = [resetCode];
     const sql = "DELETE FROM reset_codes WHERE \"resetCode\"=$1";
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function(result) {
             callback(true);
         },

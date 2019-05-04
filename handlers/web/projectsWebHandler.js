@@ -1,7 +1,9 @@
-var projects = require('../../dao/projects');
-var technology = require('../../dao/technology');
+"use strict";
 
-var ProjectsWebHandler = function () {
+const projects = require('../../dao/projects');
+const technology = require('../../dao/technology');
+
+const ProjectsWebHandler = function () {
 };
 
 ProjectsWebHandler.add = function (req, res) {
@@ -11,7 +13,7 @@ ProjectsWebHandler.add = function (req, res) {
 ProjectsWebHandler.edit = function (req, res) {
     req.checkParams('projectId', 'Invalid project id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
@@ -30,7 +32,7 @@ ProjectsWebHandler.edit = function (req, res) {
 ProjectsWebHandler.addTechnology = function (req, res) {
     req.checkParams('projectId', 'Invalid project id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
@@ -48,7 +50,7 @@ ProjectsWebHandler.addTechnology = function (req, res) {
 ProjectsWebHandler.removeTechnology = function (req, res) {
     req.checkParams('projectId', 'Invalid project id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
@@ -66,7 +68,7 @@ ProjectsWebHandler.removeTechnology = function (req, res) {
 ProjectsWebHandler.showRadar = function (req, res) {
     req.checkParams('projectId', 'Invalid project id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
@@ -96,7 +98,7 @@ ProjectsWebHandler.showRadar = function (req, res) {
 ProjectsWebHandler.list = function (req, res) {
 
     // check if a project name parameter has been specified
-    var name = req.query.name;
+    let name = req.query.name;
 
     if( name==undefined) {
         res.render('pages/searchProjects', {user: req.user});

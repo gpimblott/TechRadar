@@ -1,10 +1,11 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 /**
  * Database routines for 'Role's'
  */
-var Role = function () {
+const Role = function () {
 };
 
 /**
@@ -12,8 +13,8 @@ var Role = function () {
  * @param done function to call with the results
  */
 Role.getAll = function(done) {
-    dbhelper.getAllFromTable("roles", done, "name"  );
-}
+    dbHelper.getAllFromTable("roles", done, "name"  );
+};
 
 
 

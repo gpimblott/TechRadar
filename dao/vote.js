@@ -1,8 +1,8 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+"use strict";
 
+const dbHelper = require('../utils/dbhelper.js');
 
-var Vote = function () {
+const Vote = function () {
 };
 
 /**
@@ -12,7 +12,7 @@ var Vote = function () {
  * @param done Function to call with the results
  */
 Vote.getVotesForTechnology = function (techid, limit, done) {
-    var sql = "SELECT to_char(v.date, 'DD/MM/YY') as date,t.name as technology,s.name as status, u.username " +
+    let sql = "SELECT to_char(v.date, 'DD/MM/YY') as date,t.name as technology,s.name as status, u.username " +
         " FROM votes v" +
         " INNER JOIN technologies t on v.technology=t.id " +
         " INNER JOIN status s on v.status=s.id " +
@@ -21,13 +21,13 @@ Vote.getVotesForTechnology = function (techid, limit, done) {
         " ORDER BY v.date desc";
 
 
-    var params = [techid];
+    const params = [techid];
     if (limit != null) {
         sql += " limit $2";
         params.push(limit);
     }
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -35,14 +35,14 @@ Vote.getVotesForTechnology = function (techid, limit, done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Get a count of votes in the last month for each technology where the vots is different to the current status
  * @param done
  */
 Vote.getVotesInLastMonthDifferentFromStatus = function (done) {
-    var sql = "SELECT t.name as name, v.status AS status_id, count(t.id) as total " +
+    const sql = "SELECT t.name as name, v.status AS status_id, count(t.id) as total " +
         "FROM votes v " +
         "JOIN technologies t on v.technology=t.id " +
         "LEFT JOIN tech_status_link tsl on v.technology=tsl.technologyid " +
@@ -56,7 +56,7 @@ Vote.getVotesInLastMonthDifferentFromStatus = function (done) {
         "( v.date between (now()-INTERVAL '3 MONTH') and now() ) " +
         "GROUP BY t.id, t.name, v.status";
     
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },
@@ -64,7 +64,7 @@ Vote.getVotesInLastMonthDifferentFromStatus = function (done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Get the number of votes for each status for each technology
@@ -72,7 +72,7 @@ Vote.getVotesInLastMonthDifferentFromStatus = function (done) {
  * @param done Function to call with the results
  */
 Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
-    var sql = "SELECT technologies.name as Technology, status.name as status, COUNT(status.name) AS count " +
+    const sql = "SELECT technologies.name as Technology, status.name as status, COUNT(status.name) AS count " +
         " FROM votes " +
         " INNER JOIN technologies on technologies.id=votes.technology " +
         " INNER JOIN status on status.id=votes.status " +
@@ -80,7 +80,7 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
         " HAVING votes.technology=$1 " +
         " ORDER BY technologies.name, count desc";
     
-    dbhelper.query(sql, [techid],
+    dbHelper.query(sql, [techid],
         function (results) {
             done(results);
         },
@@ -88,7 +88,7 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 
 /**
@@ -96,14 +96,14 @@ Vote.getTotalVotesForTechnologyStatus = function (techid, done) {
  * @param done Function to call with the results
  */
 Vote.getVotesForAllTechnologies = function (done) {
-    var sql = "SELECT count(v.id), s.name as status, t.name as technology" +
+    const sql = "SELECT count(v.id), s.name as status, t.name as technology" +
         " FROM votes v" +
         " LEFT JOIN technologies t on t.id=v.technology" +
         " LEFT JOIN status s on s.id=v.status" +
         " GROUP BY t.id, s.id" +
         " ORDER BY t.name,s.name;";
     
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },
@@ -112,21 +112,21 @@ Vote.getVotesForAllTechnologies = function (done) {
             done(null);
         });
 
-}
+};
 
 /**
  * Get the number of votes for all technologies.  This is used by the dashboard
  * @param done Function to call with the results
  */
 Vote.getVotesForAllTechnologies = function (done) {
-    var sql = "SELECT count(v.id), s.name as status, t.name as technology" +
+    const sql = "SELECT count(v.id), s.name as status, t.name as technology" +
         " FROM votes v" +
         " LEFT JOIN technologies t on t.id=v.technology" +
         " LEFT JOIN status s on s.id=v.status" +
         " GROUP BY t.id, s.id" +
         " ORDER BY t.name,s.name;";
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },
@@ -135,18 +135,20 @@ Vote.getVotesForAllTechnologies = function (done) {
             done(null);
         });
 
-}/**
+};
+
+/**
  * Get the number of votes for all technologies.  This is used by the dashboard
  * @param done Function to call with the results
  */
 Vote.getVotesPerUserCount = function (done) {
-    var sql = "SELECT u.username username, count(v.id) total " +
+    const sql = "SELECT u.username username, count(v.id) total " +
         "FROM votes v " +
         "JOIN users u ON v.userid=u.id " +
         "GROUP BY username " +
         "ORDER BY total desc limit 10";
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },
@@ -155,7 +157,7 @@ Vote.getVotesPerUserCount = function (done) {
             done(null);
         });
 
-}
+};
 
 /**
  * Add a vote for a technology
@@ -168,14 +170,14 @@ Vote.getVotesPerUserCount = function (done) {
 Vote.add = function (technology, status, userid, done) {
 
 
-    dbhelper.query("SELECT id FROM votes WHERE technology=$1 and userid=$2", [technology, userid],
+    dbHelper.query("SELECT id FROM votes WHERE technology=$1 and userid=$2", [technology, userid],
         function (selectResult) {
 
-            if (selectResult[0] != undefined && selectResult[0].id != undefined) {
+            if (selectResult[0] !== undefined && selectResult[0].id !== undefined) {
 
-                var id = selectResult[0].id;
+                const id = selectResult[0].id;
 
-                dbhelper.query("UPDATE votes set status=$1,date=now() where id=$2", [status, id],
+                dbHelper.query("UPDATE votes set status=$1,date=now() where id=$2", [status, id],
 
                     function (updateResult) {
                         done(id, null);
@@ -185,7 +187,7 @@ Vote.add = function (technology, status, userid, done) {
                     });
             } else {
 
-                dbhelper.insert("INSERT INTO votes ( technology, status, userid ) values ($1, $2, $3) returning id",
+                dbHelper.insert("INSERT INTO votes ( technology, status, userid ) values ($1, $2, $3) returning id",
                     [technology, status, userid],
 
                     function (insertResult) {
@@ -200,6 +202,6 @@ Vote.add = function (technology, status, userid, done) {
         function (error) {
             done(null, error);
         });
-}
+};
 
 module.exports = Vote;

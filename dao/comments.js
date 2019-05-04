@@ -1,5 +1,6 @@
-const pg = require('pg');
-const dbhelper = require('../utils/dbhelper.js');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -30,7 +31,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
     const limit = pageSize || DEFAULT_PAGE_SIZE;
     const offset = pageNum ? pageNum * limit : 0;
 
-    dbhelper.query(sql, [technology, limit, offset],
+    dbHelper.query(sql, [technology, limit, offset],
         function (results) {
             done(results, null);
         },
@@ -49,7 +50,7 @@ Comments.getForTechnology = function (technology, pageNum, pageSize, done) {
 Comments.getCountForTechnology = function (technology, done) {
     const sql = "SELECT count(*) FROM comments where technology=$1";
 
-    dbhelper.query(sql, [technology],
+    dbHelper.query(sql, [technology],
         function (results) {
             done(results[0]);
         },
@@ -76,7 +77,7 @@ Comments.getTotalNumberCommentsForTechnologies = function (done) {
         GROUP BY t.name, s.id 
         ORDER BY total DESC limit 10`;
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results, null);
         },
@@ -91,13 +92,13 @@ Comments.getTotalNumberCommentsForTechnologies = function (done) {
  * Add a new comment
  * @param technology Technology ID that the comment should be added to
  * @param text Comment text to add
- * @param userid User ID adding the comment
+ * @param userId User ID adding the comment
  * @param done function to call with the results
  */
-Comments.add = function (technology, text, userid, software_version_id, done) {
+Comments.add = function (technology, text, userId, software_version_id, done) {
     let versionColumn = "";
     let versionParam = "";
-    let params = [technology, text, userid];
+    let params = [technology, text, userId];
 
     // add the optional software_version_id param if it's not empty
     if(software_version_id != null && software_version_id.length > 0) {
@@ -109,7 +110,7 @@ Comments.add = function (technology, text, userid, software_version_id, done) {
     const sql = "INSERT INTO comments ( technology , text , userid" + versionColumn + " ) " +
     " VALUES ( $1 , $2 , $3 " + versionParam + " ) RETURNING id";
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (result) {
             done(result.rows[0].id);
         },
@@ -134,7 +135,7 @@ Comments.delete = function (ids, done) {
     const sql = "DELETE FROM COMMENTS WHERE id IN (" + params.join(',') + "  )";
 
 
-    dbhelper.query(sql, ids,
+    dbHelper.query(sql, ids,
         function (result) {
             done(true);
         },
