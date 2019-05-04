@@ -1,5 +1,6 @@
-'use strict';
-
+/**
+ * This module breaks if 'use strict' is specified - needs overhaul when Azure AD support is re-introduced
+ */
 /**
  * Configure passport for simple database authentication
  */
