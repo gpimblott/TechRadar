@@ -1,15 +1,12 @@
-var users = require('../../dao/users');
+"use strict";
 
-var technology = require('../../dao/technology');
-var comments = require('../../dao/comments');
+/**
+ * The 'Stack' feature has not yet been implemented
+ */
 
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+const security = require('../../utils/security');
 
-var passport = require('passport');
-var security = require('../../utils/security');
-
-var StackRoutes = function () {
+const StackRoutes = function () {
 };
 
 

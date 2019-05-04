@@ -1,12 +1,13 @@
-var handler = require('../../handlers/web/categoriesWebHandler.js');
-var security = require('../../utils/security.js');
+"use strict";
 
-var CategoryRoutes = function () {
+const handler = require('../../handlers/web/categoriesWebHandler.js');
+const security = require('../../utils/security.js');
+
+const CategoryRoutes = function () {
 };
 
 
 CategoryRoutes.createRoutes = function (self) {
-
     /**
      * List categories
      */

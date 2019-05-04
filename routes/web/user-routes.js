@@ -1,7 +1,9 @@
-var handler = require('../../handlers/web/usersWebHandler');
-var security = require('../../utils/security');
+"use strict";
 
-var UserRoutes = function () {
+const handler = require('../../handlers/web/usersWebHandler');
+const security = require('../../utils/security');
+
+const UserRoutes = function () {
 };
 
 

@@ -1,9 +1,10 @@
+"use strict";
+
 const handler = require('../../handlers/web/technologiesWebHandler');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-const passport = require('passport');
 const security = require('../../utils/security.js');
 
 const TechnologyRoutes = function () {
@@ -11,7 +12,6 @@ const TechnologyRoutes = function () {
 
 
 TechnologyRoutes.createRoutes = function (self) {
-
 
     /**
      * Show the technology search page
@@ -68,7 +68,6 @@ TechnologyRoutes.createRoutes = function (self) {
      */
     self.app.get('/technologies', security.isAuthenticatedAdmin,  handler.listTechnologies );
 
-
-}
+};
 
 module.exports = TechnologyRoutes;

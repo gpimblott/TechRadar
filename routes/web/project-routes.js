@@ -1,7 +1,9 @@
-var handler = require('../../handlers/web/projectsWebHandler');
-var security = require('../../utils/security.js');
+"use strict";
 
-var ProjectRoutes = function () {
+const handler = require('../../handlers/web/projectsWebHandler');
+const security = require('../../utils/security.js');
+
+const ProjectRoutes = function () {
 };
 
 
@@ -38,8 +40,7 @@ ProjectRoutes.createRoutes = function (self) {
      */
     self.app.get('/projects', security.isAuthenticated, handler.list);
 
-
-}
+};
 
 
 module.exports = ProjectRoutes;
