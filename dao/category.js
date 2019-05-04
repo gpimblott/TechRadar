@@ -1,10 +1,11 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 /**
  * Database routines for 'Category's'
  */
-var Category = function () {
+const Category = function () {
 };
 
 /**
@@ -12,7 +13,7 @@ var Category = function () {
  * @param done function to call with the results
  */
 Category.getAll = function(done) {
-    dbhelper.getAllFromTable("CATEGORIES", done, "name"  );
+    dbHelper.getAllFromTable("CATEGORIES", done, "name"  );
 }
 
 /**
@@ -21,10 +22,10 @@ Category.getAll = function(done) {
  * @done function to call with the result
  */
 Category.add = function ( name, description, done) {
-    var sql = "INSERT INTO categories ( name, description ) values ( $1 , $2  ) returning id";
-    var params = [ name , description ];
+    const sql = "INSERT INTO categories ( name, description ) values ( $1 , $2  ) returning id";
+    const params = [ name , description ];
 
-    dbhelper.insert( sql, params ,
+    dbHelper.insert( sql, params ,
         function( result ) {
             done( result.rows[0].id );
         },
@@ -40,7 +41,7 @@ Category.add = function ( name, description, done) {
  * @param done
  */
 Category.delete = function (ids, done) {
-    dbhelper.deleteByIds("CATEGORIES" , ids , done );
+    dbHelper.deleteByIds("CATEGORIES" , ids , done );
 }
 
 

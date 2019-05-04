@@ -1,6 +1,6 @@
-const pg = require('pg');
-const dbhelper = require('../utils/dbhelper.js');
+"use strict";
 
+const dbHelper = require('../utils/dbhelper.js');
 
 const Technology = function () {
 };
@@ -13,15 +13,15 @@ const Technology = function () {
  * @param category Category ID for the technology
  * @param description Textual description of the technology
  * @param licence Type of licence
- * @param licencelink Link to more licence info
+ * @param licenceLink Link to more licence info
  * @param done Function to call when stored
  * @returns ID of the row created
  */
-Technology.add = function (name, website, category, description, licence, licencelink,  done) {
+Technology.add = function (name, website, category, description, licence, licenceLink,  done) {
     const sql = "INSERT INTO technologies ( name , website, category , description, licence, licencelink ) values ($1, $2, $3, $4, $5, $6 ) returning id";
-    const params = [name, website, category, description, licence, licencelink];
+    const params = [name, website, category, description, licence, licenceLink];
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (result) {
             done(result.rows[0].id);
         },
@@ -48,7 +48,7 @@ Technology.update = function (id, name, website, category, description, licence,
     const params = [name, website, category, description, id, licence, licencelink];
 
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (result) {
             done(true);
         },
@@ -72,7 +72,7 @@ Technology.delete = function (ids, done) {
 
     const sql = "DELETE FROM TECHNOLOGIES WHERE id IN (" + params.join(',') + "  )";
 
-    dbhelper.query(sql, ids,
+    dbHelper.query(sql, ids,
         function (result) {
             done(true);
         },
@@ -94,7 +94,7 @@ Technology.updateStatus = function (technology, status, reason, userid, done) {
     const sql = "INSERT INTO tech_status_link ( technologyid ,statusid , userid , reason ) VALUES ( $1 , $2 , $3 , $4) returning id";
     const params = [technology, status, userid, reason];
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (result) {
             done(result.rows[0].id);
         },
@@ -123,9 +123,9 @@ Technology.getById = function (userid, id, done) {
         " where t.id=$2";
     
     const params = [userid, id];
-    dbhelper.query(sql, params ,
+    dbHelper.query(sql, params ,
         function (results) {
-            if (results.length != 1) {
+            if (results.length !== 1) {
                 done(null);
             } else {
                 done(results[0]);
@@ -141,7 +141,7 @@ Technology.getById = function (userid, id, done) {
  * Get all technologies
  * @param done Function to call with the results
  */
-Technology.getAll = function (userid, done) {
+Technology.getAll = function (userId, done) {
     const sql = "SELECT t.id, t.name as name, t.website as website, t.description, t.licence, t.licencelink, " +
         "s.name as status, c.name as category, " +
         "COALESCE( " +
@@ -154,7 +154,7 @@ Technology.getAll = function (userid, done) {
         "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )";
 
 
-    dbhelper.query(sql, [userid],
+    dbHelper.query(sql, [userId],
         function (results) {
             done(results);
         },
@@ -166,7 +166,8 @@ Technology.getAll = function (userid, done) {
 
 /**
  * Selects technologies with names, category IDs, status IDs and the number of users
- * @param {integer} [limit=40] Maximum number of records to return (max: 40)
+ * @param {number} [limit=40] Maximum number of records to return (max: 40)
+ * @param done Function to call when done
  */
 Technology.getTechnologiesWithUserCounts = function (limit, done) {
     if (!(limit > 0) && !(limit < 40)) {
@@ -186,7 +187,7 @@ Technology.getTechnologiesWithUserCounts = function (limit, done) {
         ORDER BY count DESC
         LIMIT $1`;
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -194,7 +195,7 @@ Technology.getTechnologiesWithUserCounts = function (limit, done) {
             console.log(error);
             done(null);
     });
-}
+};
 
 /**
  * Get all of the technologies in a category
@@ -213,7 +214,7 @@ Technology.getAllForCategory = function (cname, done) {
         " ORDER BY status, t.name ASC";
 
 
-    dbhelper.query(sql, [cname],
+    dbHelper.query(sql, [cname],
         function (results) {
             done(results);
         },
@@ -240,7 +241,7 @@ Technology.getAllForProject = function (id, done) {
         " WHERE p.id=$1" +
         " ORDER BY status, t.name ASC;";
 
-    dbhelper.query(sql, [id],
+    dbHelper.query(sql, [id],
         function (results) {
             done(null, results);
         },
@@ -266,7 +267,7 @@ Technology.search = function (value, done) {
         "    COALESCE( (select statusid from tech_status_link where technologyid=t.id order by date desc limit 1),0 )" +
         " WHERE technologies.name ILIKE $1 AND tsl2.id IS NULL";
 
-    dbhelper.query(sql, ['%' + value + '%'],
+    dbHelper.query(sql, ['%' + value + '%'],
         function (results) {
             done(results);
         },
@@ -281,13 +282,13 @@ Technology.search = function (value, done) {
  *
  * @param technologyId Technology ID
  * @param projectId Project ID
- * @param callback Function to call when the update is finished
+ * @param done Function to call when the update is finished
  */
 Technology.addProject = function (technologyId, projectId, done) {
     const sql = "INSERT INTO technology_project_link (technologyid, projectid) VALUES ($1, $2)";
     const params = [technologyId, projectId];
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (result) {
             done(result);
         },
@@ -303,7 +304,7 @@ Technology.addProject = function (technologyId, projectId, done) {
  *
  * @param technologyId Technology ID
  * @param projectIds Project IDs
- * @param callback Function to call when the deletion is finished
+ * @param done Function to call when the deletion is finished
  */
 Technology.removeProjects = function (technologyId, projectIds, done) {
     let idPlaceholders = [];
@@ -318,7 +319,7 @@ Technology.removeProjects = function (technologyId, projectIds, done) {
     let params = [technologyId];
     params = params.concat(projectIds);
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (result) {
             done(true);
         },
@@ -341,7 +342,7 @@ Technology.getMostUsedTechnologies = function ( done ) {
             ORDER BY total DESC 
             LIMIT 40`;
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },

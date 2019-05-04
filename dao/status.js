@@ -1,5 +1,6 @@
-const pg = require('pg');
-const dbhelper = require('../utils/dbhelper.js');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 
 const Status = function () {
@@ -12,7 +13,7 @@ const Status = function () {
 Status.getAll = function (done) {
     let sql = "SELECT * FROM status ORDER BY id ASC";
 
-    dbhelper.query(sql, [],
+    dbHelper.query(sql, [],
         function (results) {
             done(results);
         },
@@ -20,7 +21,7 @@ Status.getAll = function (done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Get the history of status changes for the specified technology
@@ -45,7 +46,7 @@ Status.getHistoryForTechnology = function( technologyid , limit, done)
         params.push(limit);
     }
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -53,6 +54,6 @@ Status.getHistoryForTechnology = function( technologyid , limit, done)
             console.log(error);
             done(null);
         });
-}
+};
 
 module.exports = Status;

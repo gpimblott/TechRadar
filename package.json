@@ -32,6 +32,7 @@
     "crypto": "latest",
     "db-migrate": "latest",
     "db-migrate-pg": "latest",
+    "debug": "latest",
     "dotenv": "latest",
     "ejs": "latest",
     "express": "latest",

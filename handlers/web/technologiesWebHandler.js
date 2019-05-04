@@ -1,11 +1,11 @@
-var cache = require('../../dao/cache.js');
-var users = require('../../dao/users');
-var comments = require('../../dao/comments');
-var project = require('../../dao/projects');
-var technology = require('../../dao/technology');
-var usedThis = require('../../dao/usedThisTechnology');
+"use strict";
 
-var TechnologiesWebHandler = function () {
+const cache = require('../../dao/cache.js');
+const project = require('../../dao/projects');
+const technology = require('../../dao/technology');
+const usedThis = require('../../dao/usedThisTechnology');
+
+const TechnologiesWebHandler = function () {
 };
 
 TechnologiesWebHandler.listTechnologies = function (req, res) {
@@ -23,26 +23,24 @@ TechnologiesWebHandler.add = function (req, res) {
 TechnologiesWebHandler.edit = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var num = req.params.id;
+    const num = req.params.id;
     technology.getById(req.user.id, num, function (value) {
-        if (value == null || value.length == 0 || value.length > 1) {
+        if (value == null || value.length === 0 || value.length > 1) {
             res.redirect('/error');
-            return;
         } else {
 
-            var statuses = cache.getStatuses();
-            res.render('pages/editTechnology',
-                {
-                    technology: value,
-                    user: req.user,
-                    statuses: statuses
-                });
+            const statuses = cache.getStatuses();
+            res.render('pages/editTechnology', {
+                technology: value,
+                user: req.user,
+                statuses: statuses
+            });
         }
     });
 };
@@ -50,24 +48,21 @@ TechnologiesWebHandler.edit = function (req, res) {
 TechnologiesWebHandler.getVersions = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var num = req.params.id;
+    const num = req.params.id;
     technology.getById(req.user.id, num, function (value) {
-        if (value == null || value.length == 0 || value.length > 1) {
+        if (value == null || value.length === 0 || value.length > 1) {
             res.redirect('/error');
-            return;
         } else {
-
-            res.render('pages/editVersions',
-                {
-                    technology: value,
-                    user: req.user,
-                });
+            res.render('pages/editVersions', {
+                technology: value,
+                user: req.user
+            });
         }
     });
 };
@@ -81,22 +76,21 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
         return;
     }
 
-     
+
     const num = req.params.id;
 
     technology.getById(req.user.id, num, function (value) {
-        if (value == null || value.length == 0 || value.length > 1) {
+        if (value == null || value.length === 0 || value.length > 1) {
             res.redirect('/error');
         } else {
             const statuses = cache.getStatuses();
             const usedThisOptions = cache.getUsedThisTechOptions();
-            res.render('pages/technology',
-                {
-                    technology: value,
-                    user: req.user,
-                    statuses: statuses,
-                    usedThisOptions: usedThisOptions
-                });
+            res.render('pages/technology', {
+                technology: value,
+                user: req.user,
+                statuses: statuses,
+                usedThisOptions: usedThisOptions
+            });
         }
     });
 };
@@ -104,26 +98,25 @@ TechnologiesWebHandler.getTechnology = function (req, res) {
 TechnologiesWebHandler.getUsers = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-     
-    var num = req.params.id;
+
+    const num = req.params.id;
 
     technology.getById(req.user.id, num, function (value) {
-        usedThis.getUsersForTechnology(num, null, function(users) {
-            if (value == null || value.length == 0 || value.length > 1) {
+        usedThis.getUsersForTechnology(num, null, function (users) {
+            if (value == null || value.length === 0 || value.length > 1) {
                 res.redirect('/error');
             } else {
-                res.render('pages/technologyUsers',
-                    {
-                        technology: value,
-                        user: req.user,
-                        techUsers: users
-                    });
+                res.render('pages/technologyUsers', {
+                    technology: value,
+                    user: req.user,
+                    techUsers: users
+                });
             }
         });
     });
@@ -132,111 +125,104 @@ TechnologiesWebHandler.getUsers = function (req, res) {
 TechnologiesWebHandler.getStatusHistory = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var techid = req.params.id;
+    const techId = req.params.id;
 
-    technology.getById(req.user.id, techid, function (value) {
+    technology.getById(req.user.id, techId, function (value) {
 
-        if (value == null || value.length == 0) {
+        if (value == null || value.length === 0) {
             res.redirect('/error');
-            return;
-        }
-
-        res.render('pages/statushistory',
-            {
+        } else {
+            res.render('pages/statushistory', {
                 technology: value,
                 user: req.user
             });
+        }
     });
 };
 
 TechnologiesWebHandler.getVotes = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var techid = req.params.id;
+    const techId = req.params.id;
 
-    technology.getById(req.user.id, techid, function (value) {
+    technology.getById(req.user.id, techId, function (value) {
 
-        if (value == null || value.length == 0) {
+        if (value == null || value.length === 0) {
             res.redirect('/error');
-            return;
-        }
-
-        res.render('pages/votehistory',
-            {
+        } else {
+            res.render('pages/votehistory', {
                 technology: value,
                 user: req.user
             });
+        }
     });
 };
 
 TechnologiesWebHandler.updateStatus = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var techid = req.params.id;
+    const techId = req.params.id;
 
-    technology.getById(req.user.id, techid, function (value) {
-        if (value == null || value.length == 0) {
+    technology.getById(req.user.id, techId, function (value) {
+        if (value == null || value.length === 0) {
             res.redirect('/error');
             return;
         }
 
-        var statuses = cache.getStatuses();
-        res.render('pages/updateStatus',
-            {
-                technology: value,
-                user: req.user,
-                statuses: statuses
-            });
+        const statuses = cache.getStatuses();
+        res.render('pages/updateStatus', {
+            technology: value,
+            user: req.user,
+            statuses: statuses
+        });
     });
 };
 
 TechnologiesWebHandler.addProject = function (req, res) {
     req.checkParams('id', 'Invalid technology id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
     }
 
-    var techid = req.params.id;
+    const techId = req.params.id;
 
-    technology.getById(req.user.id, techid, function (technology) {
+    technology.getById(req.user.id, techId, function (technology) {
         if (technology === null) {
             res.redirect('/error');
-            return;
         } else {
-            project.getAllForTechnology(techid, function (linkedProjects) {
-                
+            project.getAllForTechnology(techId, function (linkedProjects) {
+
                 project.getAll(function (allProjects) {
-                    res.render('pages/addProjectToTechnology',
-                        {
-                            technology: technology,
-                            user: req.user,
-                            unassignedProjects: allProjects.filter(function (e) {
-                                return linkedProjects.map(function (linkedEl) {
-                                        return linkedEl.id
-                                    }).indexOf(e.id) === -1;
-                            })
-                        });
+                    res.render('pages/addProjectToTechnology', {
+                        technology: technology,
+                        user: req.user,
+                        unassignedProjects: allProjects.filter(function (e) {
+                            return linkedProjects.map(function (linkedEl) {
+                                return linkedEl.id
+                            }).indexOf(e.id) === -1;
+                        })
+                    });
                 });
             });
         }

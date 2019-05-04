@@ -1,40 +1,39 @@
-var users = require('../../dao/users.js');
-var User = require('../../models/User');
+"use strict";
 
-var security = require('../../utils/security.js');
+const users = require('../../dao/users.js');
+const User = require('../../models/User');
+const apiutils = require('./apiUtils.js');
 
-var apiutils = require('./apiUtils.js');
-
-var sanitizer = require('sanitize-html');
-var crypto = require('crypto');
-var userValidator  = require('../../shared/validators/userValidator.js');
-var mailer = require('../../mailer/mailer');
+const sanitizer = require('sanitize-html');
+const crypto = require('crypto');
+const userValidator  = require('../../shared/validators/userValidator.js');
+const mailer = require('../../mailer/mailer');
 
 
-var UsersApiHandler = function () {
+const UsersApiHandler = function () {
 };
 
 /**
- * Get all categories
+ * Add a new User
  */
 UsersApiHandler.addUser = function (req, res) {
-    var username = sanitizer(req.body.username);
-    var email = sanitizer(req.body.email);
-    var enabled = sanitizer(req.body.enabled);
-    var password = sanitizer(req.body.password);
-    var password2 = sanitizer(req.body.password2);
+    const username = sanitizer(req.body.username);
+    const email = sanitizer(req.body.email);
+    let enabled = sanitizer(req.body.enabled);
+    const password = sanitizer(req.body.password);
+    const password2 = sanitizer(req.body.password2);
 
-    var validationResult = userValidator.validateNewPassword(password, password2);
+    let validationResult = userValidator.validateNewPassword(password, password2);
     validationResult = validationResult.valid ? userValidator.validateUsername(username) : validationResult;
     validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
 
-    if(enabled == 'undefined') { // happens when the sanitized value was undefined
+    if(enabled === 'undefined') { // happens when the sanitized value was undefined
         enabled = 'no';
     }
 
     if(!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
-        var data = {};
+        const data = {};
         data.error = validationResult.message;
         data.success = false;
         res.end(JSON.stringify(data));
@@ -53,22 +52,27 @@ UsersApiHandler.addUserSignUp = function(req, res){
     req.body.role = 1; // prevent other roles than "user" from being set
     req.body.enabled = 'no'; // new user accounts are disabled by default
     UsersApiHandler.addUser(req, res);
-}
+};
 
+/**
+ * Update user profile
+ * @param req
+ * @param res
+ */
 UsersApiHandler.updateProfile = function (req, res) {
-    var oldPassword = sanitizer(req.body.oldPassword);
-    var oldPasswordHash = crypto.createHash('sha256').update(oldPassword).digest('base64');
-    var email = sanitizer(req.body.email);
-    var password = sanitizer(req.body.password);
-    var confirmPassword = sanitizer(req.body.confirmPassword);
-    var displayName = sanitizer(req.body.displayname);
-    var avatarData = "";
+    const oldPassword = sanitizer(req.body.oldPassword);
+    const oldPasswordHash = crypto.createHash('sha256').update(oldPassword).digest('base64');
+    const email = sanitizer(req.body.email);
+    const password = sanitizer(req.body.password);
+    const confirmPassword = sanitizer(req.body.confirmPassword);
+    const displayName = sanitizer(req.body.displayname);
+    let avatarData = "";
 
     if(req.file) {
         avatarData = req.file.buffer;
     }
 
-    var validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
+    let validationResult = userValidator.validateNewPasswordChange(password, confirmPassword, oldPassword);
     validationResult = validationResult.valid ? userValidator.validateEmail(email) : validationResult;
     if(req.file && validationResult.valid) {
         validationResult = userValidator.validateAvatar(req.file);
@@ -86,10 +90,9 @@ UsersApiHandler.updateProfile = function (req, res) {
                 // user wants to change the password but the old one is incorrect
                 apiutils.handleResultSet(res, null, "Old password is incorrect");
             } else {
-                var passwordHash = userFromDb.password;
+                let passwordHash = userFromDb.password;
                 if(password) {
-                    passwordHash = crypto.createHash('sha256')
-                        .update(password).digest('base64')
+                    passwordHash = crypto.createHash('sha256').update(password).digest('base64')
                 }
 
                 users.update(new User(req.user.id, userFromDb.username, email, displayName, passwordHash, avatarData, userFromDb.role, userFromDb.enabled), 
@@ -101,21 +104,28 @@ UsersApiHandler.updateProfile = function (req, res) {
     });
 };
 
+/**
+ * Update the user details
+ * @param req
+ * @param res
+ */
 UsersApiHandler.updateUser = function (req, res) {
-    var userId = sanitizer(req.params.userId);
-    var password = sanitizer(req.body.password);
-    var email = sanitizer(req.body.email);
-    var confirmPassword = sanitizer(req.body.confirmPassword);
-    var displayName = sanitizer(req.body.displayname);
-    var role = sanitizer(req.body.role);
-    var enabled = sanitizer(req.body.enabled);
-    var avatarData = null;
+    const userId = sanitizer(req.params.userId);
+    const password = sanitizer(req.body.password);
+    const confirmPassword = sanitizer(req.body.confirmPassword);
+    const displayName = sanitizer(req.body.displayname);
+    const role = sanitizer(req.body.role);
+    const enabled = sanitizer(req.body.enabled);
+
+    let email = sanitizer(req.body.email);
+
+    let avatarData = null;
 
     if(req.file) {
         avatarData = req.file.buffer;
     }
 
-    var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+    let validationResult = userValidator.validateNewPassword(password, confirmPassword);
     if(email && validationResult.valid) {
         validationResult = userValidator.validateEmail(email);
     }
@@ -131,7 +141,7 @@ UsersApiHandler.updateUser = function (req, res) {
         if(error) {
             apiutils.handleResultSet(res, null, error);
         } else {
-            var passwordHash = userFromDb.password;
+            let passwordHash = userFromDb.password;
             if(password) {
                 passwordHash = crypto.createHash('sha256')
                     .update(password).digest('base64')
@@ -155,7 +165,7 @@ UsersApiHandler.getAllUsers = function (req, res) {
 };
 
 UsersApiHandler.deleteUsers = function (req, res) {
-    var data = req.body.id;
+    const data = req.body.id;
 
     users.delete(data, function(result, error) {
         apiutils.handleResultSet(res, result, error);
@@ -163,14 +173,14 @@ UsersApiHandler.deleteUsers = function (req, res) {
 };
 
 UsersApiHandler.getAvatar = function (req, res) {
-    var username = sanitizer(req.query.username);
+    const username = sanitizer(req.query.username);
     if(!username) {
         apiutils.handleResultSet(res, null, "Username parameter missing");
         return;
     }
 
     users.getAvatar(username, function(result, error) {
-        var data = {};
+        const data = {};
         if (!error) {
             data.result = result.toString('base64');
             data.success = true;
@@ -187,28 +197,28 @@ UsersApiHandler.getAvatar = function (req, res) {
 };
 
 UsersApiHandler.generateResetPasswordCode = function (req, res) {
-    var email = sanitizer(req.body.email);
+    const email = sanitizer(req.body.email);
 
-    var validationResult = userValidator.validateEmail(email);
+    const validationResult = userValidator.validateEmail(email);
     if(!validationResult.valid) {
         apiutils.handleResultSet(res, null, validationResult.message);
         return;
     }
 
-    var findByEmailCallback = function(error, user) {
+    const findByEmailCallback = function(error, user) {
         if(!user) {
             apiutils.handleResultSet(res, null, "Email not found");
         } else {
             crypto.randomBytes(48, function(err, buffer) {
-                var token = buffer.toString('hex');
-                var expireDate = new Date();
+                const token = buffer.toString('hex');
+                const expireDate = new Date();
                 expireDate.setHours(expireDate.getHours() + 1);
 
                 users.addPasswordResetCode(user.id, token, expireDate, function(result, error) {
                     if(error) {
                         apiutils.handleResultSet(res, null, error);
                     } else {
-                        var resetUrl = 'https://' + req.headers.host + "/user/resetpassword?resetCode=" + token;
+                        const resetUrl = 'https://' + req.headers.host + "/user/resetpassword?resetCode=" + token;
 
                         mailer.sendEmail({
                             from: process.env.MAIL_FROM,
@@ -230,17 +240,17 @@ UsersApiHandler.generateResetPasswordCode = function (req, res) {
 };
 
 UsersApiHandler.resetPassword = function (req, res) {
-    var resetCode = sanitizer(req.body.resetCode);
-    var password = sanitizer(req.body.password);
-    var confirmPassword = sanitizer(req.body.confirmPassword);
+    const resetCode = sanitizer(req.body.resetCode);
+    const password = sanitizer(req.body.password);
+    const confirmPassword = sanitizer(req.body.confirmPassword);
 
-    var validationResult = userValidator.validateNewPassword(password, confirmPassword);
+    const validationResult = userValidator.validateNewPassword(password, confirmPassword);
     if(!validationResult.valid) {
         apiutils.handleResultSet(res, null, validationResult.message);
         return;
     }
 
-    var passwordHash = crypto.createHash('sha256').update(password).digest('base64');
+    const passwordHash = crypto.createHash('sha256').update(password).digest('base64');
 
     users.getUserByPasswordResetCode(resetCode, function(user, error) {
         if(!user) {

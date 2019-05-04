@@ -1,5 +1,6 @@
-const pg = require('pg');
-const dbhelper = require('../utils/dbhelper.js');
+"use strict";
+
+const dbHelper = require('../utils/dbhelper.js');
 
 const UsedThisTech = function () {
 };
@@ -12,7 +13,7 @@ const UsedThisTech = function () {
 UsedThisTech.getAllOptions = function (done) {
     const sql = "SELECT * from used_this_technology_options";
 
-    dbhelper.query(sql, null,
+    dbHelper.query(sql, null,
         function (results) {
             done(results);
         },
@@ -20,18 +21,24 @@ UsedThisTech.getAllOptions = function (done) {
             console.log(error);
             done(null);
         });
-}
+};
 
-UsedThisTech.getUsersCountInLastDays = function (techid, daysAgo, done) {
-    const params = [techid];
+/**
+ *
+ * @param techId
+ * @param daysAgo
+ * @param done
+ */
+UsedThisTech.getUsersCountInLastDays = function (techId, daysAgo, done) {
+    const params = [techId];
     let sql = "SELECT COUNT(*) FROM used_this_technology WHERE technology=$1";
 
-    if(daysAgo != undefined && dbhelper.isInt(daysAgo)) {
+    if(daysAgo !== undefined && dbHelper.isInt(daysAgo)) {
         // can't use $2 param here, daysAgo is guaranteed to be an integer
         sql += " AND date > current_date - interval '" + daysAgo + "'  day";
     }
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -39,15 +46,15 @@ UsedThisTech.getUsersCountInLastDays = function (techid, daysAgo, done) {
             console.log(error);
             done(null);
     });
-}
+};
 
 /**
  * Get users that used the technology along with dates of last use
- * @param techid ID of the technology
+ * @param techId ID of the technology
  * @param limit Maximum number of results to return (undefined || null==all)
  * @param done Function to call with the results
  */
-UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
+UsedThisTech.getUsersForTechnology = function (techId, limit, done) {
     let sql = "SELECT to_char(used.date, 'DD/MM/YY') as date,t.name as technology, u.username, u.email, u.displayname" +
         " FROM used_this_technology used" +
         " INNER JOIN technologies t on used.technology=t.id " +
@@ -56,13 +63,13 @@ UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
         " ORDER BY used.date desc";
 
 
-    const params = [techid];
-    if (limit != null && limit != "undefined") {
+    const params = [techId];
+    if (limit != null && limit !== "undefined") {
         sql += " limit $2";
         params.push(limit);
     }
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -70,7 +77,7 @@ UsedThisTech.getUsersForTechnology = function (techid, limit, done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Add a new used_this_technology vote
@@ -84,13 +91,13 @@ UsedThisTech.add = function (technology, daysAgo, userId, done) {
     const date = new Date();
     date.setDate(date.getDate() - daysAgo);
 
-    dbhelper.query("SELECT id FROM used_this_technology WHERE technology=$1 and userid=$2", [technology, userId],
+    dbHelper.query("SELECT id FROM used_this_technology WHERE technology=$1 and userid=$2", [technology, userId],
         function (selectResult) {
-            if (selectResult[0] != undefined && selectResult[0].id != undefined) {
+            if (selectResult[0] !== undefined && selectResult[0].id !== undefined) {
 
                 const id = selectResult[0].id;
 
-                dbhelper.query("UPDATE used_this_technology set date=$1 where id=$2", [date, id],
+                dbHelper.query("UPDATE used_this_technology set date=$1 where id=$2", [date, id],
 
                     function (updateResult) {
                         done(id, null);
@@ -99,7 +106,7 @@ UsedThisTech.add = function (technology, daysAgo, userId, done) {
                         done(null, error);
                     });
             } else {
-                dbhelper.insert("INSERT INTO used_this_technology ( technology, date, userid ) values ($1, $2, $3) returning id",
+                dbHelper.insert("INSERT INTO used_this_technology ( technology, date, userid ) values ($1, $2, $3) returning id",
                     [technology, date, userId],
 
                     function (insertResult) {
@@ -113,7 +120,7 @@ UsedThisTech.add = function (technology, daysAgo, userId, done) {
         function (error) {
             done(null, error);
         });
-}
+};
 
 
 module.exports = UsedThisTech;

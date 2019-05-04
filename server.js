@@ -9,6 +9,8 @@ require('console-stamp')(console, '[ddd mmm dd HH:MM:ss]]');
 // Load in the environment variables
 require('dotenv').config({path: 'process.env'});
 
+const debug = require('debug')('radar:server');
+
 // Express
 const express = require('express');
 const helmet = require('helmet');
@@ -72,11 +74,10 @@ const TechRadar = function () {
      */
     self.terminator = function (sig) {
         if (typeof sig === "string") {
-            console.log('%s: Received %s - terminating Tech Radar ...',
-                Date(Date.now()), sig);
+            debug('%s: Received %s - terminating Tech Radar ...', Date(Date.now()), sig);
             process.exit(1);
         }
-        console.log('%s: Node server stopped.', Date(Date.now()));
+        debug('%s: Node server stopped.', Date(Date.now()));
     };
 
 
@@ -144,7 +145,7 @@ const TechRadar = function () {
  
          if (self.app.get('env')  == 'production') {
             self.app.enable('trust proxy', 1); // trusts first proxy - Heroku load balancer
-            console.log("In production mode");
+            debug("In production mode");
             self.app.use(express_enforces_ssl());
             sess.cookie.secure = true;
          }
@@ -154,8 +155,8 @@ const TechRadar = function () {
         // Setup the Google Analytics ID if defined
         self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
 
-        console.log("GA ID:" + self.app.locals.google_id);
-        console.log("Cookie key:" + cookie_key);
+        debug("GA ID:" + self.app.locals.google_id);
+        debug("Cookie key:" + cookie_key);
         
         // Browser Cache
         const oneDay = 86400000;
@@ -198,8 +199,7 @@ const TechRadar = function () {
     self.start = function () {
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, function () {
-            console.log('%s: Node server started on %s:%d ...',
-                Date(Date.now()), self.port);
+            debug('%s: Node server started on port %d ...', Date(Date.now()), self.port);
         });
     };
 

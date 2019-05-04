@@ -1,7 +1,8 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+"use strict";
 
-var Stacks = function () {
+const dbHelper = require('../utils/dbhelper.js');
+
+const Stacks = function () {
 };
 
 /**
@@ -9,20 +10,22 @@ var Stacks = function () {
  * @param done function to call with the results
  */
 Stacks.getAll = function( done ) {
-    dbhelper.getAllFromTable("STACKS" , done );
-}
+    dbHelper.getAllFromTable("STACKS" , done );
+};
 
 
 /**
  * Add a new stack
  * @param name Name of the stack to add
+ * @param description
+ * @param done Function to call when we have a result
  * @done function to call with the result
  */
 Stacks.add = function ( name, description, done) {
-    var sql = "INSERT INTO stacks ( name, description ) values ( $1 , $2 ) returning id";
-    var params = [ name, description ];
+    const sql = "INSERT INTO stacks ( name, description ) values ( $1 , $2 ) returning id";
+    const params = [ name, description ];
 
-    dbhelper.insert( sql, params ,
+    dbHelper.insert( sql, params ,
         function( result ) {
             done( result.rows[0].id );
         },
@@ -30,7 +33,7 @@ Stacks.add = function ( name, description, done) {
             console.log(error);
             done(null , error );
         } );
-}
+};
 
 /**
  * Delete a set of stacks using their ID numbers
@@ -38,7 +41,7 @@ Stacks.add = function ( name, description, done) {
  * @param done
  */
 Stacks.delete = function (ids, done) {
-    dbhelper.deleteByIds( "STACKS" , ids , done );
-}
+    dbHelper.deleteByIds( "STACKS" , ids , done );
+};
 
 module.exports = Stacks;

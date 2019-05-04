@@ -1,21 +1,23 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+"use strict";
 
-var SoftwareVersions = function () {
+const dbHelper = require('../utils/dbhelper.js');
+
+const SoftwareVersions = function () {
 };
 
 /**
  * Get all versions that belong to a technology
+ * @param technology ID of the technology to search for
  * @param done Function to call with the results
  */
 SoftwareVersions.getAllForTechnology = function (technology, done) {
-    var sql = `SELECT sv.id, sv.name, sv.technology, COUNT(tpl.projectid) AS projects_count from software_versions AS sv         
+    const sql = `SELECT sv.id, sv.name, sv.technology, COUNT(tpl.projectid) AS projects_count from software_versions AS sv         
         LEFT OUTER JOIN technology_project_link tpl ON tpl.software_version_id = sv.id
         WHERE sv.technology=$1
         GROUP BY sv.id, sv.name, sv.technology`;
-    var params = [technology];
+    const params = [technology];
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
@@ -23,18 +25,20 @@ SoftwareVersions.getAllForTechnology = function (technology, done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Add a new version that's assigned to a single technology
+ * @param technology Id of the software
+ * @param name Name of the version being added
  * @param done Function to call with the results
  */
 SoftwareVersions.add = function (technology, name, done) {
-    var sql = `INSERT INTO software_versions(technology, name)
+    const sql = `INSERT INTO software_versions(technology, name)
         VALUES($1, $2) RETURNING id`;
-    var params = [technology, name];
+    const params = [technology, name];
 
-    dbhelper.insert(sql, params,
+    dbHelper.insert(sql, params,
         function (results) {
             done(results);
         },
@@ -42,7 +46,7 @@ SoftwareVersions.add = function (technology, name, done) {
             console.log(error);
             done(null);
         });
-}
+};
 
 /**
  * Update a version
@@ -51,23 +55,18 @@ SoftwareVersions.add = function (technology, name, done) {
  * @param done Function to call with the results
  */
 SoftwareVersions.update = function (version, name, done) {
-    var params = [version, name];
-    var sql = `UPDATE software_versions SET name=
-        COALESCE(
-            (SELECT $2::varchar WHERE NOT EXISTS (SELECT 1 FROM software_versions WHERE name = $2)),
-            -- use the original name if the new name is a duplicate
-            name)
-        WHERE id=$1`;
+    const params = [version, name];
+    const sql = `UPDATE software_versions SET name= $2 WHERE id=$1`;
 
-    dbhelper.query(sql, params,
+    dbHelper.query(sql, params,
         function (results) {
             done(results);
         },
         function (error) {
-            console.log(error);
+            debug(error);
             done(null);
         });
-}
+};
 
 /**
  * Remove a set of versions using their ID numbers
@@ -75,7 +74,7 @@ SoftwareVersions.update = function (version, name, done) {
  * @param done
  */
 SoftwareVersions.delete = function (versions, done) {
-    dbhelper.deleteByIds("software_versions" , versions, done );
-}
+    dbHelper.deleteByIds("software_versions" , versions, done );
+};
 
 module.exports = SoftwareVersions;

@@ -1,3 +1,5 @@
+"use strict";
+
 const cache = require('../../dao/cache.js');
 const technology = require('../../dao/technology');
 
@@ -5,16 +7,26 @@ const CategoriesWebHandler = function () {
 };
 
 /**
- * Get all categories
+ * List all categories
  */
 CategoriesWebHandler.listCategories = function (req, res) {
     res.render('pages/admin/listCategories', {user: req.user});
 };
 
+/**
+ * Add a new category
+ * @param req
+ * @param res
+ */
 CategoriesWebHandler.addCategory = function (req, res) {
     res.render('pages/admin/addCategory', {user: req.user});
 };
 
+/**
+ * Get the technologies for a category
+ * @param req
+ * @param res
+ */
 CategoriesWebHandler.technologiesForCategory = function (req, res) {
 
     const cname = decodeURI(req.params.category);

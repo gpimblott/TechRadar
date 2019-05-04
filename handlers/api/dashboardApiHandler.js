@@ -1,4 +1,5 @@
-const cache = require('../../dao/cache');
+"use strict";
+
 const projects = require('../../dao/projects');
 const votes = require('../../dao/vote');
 const technologies = require('../../dao/technology');
@@ -10,12 +11,14 @@ const DashboardApiHandler = function () {
 };
 
 /**
- * Get all
+ * Get the technologies used by a project
+ * @param req
+ * @param res
  */
 DashboardApiHandler.getTechnologyForProject = function (req, res) {
     const projectId = req.params.project;
 
-    projects.getTechForProject(function (projectId, result) {
+    projects.getTechForProject(projectId,function (projectId, result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
@@ -26,7 +29,7 @@ DashboardApiHandler.getVotesForAllTechnologies = function (req, res) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     })
-}
+};
 
 DashboardApiHandler.getVotesDifferentFromStatus = function (req, res) {
     votes.getVotesInLastMonthDifferentFromStatus(function (result) {
