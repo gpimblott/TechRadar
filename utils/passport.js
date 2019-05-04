@@ -10,10 +10,10 @@ const users = require('../dao/users.js');
 const User = require('../models/User.js');
 
 if (process.env.AZURE_IDENTITY_METADATA) {
-  var config = require('./configAzureAD');
-  var OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
+  const config = require('./configAzureAD');
+  const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
-  var strategyConfig = {
+  const strategyConfig = {
     callbackURL: config.creds.returnURL,
     realm: config.creds.realm,
     clientID: config.creds.clientID,
@@ -30,7 +30,7 @@ if (process.env.AZURE_IDENTITY_METADATA) {
   };
 }
 
-var log = bunyan.createLogger({
+const log = bunyan.createLogger({
   name: 'TechRadar - passport.js',
   streams: [ {
     stream: process.stderr,
@@ -65,7 +65,7 @@ passport.use(new LocalStrategy(
 
       let userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
-      if (user.password != userHash) {
+      if (user.password !== userHash) {
         return cb(null, false, { message: 'Incorrect login' });
       }
       return cb(null, user);

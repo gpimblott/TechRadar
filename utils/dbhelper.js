@@ -4,7 +4,7 @@
 const { Pool } = require('pg');
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-})
+});
 
 
 const DBHelper = function () {
@@ -41,7 +41,7 @@ DBHelper.query = function (sql, parameters, done, error) {
         });
 
     });
-}
+};
 
 /**
  * Perform an insert operation on the database
@@ -100,7 +100,7 @@ DBHelper.deleteByIds = function (tableName, ids, done) {
             done(false, error);
         });
     
-}
+};
 
 DBHelper.getAllFromTable = function( tableName , done , order ) {
     let sql = "SELECT * FROM " + tableName;
@@ -120,13 +120,13 @@ DBHelper.getAllFromTable = function( tableName , done , order ) {
             console.log(error);
             done( null );
         });
-}
+};
 
 DBHelper.isInt = function(value) {
     return !isNaN(value) && 
-        parseInt(Number(value)) == value && 
+        parseInt(Number(value)) === value &&
         !isNaN(parseInt(value, 10));
-}
+};
 
 
 module.exports = DBHelper;
