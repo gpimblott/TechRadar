@@ -1,19 +1,19 @@
-var nodemailer = require('nodemailer');
-var stubTransport = require('nodemailer-stub-transport');
+const debug = require('debug')('radar:mailer:stub');
+const nodeMailer = require('nodemailer');
+const stubTransport = require('nodemailer-stub-transport');
 
-var transport = nodemailer.createTransport(stubTransport());
+const transport = nodeMailer.createTransport(stubTransport());
 
-var StubMailer = function () {
+const StubMailer = function () {
 };
 
 StubMailer.sendEmail = function(mailData, callback) {
     transport.sendMail(mailData, function(err, info){
         if (err) {
-            console.log("Error while sending email:");
-            console.log(err);
+            debug("Error while sending email:");
+            debug(err);
         } else {
-            console.log("EMAIL SENT:");
-            console.log(info.response.toString());
+            debug("Email sent: %s", info.response.toString());
         }
 
         if (callback) {

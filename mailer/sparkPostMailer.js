@@ -1,19 +1,19 @@
-var nodemailer = require('nodemailer');
-var sparkPostTransport = require('nodemailer-sparkpost-transport');
+const debug = require('debug')('radar:mailer:sparkpost');
+const nodeMailer = require('nodemailer');
+const sparkPostTransport = require('nodemailer-sparkpost-transport');
 
-var transport = nodemailer.createTransport(sparkPostTransport());
+const transport = nodeMailer.createTransport(sparkPostTransport());
 
-var SparkPostMailer = function () {
+const SparkPostMailer = function () {
 };
 
 SparkPostMailer.sendEmail = function(mailData, callback) {
     transport.sendMail(mailData, function(err, info){
         if (err) {
-            console.log("Error while sending email:");
-            console.log(err);
+            debug("Error while sending email:");
+            debug(err);
         } else {
-            console.log("EMAIL SENT:");
-            console.log(info.response);
+            debug("Email sent: %s", info.response.toString());
         }
 
         if (callback) {
