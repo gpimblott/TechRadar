@@ -1,25 +1,32 @@
-var technology = require('../../dao/technology');
-var status = require('../../dao/status');
-var votes = require('../../dao/vote');
-var usedThisVotes = require('../../dao/usedThisTechnology');
-var project = require('../../dao/projects');
-var cache = require('../../dao/cache');
+"use strict";
 
-var apiutils = require('./apiUtils');
-var sanitizer = require('sanitize-html');
-var technologyValidator = require('../../shared/validators/technologyValidator');
+const technology = require('../../dao/technology');
+const status = require('../../dao/status');
+const votes = require('../../dao/vote');
+const usedThisVotes = require('../../dao/usedThisTechnology');
+const project = require('../../dao/projects');
+const cache = require('../../dao/cache');
+
+const apiUtils = require('./apiUtils');
+const sanitizer = require('sanitize-html');
+const technologyValidator = require('../../shared/validators/technologyValidator');
 
 
-var TechnologyApiHandler = function () {
+const TechnologyApiHandler = function () {
 };
 
+/**
+ * Add a vote for a technology
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.addVote = function (req, res) {
-    var tech = sanitizer(req.params.technology);
-    var statusName = sanitizer(req.body.statusname);
-    var userId = sanitizer(req.user.id);
+    const tech = sanitizer(req.params.technology);
+    const statusName = sanitizer(req.body.statusname);
+    const userId = sanitizer(req.user.id);
 
-    var status = cache.getStatus( statusName );
-    var statusValue = status.id;
+    const status = cache.getStatus( statusName );
+    const statusValue = status.id;
 
     votes.add(tech, statusValue, userId, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -31,10 +38,15 @@ TechnologyApiHandler.addVote = function (req, res) {
     });
 };
 
+/**
+ * Add a 'used this before' flag to a technology for a user
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.addUsedThisTechnologyVote = function (req, res) {
-    var tech = sanitizer(req.params.technology);
-    var daysAgo = sanitizer(req.body.daysAgo);
-    var userId = sanitizer(req.user.id);
+    const tech = sanitizer(req.params.technology);
+    const daysAgo = sanitizer(req.body.daysAgo);
+    const userId = sanitizer(req.user.id);
 
     usedThisVotes.add(tech, daysAgo, userId, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -46,9 +58,13 @@ TechnologyApiHandler.addUsedThisTechnologyVote = function (req, res) {
     });
 };
 
+/**
+ * Get all of teh technologies
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.getTechnologies = function (req, res) {
-    
-    var search = req.query.search;
+    const search = req.query.search;
 
     if (search == null) {
         technology.getAll(req.user.id, function (result) {
@@ -64,19 +80,24 @@ TechnologyApiHandler.getTechnologies = function (req, res) {
     }
 };
 
-
+/**
+ * Add a technology
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.addTechnology = function (req, res) {
-    var technologyName = sanitizer(req.body.technologyName);
-    var technologyWebsite = sanitizer(req.body.technologyWebsite);
-    var technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
+    const technologyName = sanitizer(req.body.technologyName);
+    const technologyWebsite = sanitizer(req.body.technologyWebsite);
+    const technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
 
-    var validationResult = technologyValidator.validateTechnologyName(technologyName);
+    let validationResult = technologyValidator.validateTechnologyName(technologyName);
     validationResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
     validationResult = validationResult.valid ? technologyValidator.validateTechnologyLicenceWebsite(technologyLicenceLink) : validationResult;
     
     if (!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
-        var data = {};
+        
+        let data = {};
         data.error = validationResult.message;
         data.success = false;
         res.end(JSON.stringify(data));
@@ -91,24 +112,29 @@ TechnologyApiHandler.addTechnology = function (req, res) {
         sanitizer(req.body.technologyLicence),
         technologyLicenceLink,
         function (result, error) {
-            apiutils.handleResultSet(res, result, error);
+            apiUtils.handleResultSet(res, result, error);
         });
 };
 
+/**
+ * Update a technology
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.updateTechnology = function (req, res) {
-    var techid = sanitizer(req.params.technology);
+    const techId = sanitizer(req.params.technology);
 
-    var technologyName = sanitizer(req.body.name);
-    var technologyWebsite = sanitizer(req.body.website);
-    var technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
+    const technologyName = sanitizer(req.body.name);
+    const technologyWebsite = sanitizer(req.body.website);
+    const technologyLicenceLink = sanitizer(req.body.technologyLicenceLink);
 
-    var validationResult = technologyValidator.validateTechnologyName(technologyName);
+    let validationResult = technologyValidator.validateTechnologyName(technologyName);
     validationResult = validationResult.valid ? technologyValidator.validateTechnologyWebsite(technologyWebsite) : validationResult;
     validationResult = validationResult.valid ? technologyValidator.validateTechnologyLicenceWebsite(technologyLicenceLink) : validationResult;
 
     if (!validationResult.valid) {
         res.writeHead(200, {"Content-Type": "application/json"});
-        var data = {};
+        const data = {};
         data.error = validationResult.message;
         data.success = false;
         res.end(JSON.stringify(data));
@@ -116,7 +142,7 @@ TechnologyApiHandler.updateTechnology = function (req, res) {
     }
     
     technology.update(
-        techid,
+        techId,
         sanitizer(technologyName),
         sanitizer(technologyWebsite),
         sanitizer(req.body.category),
@@ -125,32 +151,41 @@ TechnologyApiHandler.updateTechnology = function (req, res) {
         technologyLicenceLink,
 
         function (result, error) {
-            apiutils.handleResultSet(res, result, error);
+            apiUtils.handleResultSet(res, result, error);
         });
 };
 
+/**
+ * Delete a technology
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.deleteTechnology = function (req, res) {
-    var data = req.body.id;
+    const data = req.body.id;
 
     technology.delete(data, function (result, error) {
-        apiutils.handleResultSet(res, result, error);
+        apiUtils.handleResultSet(res, result, error);
     })
 };
 
-
+/**
+ * Get the votes for a technology
+ * @param req
+ * @param res
+ */
 TechnologyApiHandler.getVotes = function (req, res) {
-    var techid = sanitizer(req.params.technology);
-    var limit = sanitizer(req.query.limit);
+    const techId = sanitizer(req.params.technology);
+    const limit = sanitizer(req.query.limit);
 
-    votes.getVotesForTechnology(techid, limit, function (result) {
+    votes.getVotesForTechnology(techId, limit, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
     });
 };
 
 TechnologyApiHandler.getStatusHistory = function (req, res) {
-    var tech = sanitizer(req.params.technology);
-    var limit = sanitizer(req.query.limit);
+    const tech = sanitizer(req.params.technology);
+    const limit = sanitizer(req.query.limit);
 
     status.getHistoryForTechnology(tech, limit, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -160,8 +195,8 @@ TechnologyApiHandler.getStatusHistory = function (req, res) {
 };
 
 TechnologyApiHandler.getVoteHistory = function (req, res) {
-    var tech = sanitizer(req.params.technology);
-    var limit = sanitizer(req.query.limit);
+    const tech = sanitizer(req.params.technology);
+    const limit = sanitizer(req.query.limit);
 
     votes.getVotesForTechnology(tech, limit, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -170,7 +205,7 @@ TechnologyApiHandler.getVoteHistory = function (req, res) {
 };
 
 TechnologyApiHandler.getVoteTotals = function (req, res) {
-    var tech = sanitizer(req.params.technology);
+    const tech = sanitizer(req.params.technology);
     votes.getTotalVotesForTechnologyStatus(tech, function (result) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(result));
@@ -179,27 +214,27 @@ TechnologyApiHandler.getVoteTotals = function (req, res) {
 };
 
 TechnologyApiHandler.updateStatus = function (req, res) {
-    var status = sanitizer(req.body.statusvalue);
-    var reason = sanitizer(req.body.reason);
-    var tech = sanitizer(req.params.technology);
+    const status = sanitizer(req.body.statusvalue);
+    const reason = sanitizer(req.body.reason);
+    const tech = sanitizer(req.params.technology);
 
     technology.updateStatus(tech, status, reason, req.user.id, function (result, error) {
-        apiutils.handleResultSet(res, result, error);
+        apiUtils.handleResultSet(res, result, error);
     })
 };
 
 TechnologyApiHandler.addProject = function (req, res) {
-    var projectId = sanitizer(req.body.project);
-    var technologyId = sanitizer(req.params.technology);
+    const projectId = sanitizer(req.body.project);
+    const technologyId = sanitizer(req.params.technology);
 
     technology.addProject(technologyId, projectId, function (result, error) {
-        apiutils.handleResultSet(res, result, error);
+        apiUtils.handleResultSet(res, result, error);
     })
 };
 
 TechnologyApiHandler.getUsersCountInLastDays = function (req, res) {
-    var technologyId = sanitizer(req.params.technology);
-    var daysAgo; 
+    const technologyId = sanitizer(req.params.technology);
+    let daysAgo = 0;
     if(typeof req.query.daysAgo != "undefined"){
         daysAgo = sanitizer(req.query.daysAgo);
     }
@@ -211,8 +246,8 @@ TechnologyApiHandler.getUsersCountInLastDays = function (req, res) {
 };
 
 TechnologyApiHandler.getUsers = function (req, res) {
-    var technologyId = sanitizer(req.params.technology);
-    var limit; // getUsersForTechnology can handle undefined limit
+    const technologyId = sanitizer(req.params.technology);
+    let limit; // getUsersForTechnology can handle undefined limit
     if(typeof req.query.limit != "undefined"){
         limit = sanitizer(req.query.limit);
     }
@@ -224,7 +259,7 @@ TechnologyApiHandler.getUsers = function (req, res) {
 };
 
 TechnologyApiHandler.getProjects = function (req, res) {
-    var technologyId = sanitizer(req.params.technology);
+    const technologyId = sanitizer(req.params.technology);
 
     project.getAllForTechnology(technologyId, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});
@@ -233,8 +268,8 @@ TechnologyApiHandler.getProjects = function (req, res) {
 };
 
 TechnologyApiHandler.removeProject = function (req, res) {
-    var technologyId = sanitizer(req.params.technology);
-    var projectIds = req.body.projects;
+    const technologyId = sanitizer(req.params.technology);
+    const projectIds = req.body.projects;
 
     technology.removeProjects(technologyId, projectIds, function (result, error) {
         res.writeHead(200, {"Content-Type": "application/json"});

@@ -47,6 +47,10 @@
                         <i class="glyphicon glyphicon-plus"></i>
                         Add
                     </a>
+                    <button id="editBtn" class="btn btn-danger" disabled="">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        Edit
+                    </button>
                     <button id="deleteBtn" class="btn btn-danger" disabled="">
                         <i class="glyphicon glyphicon-remove"></i>
                         Delete
@@ -65,10 +69,12 @@
 <script>
 
     $table = $('#results');
-    $deleteBtn = $('#deleteBtn')
+    $deleteBtn = $('#deleteBtn');
+    $editBtn = $('#editBtn');
 
     // Disabled by default
     $deleteBtn.prop('disabled', 1);
+    $editBtn.prop('disabled', 1);
 
     $table.bootstrapTable( {
         method: 'get',
@@ -116,6 +122,12 @@
 
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
         $deleteBtn.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        $editBtn.prop('disabled', $table.bootstrapTable('getSelections').length!==1);
+    });
+
+    $editBtn.click( function() {
+        var id = getIdSelections();
+        window.location.href = "/user/" + id[0] + "/edit";
     });
 
     $deleteBtn.click( function() {

@@ -1,7 +1,10 @@
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
+"use strict";
 
-var options = {
+const debug = require('debug')('radar:mailer:smtp');
+const nodeMailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
+
+const options = {
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     requireTLS: process.env.SMTP_TLS === '1'
@@ -13,21 +16,21 @@ if (process.env.SMTP_USERNAME && process.env.SMTP_PASSWORD) {
         pass: process.env.SMTP_PASSWORD
     }
 }
-console.log(options);
 
-var transport = nodemailer.createTransport(smtpTransport(options));
+debug(options);
 
-var SmtpMailer = function () {
+const transport = nodeMailer.createTransport(smtpTransport(options));
+
+const SmtpMailer = function () {
 };
 
 SmtpMailer.sendEmail = function(mailData, callback) {
     transport.sendMail(mailData, function(err, info){
         if (err) {
-            console.log("Error while sending email:");
-            console.log(err);
+            debug("Error while sending email:");
+            debug(err);
         } else {
-            console.log("EMAIL SENT:");
-            console.log(info.response.toString());
+            debug("Email Sent: %s" , info.response.toString());
         }
 
         if (callback) {

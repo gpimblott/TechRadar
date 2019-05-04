@@ -14,7 +14,7 @@
  * @returns mailer module
  * @constructor
  */
-var Mailer = function() {
+const Mailer = function() {
     let type = process.env.MAILER || '';
 
     if (type.toLowerCase() === 'stub') {
@@ -32,5 +32,5 @@ var Mailer = function() {
     throw "Mailer type not specified";
 };
 
-var mailerImpl = Mailer();
+const mailerImpl = Mailer();
 module.exports.sendEmail = mailerImpl.sendEmail;

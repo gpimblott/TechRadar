@@ -1,6 +1,8 @@
-var users = require('../../dao/users');
+"use strict";
 
-var UsersWebHandler = function () {
+const users = require('../../dao/users');
+
+const UsersWebHandler = function () {
 };
 
 UsersWebHandler.list = function (req, res) {
@@ -18,7 +20,7 @@ UsersWebHandler.editProfile = function (req, res) {
 UsersWebHandler.editUser = function (req, res) {
     req.checkParams('userId', 'Invalid user id').isInt();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.redirect('/error');
         return;
@@ -27,7 +29,6 @@ UsersWebHandler.editUser = function (req, res) {
     users.findById(req.params.userId, function (error, editUser) {
         if (error) {
             res.redirect_to('/error');
-            return;
         } else {
             res.render('pages/admin/user/editUser', {user: req.user, editUser: editUser});
         }

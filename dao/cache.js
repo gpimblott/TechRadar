@@ -1,82 +1,97 @@
+"use strict";
+
+const debug = require('debug')('radar:cache');
 /**
  * Cache module
  *
  * This keeps frequently used values loaded in memory to reduce database calls.
- * 
+ *
+ * It is implmented as a Singleton - only ever exporting the same instance
+ *
  * Currently:
  *  Statuses
  *  Categories
+ *  Roles
  *  "I've used this tech" options
  */
-var categoryDao = require('./category.js');
-var statusDao = require('./status.js');
-var roleDao = require('./role.js');
-var usedThisTechnologyDao = require('./usedThisTechnology.js');
-
-var categories = null;
-var statuses = null;
-var roles = null;
-var usedThisTechOptions = null;
+const categoryDao = require('./category.js');
+const statusDao = require('./status.js');
+const roleDao = require('./role.js');
+const usedThisTechnologyDao = require('./usedThisTechnology.js');
 
 
-var Cache = function () {
-};
+
+class Cache {
+
+    constructor() {
+        this.categories=null;
+        this.statuses=null;
+        this.roles=null;
+        this.usedThisTechOptions=null;
+    }
 
 
-Cache.refresh = function ( app ) {
-    categoryDao.getAll( function (results ) {
-        categories = results;
-        app.locals.categories = results;
-    });
-    
-    statusDao.getAll( function (results ) {
-        statuses = results;
-        app.locals.statuses = results;
-    })
+    refresh(app) {
+        debug ("Caching frequently used data");
 
-    roleDao.getAll( function (results ) {
-        roles = results;
-        app.locals.roles = results;
-    })
+        let self = this;
+        categoryDao.getAll(function (results) {
+            self.categories = results;
+            app.locals.categories = results;
+        });
 
-    usedThisTechnologyDao.getAllOptions( function (results ) {
-        usedThisTechOptions = results;
-        app.locals.usedThisTechOptions = results;
-    });
-}
+        statusDao.getAll(function (results) {
+            self.statuses = results;
+            app.locals.statuses = results;
+        })
 
-Cache.getCategories = function() {
-    return categories;
-}
+        roleDao.getAll(function (results) {
+            self.roles = results;
+            app.locals.roles = results;
+        })
 
-Cache.getCategory = function( value ) {
- 
-    for(var i=0;i<categories.length;i++) {
-        var category = categories[i];
-        if( category.name.toLowerCase() === value.toLowerCase()) {
-            return category;
+        usedThisTechnologyDao.getAllOptions(function (results) {
+            self.usedThisTechOptions = results;
+            app.locals.usedThisTechOptions = results;
+        });
+    }
+
+    getCategories() {
+        return this.categories;
+    }
+
+    getCategory(value) {
+
+        for (let i = 0; i < this.categories.length; i++) {
+            let category = this.categories[i];
+            if (category.name.toLowerCase() === value.toLowerCase()) {
+                return category;
+            }
         }
-    };
-    return null;
-}
+        return null;
+    }
 
-Cache.getStatuses= function() {
-    return statuses;
-}
 
-Cache.getStatus= function( value ) {
+    getStatuses() {
+        return this.statuses;
+    }
 
-    for(var i=0;i<statuses.length;i++) {
-        var status = statuses[i];
-        if( status.name.toLowerCase() === value.toLowerCase()) {
-            return status;
+
+    getStatus(value) {
+
+        for (let i = 0; i < this.statuses.length; i++) {
+            let status = this.statuses[i];
+            if (status.name.toLowerCase() === value.toLowerCase()) {
+                return status;
+            }
         }
-    };
-    return null;
+        return null;
+    }
+
+    getUsedThisTechOptions() {
+        return this.usedThisTechOptions;
+    }
+
 }
 
-Cache.getUsedThisTechOptions = function() {
-    return usedThisTechOptions;
-}
-
-module.exports = Cache;
+module.exports = new Cache();

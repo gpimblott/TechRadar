@@ -85,6 +85,11 @@ $('#results').bootstrapTable({
 })
 
 function emailFormatter(value, row, index) {
+    if( value === null) {
+        return 'Not known';
+    } else {
+
+    }
     return [
         '<a href="mailto:' + value + '">' + value + '</a>'
     ].join('');

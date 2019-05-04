@@ -1,5 +1,6 @@
+"use strict";
 
-var ApiUtils= function () {
+const ApiUtils= function () {
 };
 
 /**
@@ -10,7 +11,7 @@ var ApiUtils= function () {
 ApiUtils.handleResultSet = function( res , result  , error ) {
     res.writeHead(200, {"Content-Type": "application/json"});
 
-    var data = {};
+    let data = {};
     if ( result ) {
         data.result = result;
         data.success = true;
