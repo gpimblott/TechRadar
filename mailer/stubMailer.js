@@ -1,8 +1,8 @@
 const debug = require('debug')('radar:mailer:stub');
-const nodemailer = require('nodemailer');
+const nodMailer = require('nodemailer');
 const stubTransport = require('nodemailer-stub-transport');
 
-const transport = nodemailer.createTransport(stubTransport());
+const transport = nodMailer.createTransport(stubTransport());
 
 const StubMailer = function () {
 };
